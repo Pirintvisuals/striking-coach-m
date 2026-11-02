@@ -1,7 +1,7 @@
 // Offline cache. Bump VERSION whenever any file changes so phones pick it up.
-const VERSION = 'v2';
+const VERSION = 'v3';
 const FILES = [
-  './', 'index.html', 'style.css', 'app.js', 'library.json', 'manifest.webmanifest',
+  './', 'index.html', 'style.css', 'app.js', 'camera.js', 'library.json', 'manifest.webmanifest',
   'audio/sprite.m4a', 'audio/sprite.json', 'audio/keepawake.mp4',
   'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png',
 ];
@@ -40,5 +40,12 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
   if (req.headers.has('range')) { e.respondWith(rangeResponse(req)); return; }
-  e.respondWith(caches.match(req, { ignoreSearch: true }).then(hit => hit || fetch(req)));
+  // Camera-coach files (~15 MB) are not precached; they are cached the first time the camera is used.
+  e.respondWith(caches.match(req, { ignoreSearch: true }).then(hit => hit || fetch(req).then(res => {
+    if (res.ok && new URL(req.url).pathname.includes('/vendor/')) {
+      const copy = res.clone();
+      caches.open(VERSION).then(c => c.put(req, copy));
+    }
+    return res;
+  })));
 });

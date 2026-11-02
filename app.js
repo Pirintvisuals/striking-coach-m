@@ -8,7 +8,7 @@ const LS = {
   get(k, d) { try { const v = localStorage.getItem('sc.' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem('sc.' + k, JSON.stringify(v)); } catch {} },
 };
-const DEFAULTS = { defPct: 15, sayAnswer: true, headKicks: true, quick: false, roundMin: 10, restMin: 2, rounds: 3 };
+const DEFAULTS = { defPct: 15, sayAnswer: true, headKicks: true, quick: false, roundMin: 10, restMin: 2, rounds: 3, camera: false };
 const settings = Object.assign({}, DEFAULTS, LS.get('settings', {}));
 if (Q.has('quick')) settings.quick = true;
 const saveSettings = () => { if (!SIM) LS.set('settings', settings); };
@@ -125,7 +125,13 @@ async function clip(id, text, who = 'coach') {
   }
   const el = audio.el, end = c.s + c.d, started = clock.now();
   el.currentTime = c.s;
-  try { await el.play(); } catch { return speak(text, who); }
+  // A play() that never settles (or a sprite the browser can't decode) must not freeze the session.
+  const played = await Promise.race([el.play().then(() => true, () => false), tick(1500).then(() => false)]);
+  if (!played || el.error) {
+    el.pause();
+    if (el.error) audio.ok = false; // stop trying the sprite for the rest of the session
+    return id.startsWith('fx:') ? (FX_FALLBACK[id] ? beep(...FX_FALLBACK[id]) : undefined) : speak(text, who);
+  }
   for (;;) {
     await tick(15);
     if (run && run.aborted) { el.pause(); throw new Abort(); }
@@ -139,7 +145,12 @@ async function clip(id, text, who = 'coach') {
 
 const NUM = { 1: 'one', 2: 'two', 3: 'three', 4: 'four' };
 const sayToken = t => { const s = t.split(' ').map(w => NUM[w] || w).join(' '); return s[0].toUpperCase() + s.slice(1) + '.'; };
-async function sayTokens(tokens) { for (const t of tokens) await clip('t:' + t, sayToken(t)); }
+async function sayTokens(tokens) {
+  for (const t of tokens) {
+    if (camOn()) Cam.coach.onCall(t, performance.now()); // the camera knows exactly what was called and when
+    await clip('t:' + t, sayToken(t));
+  }
+}
 const say = text => clip('x:' + text, text);
 const sayIncoming = attack => clip('in:' + attack, `Incoming ${attack}!`, 'incoming');
 
@@ -324,6 +335,41 @@ function pickThemed(th, st, phase, mode) {
   return core();
 }
 
+// ---------- camera coach (optional) ----------
+const camOn = () => !SIM && run && run.cam && Cam.running && Cam.coach && Cam.coach.base;
+async function camCue() { // between combos only
+  if (!camOn() || !run.inRound) return;
+  const type = Cam.coach.takeCue(performance.now());
+  if (type) { showCall('CAMERA · ' + LIB.phrases.camCue[type]); await say(LIB.phrases.camCue[type]); }
+}
+function camPause(p) { if (camOn()) Cam.coach.pause(p); }
+async function camCalibrate() {
+  const P = LIB.phrases;
+  setPhase('Camera check', 45000, 'Phone diagonal in front of you, 2–3 m away, head to feet in view');
+  run.st = newRoundState(45000, 0); run.st.warned = true;
+  const fail = async () => { await say(P.camFail); Cam.stop(); run.cam = false; $('camBox').classList.add('hidden'); return false; };
+  if (!(await run.camStart)) { $('camInfo').textContent = 'Camera coach off: ' + (Cam.error || 'not available'); return fail(); }
+  const c = Cam.coach;
+  await say(P.camSetup);
+  await wait(4000);
+  for (let attempt = 0; ; attempt++) {
+    c.startStep('seen'); await wait(3000);
+    const seen = c.endStep();
+    if (seen === 'ok') break;
+    if (attempt === 2) return fail();
+    await say(P['cam_' + seen] || P.cam_noperson);
+    await wait(6000);
+  }
+  await say(P.camSeeYou);
+  await say(P.camGuard); c.startStep('guard'); await wait(5000);
+  if (c.endStep() !== 'ok') return fail();
+  await say(P.camJabs); c.startStep('jabs'); await wait(5000); c.endStep();
+  await say(P.camTwos); c.startStep('twos'); await wait(6000);
+  if (c.endStep() === 'nohip') await say(P.camNoHip);
+  await say(P.camDone);
+  return true;
+}
+
 // ---------- rounds ----------
 function newRoundState(dur, spinMax) {
   const start = clock.now();
@@ -332,6 +378,7 @@ function newRoundState(dur, spinMax) {
 const remember = (st, e) => { st.recent.push(e.id); if (st.recent.length > 6) st.recent.shift(); };
 
 async function flurry(ms, kind, opener) {
+  camPause(true); // all-out flurries aren't judged
   showCall('FLURRY · ' + kind.toUpperCase());
   const end = clock.now() + ms;
   await say(opener || (ms > 17500 ? LIB.phrases.flurry20 : LIB.phrases.flurry15));
@@ -343,6 +390,7 @@ async function flurry(ms, kind, opener) {
   }
   await gapWait(Math.max(0, end - clock.now()));
   run.flurries++;
+  if (run.inRound) camPause(false);
 }
 
 async function themedRound(spec) {
@@ -357,6 +405,8 @@ async function themedRound(spec) {
   await say(LIB.phrases.round[n - 1] || LIB.phrases.round.at(-1));
   await say(th.focus);
   await say(th.teach);
+  if (camOn()) Cam.coach.startRound(n, th.name);
+  run.inRound = true;
 
   // 1. Teach: drill the setup alone (technical pace even on hard days, so the shape is right first).
   const setup = LIB.byId[th.setup];
@@ -406,6 +456,7 @@ async function themedRound(spec) {
     remember(st, e);
     run.counts[e.kind] = (run.counts[e.kind] || 0) + 1;
     await doItem(e, p);
+    await camCue();
   }
   if (finalMs) {
     await gapWait(Math.max(0, end - finalMs - clock.now()));
@@ -414,6 +465,8 @@ async function themedRound(spec) {
   showCall('');
   await gapWait(Math.max(0, end - clock.now()));
   await clip('fx:bell3');
+  run.inRound = false;
+  if (camOn()) run.camReport = Cam.coach.endRound();
   run.roundsDone++;
 }
 
@@ -491,6 +544,13 @@ async function runRest(dur, tip) {
   run.st.warned = true;
   const end = run.phase.end;
   await say(LIB.phrases.rest);
+  if (run.camReport) {
+    const r = run.camReport; run.camReport = null;
+    run.camReports.push(r.text);
+    if (!SIM) $('answer').textContent = r.text;
+    await say(LIB.phrases.camReport);
+    await clip('x:' + r.say, r.say); // has numbers in it: spoken by the phone's voice
+  }
   if (tip) { await wait(Math.min(4000, dur / 6)); await say(tip); }
   if (end - clock.now() > 10500) { await waitUntil(end - 10000); await say(LIB.phrases.ten); }
   await countIn(end);
@@ -518,6 +578,7 @@ async function runSession(sess) {
   run.st = newRoundState(10000, 0); run.st.warned = true;
   await say(sess.intro);
   await countIn(run.phase.end);
+  if (run.cam) await camCalibrate();
   await warmupRound(T.warm);
   for (const r of rounds) {
     await runRest(T.rest, r.theme.tip);
@@ -525,6 +586,7 @@ async function runSession(sess) {
   }
   await runRest(T.rest, sess.mode === 'hard' ? LIB.phrases.nextBurn : LIB.phrases.nextTech);
   if (sess.mode === 'hard') await burnout(T.fin); else await techFinisher(T.fin, themes.slice(0, rounds.length));
+  if (run.camReport) { run.camReports.push(run.camReport.text); run.camReport = null; }
   setPhase('Done', 0, '');
   await say(LIB.phrases.done);
 }
@@ -558,7 +620,7 @@ function show(id) {
 }
 let chosen = 0;
 const fmtSession = s => `${s.name} — ${s.mode}`;
-const fmtCfg = () => settings.quick ? 'quick test' : `${settings.rounds}×${settings.roundMin} min, ${settings.restMin} min rest`;
+const fmtCfg = () => (settings.quick ? 'quick test' : `${settings.rounds}×${settings.roundMin} min, ${settings.restMin} min rest`) + (settings.camera ? ', camera coach' : '');
 
 function renderHome() {
   const next = LS.get('next', 0) % LIB.sessions.length;
@@ -582,7 +644,7 @@ function renderHome() {
 
 function newRun(sess, idx) {
   return { sess, idx, aborted: false, finished: false, roundsDone: 0, totalRounds: 5, started: new Date(),
-    trace: [], trapsDone: [], flurries: 0, counts: {}, roundNo: 0 };
+    trace: [], trapsDone: [], flurries: 0, counts: {}, roundNo: 0, cam: false, camReports: [], inRound: false };
 }
 
 $('startBtn').onclick = () => {
@@ -591,6 +653,16 @@ $('startBtn').onclick = () => {
   keepAwake();
   run = newRun(sess, chosen);
   window.__run = run;
+  if (settings.camera && Cam.supported()) { // ask for the camera inside the tap
+    run.cam = true;
+    $('camBox').classList.remove('hidden');
+    $('camInfo').textContent = 'Camera starting…';
+    run.camStart = Cam.start($('camVideo'));
+    run.camTimer = setInterval(() => {
+      if (Cam.running) $('camInfo').textContent = !Cam.coach.base ? `Camera: ${Cam.fps} fps, calibrating`
+        : Cam.coach.paused ? 'Camera coach: waiting for the next themed round' : `Camera coach: watching (${Cam.fps} fps)`;
+    }, 1000);
+  } else $('camBox').classList.add('hidden');
   clock.reset();
   $('pauseBtn').textContent = 'Pause';
   show('run');
@@ -598,8 +670,8 @@ $('startBtn').onclick = () => {
   unlocked.then(() => runSession(sess)).then(() => finish(true), e => { if (!(e instanceof Abort)) console.error(e); finish(false); });
 };
 $('pauseBtn').onclick = () => {
-  if (clock.pausedAt == null) { clock.pause(); $('pauseBtn').textContent = 'Resume'; }
-  else { clock.resume(); $('pauseBtn').textContent = 'Pause'; }
+  if (clock.pausedAt == null) { clock.pause(); camPause(true); $('pauseBtn').textContent = 'Resume'; }
+  else { clock.resume(); if (run.inRound) camPause(false); $('pauseBtn').textContent = 'Pause'; }
 };
 $('stopBtn').onclick = () => {
   if (!confirm('Stop the session?')) return;
@@ -611,6 +683,8 @@ function finish(completed) {
   if (!run || run.finished) return;
   run.finished = true;
   clearInterval(run.timer);
+  clearInterval(run.camTimer);
+  if (run.cam) Cam.stop();
   audio.el.pause();
   try { speechSynthesis.cancel(); } catch {}
   releaseAwake();
@@ -637,6 +711,7 @@ $('saveLog').onclick = () => {
     date: run.started.toISOString(), session: run.sess.id, name: fmtSession(run.sess),
     rounds: `${run.roundsDone}/${run.totalRounds}`, completed: run.completed, cfg: fmtCfg(),
     rating, note: $('note').value.trim(), defPct: settings.defPct, quick: settings.quick,
+    cam: run.camReports.length ? run.camReports : undefined,
   });
   LS.set('log', log);
   LS.set('next', (run.idx + 1) % LIB.sessions.length);
@@ -657,6 +732,7 @@ function exportText() {
     const d = new Date(x.date);
     lines.push(`${day(d)} ${d.toTimeString().slice(0, 5)} | ${x.name} | ${x.rounds} rounds${x.completed ? '' : ' (stopped)'}${x.quick ? ' (quick test)' : ''}${x.cfg ? ' | ' + x.cfg : ''} | rating ${x.rating || '-'}/5 | def ${x.defPct}%`);
     if (x.note) lines.push('  Note: ' + x.note.replace(/\n+/g, ' / '));
+    for (const c of x.cam || []) lines.push('  Camera: ' + c);
   }
   return lines.join('\n');
 }
@@ -668,6 +744,7 @@ function renderHistory() {
     div.className = 'hist';
     div.innerHTML = `<div><b>${x.rating || '–'}/5</b> ${x.name}</div><div class="small">${new Date(x.date).toLocaleString('en-GB')} · ${x.rounds} rounds${x.cfg ? ' · ' + x.cfg : ''}</div>`;
     if (x.note) { const p = document.createElement('div'); p.textContent = x.note; div.appendChild(p); }
+    for (const c of x.cam || []) { const p = document.createElement('div'); p.className = 'small'; p.textContent = 'Camera: ' + c; div.appendChild(p); }
     $('histList').appendChild(div);
   }
   $('exportMsg').textContent = ''; $('exportBox').classList.add('hidden');
@@ -696,12 +773,14 @@ function neededClips() { // [id, text] the app can say; mirrors collect() in too
   LIB.combos.forEach(e => tok(e.calls)); LIB.traps.forEach(e => tok(e.calls));
   LIB.defence.forEach(d => { out.push(['in:' + d.attack, `Incoming ${d.attack}!`]); tok(d.answer); });
   for (const th of Object.values(LIB.themes)) [th.focus, th.teach, th.tip, ...th.cues].forEach(t => out.push(['x:' + t, t]));
-  for (const v of Object.values(LIB.phrases)) [v].flat().forEach(t => out.push(['x:' + t, t]));
+  const walk = v => typeof v === 'string' ? out.push(['x:' + v, v]) : Object.values(v).forEach(walk);
+  walk(LIB.phrases);
   return out;
 }
 function renderSettings() {
   $('defPct').value = settings.defPct; $('defVal').textContent = settings.defPct + '%';
-  $('sayAnswer').checked = settings.sayAnswer; $('headKicks').checked = settings.headKicks; $('quick').checked = settings.quick;
+  $('sayAnswer').checked = settings.sayAnswer; $('headKicks').checked = settings.headKicks; $('quick').checked = settings.quick; $('camera').checked = settings.camera;
+  $('camera').disabled = !Cam.supported();
   $('roundMin').value = settings.roundMin; $('restMin').value = settings.restMin; $('roundsN').value = settings.rounds;
   $('totalInfo').textContent = `Session length: about ${totalMin()} min (5 min warm-up and 3 min finisher included).`;
   $('rotSel').innerHTML = LIB.sessions.map((s, i) => `<option value="${i}">${i + 1}. ${fmtSession(s)}</option>`).join('');
@@ -714,6 +793,7 @@ $('defPct').oninput = e => { settings.defPct = +e.target.value; $('defVal').text
 $('sayAnswer').onchange = e => { settings.sayAnswer = e.target.checked; saveSettings(); };
 $('headKicks').onchange = e => { settings.headKicks = e.target.checked; saveSettings(); };
 $('quick').onchange = e => { settings.quick = e.target.checked; saveSettings(); };
+$('camera').onchange = e => { settings.camera = e.target.checked; saveSettings(); };
 for (const [id, key] of [['roundMin', 'roundMin'], ['restMin', 'restMin'], ['roundsN', 'rounds']]) {
   $(id).onchange = e => { settings[key] = +e.target.value; saveSettings(); renderSettings(); };
 }

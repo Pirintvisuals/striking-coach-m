@@ -51,6 +51,29 @@ Spinning techniques, knees and elbows are capped: one spinning technique per rou
 the McGregor/Ruffy spin rounds. In a simulated hard snipe session there were 842 jab/straight calls and
 2 spinning ones.
 
+## Camera coach (optional, experimental)
+
+Turn it on in **Settings → Camera coach**. It uses the front camera and MediaPipe Pose, which runs on the
+phone, so no video leaves it. Use it like this:
+
+1. Stand the phone **diagonal in front of you, 2–3 m away**, with your whole body in view from head to feet, in decent light.
+2. After the countdown there's a ~40 s **calibration**. It checks it can see you, then asks you to
+   hold your guard for 5 s (it learns *your* guard, so a low or extended lead hand counts as normal), throw 3
+   jabs (it works out your lead hand), and throw 3 of your best 2s (that becomes your baseline for hip turn).
+3. During the **themed rounds** it checks:
+   - **Rear hand home**: after every 2, rear hook or rear elbow, the rear hand should be back within about 0.65 s, and stay at the chin between combos.
+   - **Lead hand**: back after jabs and hooks. Between combos it only flags drops well below your own low guard.
+   - **Hip turn on the 2**: how far your hips rotate on each called 2, compared with your calibration 2s.
+   - **Chin up / standing tall**, **stance turning square**, and **feet going still** between combos.
+4. Live cues ("Rear hand home", "Turn the hip on the two", …) come **between combos only**, at most
+   once every 20 s, and the same cue at most once every 45 s. Flurries aren't judged.
+5. During the rest after each round you get a short spoken **camera report**, with the worst one or two
+   things and whether they got worse late in the round. The written version goes into the log and the export.
+
+It can't judge whether you hit the bag, or the finer technique on kicks. A punch it couldn't see
+clearly isn't counted either way. The pose library and model (`vendor/mediapipe`, ~15 MB used, Apache-2.0) download
+the first time the camera runs and are cached for offline use after that.
+
 ## Deploy for free (pick one)
 
 **GitHub Pages:** on GitHub, open the repo, go to **Settings → Pages**, set
@@ -119,7 +142,7 @@ or clearing Safari data wipes it, so export now and then.
 
 ## Files
 
-`index.html`, `style.css` and `app.js` are the app. `library.json` holds all combos,
+`index.html`, `style.css` and `app.js` are the app, and `camera.js` is the camera coach. `library.json` holds all combos,
 traps, incoming attacks, round themes, flurries and spoken phrases. `audio/` has the voice sprite and
 its index, plus the wake-lock fallback video. `sw.js` is the offline cache, and
 `tools/` has the clip and doc generators.

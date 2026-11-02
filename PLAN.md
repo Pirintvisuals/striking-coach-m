@@ -110,3 +110,17 @@ Feedback, and what changed:
    rises through the round, and later rounds call back to traps from earlier ones.
 
 The session structure section above describes v1 (4 × 4 min). It is superseded by this one.
+
+## v3 (2026-11-02): optional camera coach
+
+Milan asked for a camera that tells him what to improve, and asked to be asked rather than assumed. His
+answers were: bladed stance, guard with the lead hand low/extended, phone diagonal in front, watch both hands
+coming home, chin/standing tall, feet (flat or square), **and technique like the hip turn**, live cues plus
+a report, camera optional.
+
+- Off by default (Settings). MediaPipe Pose (lite) runs on the phone at ~15 fps, only in themed rounds.
+- It never uses a textbook guard: a ~40 s calibration learns his guard, his lead hand and his best-2 hip turn.
+- Because the app knows exactly when it called each strike, it can judge every called 2 (hip
+  rotation vs his own baseline) and every called punch (did that hand come home within ~0.65 s).
+- Cues come between combos only, rate-limited. A spoken report after each round and a written one in the log/export.
+- Not judged: hitting the bag, kick technique, anything it couldn't see clearly.
