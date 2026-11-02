@@ -53,7 +53,8 @@ the McGregor/Ruffy spin rounds. In a simulated hard snipe session there were 842
 
 ## During a session
 
-- **Skip ⏭** jumps to the next part: countdown → camera check → warm-up → rest → round → … → finisher.
+- **Skip** says what it skips: countdown, camera check, warm-up, **rest**, **lesson** (just the teach part, the round
+  carries on) or round. **Settings → Rest → None** removes the rests completely.
 - **Stop**: tap twice. It works at any moment, including the countdown, and the voice stops at once.
 - **7. Build your own** on the home screen: pick hard or technical and 1–5 round themes from any day,
   for example McGregor's straight and then Adesanya's feints. It doesn't move the rotation.
@@ -64,7 +65,7 @@ the McGregor/Ruffy spin rounds. In a simulated hard snipe session there were 842
 
 ## Camera coach (optional, experimental)
 
-Turn it on in **Settings → Camera coach**. It uses the front camera and MediaPipe Pose, which runs on the
+Turn it on in **Settings → Camera coach**. It uses the **back** camera and MediaPipe Pose, which runs on the
 phone, so no video leaves it. Use it like this:
 
 1. Stand the phone **diagonal in front of you, 2–3 m away**, with your whole body in view from head to feet, in decent light.
@@ -75,10 +76,13 @@ phone, so no video leaves it. Use it like this:
    - **Rear hand home**: after every 2, rear hook or rear elbow, the rear hand should be back within about 0.65 s, and stay at the chin between combos.
    - **Lead hand**: back after jabs and hooks. Between combos it only flags drops well below your own low guard.
    - **Hip turn on the 2**: how far your hips rotate on each called 2, compared with your calibration 2s.
+   - **Kicks**: on a lead-leg kick the rear hand stays at the chin; on a rear-leg kick the lead hand stays up.
    - **Chin up / standing tall**, **stance turning square**, and **feet going still** between combos.
-4. Live cues ("Rear hand home", "Turn the hip on the two", …) come **between combos only**, at most
+4. The run screen shows live numbers ("Rear home 12/14 · Hip 82% · Kick guard 5/7"). A third of the way into a round it says
+   whether it can see your work ("Camera check: hands are coming home", or "I can't see your punches well").
+5. Live cues ("Rear hand home", "Turn the hip on the two", …) come **between combos only**, at most
    once every 20 s, and the same cue at most once every 45 s. Flurries aren't judged.
-5. During the rest after each round you get a short spoken **camera report**, with the worst one or two
+6. During the rest after each round you get a short spoken **camera report**, with the worst one or two
    things and whether they got worse late in the round. The written version goes into the log and the export.
 
 It can't judge whether you hit the bag, or the finer technique on kicks. A punch it couldn't see

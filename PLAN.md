@@ -137,3 +137,17 @@ mix themes (some snipe, some kicks) without sitting through whole sessions or sl
   inside the silence before them, and there's a "Phone voice only" setting as a fallback.
 - Skip button; two-tap Stop that works at any moment; "Build your own" session (1–5 themes from any
   day, hard or technical, outside the rotation); warm-up length setting (default 3 min), faster warm-up.
+
+## v5 (2026-11-02): second phone test
+
+- Words still lost at the start of clips ("up jab" → "jab", "low kick" → "kick", "teep" and incoming calls
+  unheard). The sprite now holds **whole combos as one clip** ("Up jab, two."), has 0.6 s of silence between clips, and the app
+  starts each clip ~0.5 s early inside that silence. The alert chirp is part of each "Incoming …" clip.
+- Content: no teep-teep or double front kick inside one combo (the bag moves away). Parry logic: the rear hand parries a jab or teep, so the
+  lead hand fires first ("parry, 1, 2"); only a parried cross is answered with the 2. More up jab ↔ 2,
+  more body kicks, sprawls. The audit enforces the parry rule and the no-double-kick rule.
+- Less boring: the lesson is ~35–45 s and mixes in related calls from the 3rd rep, "Again!" repeats, one challenge per round,
+  a flurry and rapid-fire strings on technical days too, faster technical pace, a sprawl flurry in the burnout.
+- Skip says what it skips (rest, lesson, round…); "Skip lesson" keeps the round; rest can be set to none.
+- Camera: back camera; checks that the other hand stays up on kicks; live numbers on screen; a spoken check-in a third of the way
+  into each round, so it's clear whether it can see him.

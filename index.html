@@ -45,7 +45,7 @@
   <p id="focus" class="focus"></p>
   <div id="call" class="call"></div>
   <p id="answer" class="answer"></p>
-  <div id="camBox" class="cambox hidden"><video id="camVideo" playsinline muted></video><span id="camInfo" class="small"></span></div>
+  <div id="camBox" class="cambox hidden"><video id="camVideo" playsinline muted></video><div><div id="camInfo" class="small"></div><div id="camStats" class="camstats"></div></div></div>
   <div class="row">
     <button id="pauseBtn">Pause</button>
     <button id="skipBtn">Skip ⏭</button>
@@ -88,7 +88,7 @@
       <select id="roundMin"><option value="3">3 min</option><option value="4">4 min</option><option value="5">5 min</option><option value="6">6 min</option><option value="8">8 min</option><option value="10">10 min</option><option value="12">12 min</option></select>
     </label>
     <label>Rest
-      <select id="restMin"><option value="0.5">30 s</option><option value="1">1 min</option><option value="1.5">1:30</option><option value="2">2 min</option><option value="3">3 min</option></select>
+      <select id="restMin"><option value="0">None</option><option value="0.5">30 s</option><option value="1">1 min</option><option value="1.5">1:30</option><option value="2">2 min</option><option value="3">3 min</option></select>
     </label>
     <label>Rounds
       <select id="roundsN"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
@@ -103,7 +103,7 @@
   </label>
   <p class="small">If calls get cut off or numbers go missing, pick "Phone voice only". Every combo is then said as one sentence by the iPhone voice.</p>
   <label class="check"><input id="camera" type="checkbox"> Camera coach (experimental)</label>
-  <p class="small">Uses the front camera to watch your guard, chin, feet and hip turn on the 2, and calls out fixes between combos, with a report after each round. Video stays on the phone. Stand the phone diagonal in front of you, 2–3 m away, head to feet in view. Adds a 40-second calibration before the warm-up. Uses more battery. Needs to be online the first time (downloads about 15 MB).</p>
+  <p class="small">Uses the back camera to watch your guard, chin, feet, hip turn on the 2 and the other hand on kicks, and calls out fixes between combos, with a report after each round. Video stays on the phone. Stand the phone diagonal in front of you, 2–3 m away, head to feet in view. Adds a 40-second calibration before the warm-up. Uses more battery. Needs to be online the first time (downloads about 15 MB).</p>
   <label class="check"><input id="quick" type="checkbox"> Quick test mode (90-second rounds, 15-second rest)</label>
   <label>Rotation position
     <select id="rotSel"></select>

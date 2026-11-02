@@ -17,7 +17,8 @@ OUT = os.path.join(ROOT, "audio")
 VOICE = "en-GB-RyanNeural"      # the coach: every offence call, cue and spoken line
 VOICE_IN = "en-US-AriaNeural"   # incoming attacks only: a clearly different voice
 RATE = 24000
-GAP = 0.35  # seconds of silence between clips (guards against seek bleed)
+GAP = 0.6  # seconds of silence between clips: the app starts each clip ~0.45 s early, inside this silence,
+           # because iPhone swallows the first moments after a seek ("up jab" came out as "jab")
 
 NUM = {"1": "one", "2": "two", "3": "three", "4": "four"}
 # Keys whose string values are spoken lines (app.js says them by text: clip id "x:" + text).
@@ -28,6 +29,20 @@ def say_token(tok):
     """Text for a call token: numbers spoken as words. Must match sayToken() in app.js."""
     words = [NUM.get(w, w) for w in tok.split()]
     return " ".join(words).capitalize() + "."
+
+
+def say_step(tokens):
+    """One whole combo as one sentence: 'Up jab, two.' Must match sayStep() in app.js."""
+    words = [" ".join(NUM.get(w, w) for w in t.split()) for t in tokens]
+    s = ", ".join(words)
+    return s[0].upper() + s[1:] + "."
+
+
+def steps_of(calls):
+    for step in calls.split("|"):
+        toks = [t.strip() for t in step.split(",") if t.strip()]
+        if toks:
+            yield toks
 
 
 def tokens_of(calls):
@@ -52,11 +67,16 @@ def lines(o, key=None, all_strings=False):
 def collect(lib):
     """id -> (text, rate, voice). Ids must match app.js: t:<token>, in:<attack>, x:<spoken text>."""
     clips = {}
+    # Whole combos (one clip per step, said fluently) plus single tokens (used for "rapid fire" and as backup).
     for e in lib["combos"] + lib["traps"]:
+        for st in steps_of(e["calls"]):
+            clips["s:" + ", ".join(st)] = (say_step(st), "+12%", VOICE)
         for t in tokens_of(e["calls"]):
             clips["t:" + t] = (say_token(t), "+15%", VOICE)
     for d in lib["defence"]:
         clips["in:" + d["attack"]] = (f"Incoming {d['attack']}!", "+10%", VOICE_IN)
+        for st in steps_of(d["answer"]):
+            clips["s:" + ", ".join(st)] = (say_step(st), "+12%", VOICE)
         for t in tokens_of(d["answer"]):
             clips["t:" + t] = (say_token(t), "+15%", VOICE)
     for group in ("combos", "traps", "themes", "sessions", "warmup", "flurries"):
@@ -64,6 +84,8 @@ def collect(lib):
             clips["x:" + text] = (text, "+0%", VOICE)
     for text in lines(lib["phrases"], all_strings=True):
         clips["x:" + text] = (text, "+5%", VOICE)
+    for ch in lib["phrases"].get("challenges", []):
+        clips["x:" + ch["say"]] = (ch["say"], "+5%", VOICE)
     return clips
 
 
@@ -141,10 +163,17 @@ async def main():
             to_pcm(mp3, wav)
         with wave.open(wav) as w:
             frames = w.readframes(w.getnframes())
+        if cid.startswith("in:"):  # alert chirp + short pause + "Incoming ...!" as ONE clip (one seek on iPhone)
+            synth_fx(wav, *FX["fx:alert"])
+            with wave.open(wav) as w:
+                alert = w.readframes(w.getnframes())
+            frames = alert + b"\x00\x00" * int(0.15 * RATE) + frames
         dur = len(frames) / 2 / RATE
         index[cid] = {"s": round(pos, 3), "d": round(dur, 3)}
         if not fx:
             index[cid]["text"] = clips[cid][0]
+        if cid.startswith("in:"):
+            index[cid]["alert"] = True
         pcm += frames + gap
         pos += dur + GAP
 
@@ -153,7 +182,7 @@ async def main():
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(RATE); w.writeframes(bytes(pcm))
     # AAC in .m4a: Safari seeks it accurately (mp4 has a sample index)
     ff("-i", big, "-c:a", "aac", "-b:a", "48k", "-movflags", "+faststart", os.path.join(OUT, "sprite.m4a"))
-    json.dump({"voice": VOICE, "voiceIncoming": VOICE_IN, "clips": index}, open(os.path.join(OUT, "sprite.json"), "w"), indent=0)
+    json.dump({"voice": VOICE, "voiceIncoming": VOICE_IN, "gap": GAP, "clips": index}, open(os.path.join(OUT, "sprite.json"), "w"), indent=0)
     print(f"sprite: {pos:.0f}s, {len(index)} clips -> audio/sprite.m4a")
 
 

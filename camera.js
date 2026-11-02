@@ -10,6 +10,10 @@ const POSE = { nose: 0, ls: 11, rs: 12, lw: 15, rw: 16, lh: 23, rh: 24, la: 27, 
 const LEAD_TOKENS = new Set(['1', 'body jab', 'up jab', '3', 'body 3', 'check hook', 'lead elbow']);
 const REAR_TOKENS = new Set(['2', 'body 2', '4', 'rear elbow']);
 const HIP_TOKENS = new Set(['2', 'body 2']);
+// Kicks: the hand on the other side has to stay up. Lead-leg kick -> rear hand at the chin;
+// rear-leg kick -> lead hand stays up (the rear arm may swing).
+const LEAD_KICKS = new Set(['lead body kick', 'lead head kick', 'front kick', 'oblique kick', 'question mark kick', 'teep']);
+const REAR_KICKS = new Set(['low kick', 'calf kick', 'rear body kick', 'rear head kick', 'knee']);
 
 const mid = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, z: ((a.z || 0) + (b.z || 0)) / 2 });
 const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -73,7 +77,8 @@ class Coach {
     const hand = LEAD_TOKENS.has(token) ? this.base.lead : REAR_TOKENS.has(token) ? this.base.rear : null;
     // A new strike with the same hand closes the previous check for that hand at this moment.
     if (hand) for (const c of this.calls) if (c.hand === hand && !c.done && c.until == null) c.until = t;
-    this.calls.push({ token, t, hand, hip: HIP_TOKENS.has(token) && this.base.hipRot >= 8 });
+    const kick = LEAD_KICKS.has(token) ? 'lead' : REAR_KICKS.has(token) ? 'rear' : null;
+    this.calls.push({ token, t, hand, kick, hip: HIP_TOKENS.has(token) && this.base.hipRot >= 8 });
   }
 
   // ---- calibration ----
@@ -119,7 +124,7 @@ class Coach {
 
   // ---- rounds ----
   startRound(n, name) {
-    this.round = { n, name, t0: null, rear: { n: 0, home: 0, slow: [] }, lead: { n: 0, home: 0, slow: [] },
+    this.round = { n, name, t0: null, rear: { n: 0, home: 0, slow: [] }, lead: { n: 0, home: 0, slow: [] }, kick: { n: 0, ok: 0 },
       hip: [], events: { rearDrop: [], leadDrop: [], chin: [], square: [], still: [] } };
     this.calls = []; this.cues = []; this.gap = {}; this.paused = false;
   }
@@ -150,6 +155,18 @@ class Coach {
         s.n++;
         if (ms <= 650) s.home++;
         else { s.slow.push(c.t); this.flag(c.hand === this.base.rear ? 'rearDrop' : 'leadDrop', c.t, true); }
+      }
+      if (c.kick) {
+        const b = this.base;
+        const okFrame = f => c.kick === 'lead'
+          ? dist(f[b.rear], b[b.rear]) < b.R * 2.2
+          : f[b.lead].y - b[b.lead].y < 0.45;
+        const seen = win.filter(x => x.f.wristsSeen);
+        if (seen.length >= 4) {
+          r.kick.n++;
+          if (seen.filter(x => okFrame(x.f)).length / seen.length >= 0.6) r.kick.ok++;
+          else this.flag('kickGuard', c.t, false);
+        }
       }
       if (c.hip) {
         const y0 = median(win.slice(0, 3).map(x => x.f.hipYaw));
@@ -191,6 +208,19 @@ class Coach {
     if (t - this.lastCue < this.cueGap || t - (this.lastCueByType[type] ?? -1e9) < 45000) return;
     this.cues.push(type);
   }
+  // One line for the run screen, so it's visible that the camera is working.
+  liveStats() {
+    const r = this.round; if (!r) return '';
+    const parts = [];
+    if (r.rear.n) parts.push(`Rear home ${r.rear.home}/${r.rear.n}`);
+    if (r.lead.n) parts.push(`Lead home ${r.lead.home}/${r.lead.n}`);
+    if (r.hip.length) parts.push(`Hip ${Math.round(100 * median(r.hip.map(h => h.ratio)))}%`);
+    if (r.kick.n) parts.push(`Kick guard ${r.kick.ok}/${r.kick.n}`);
+    return parts.length ? parts.join(' · ') : 'Watching… nothing judged yet';
+  }
+  judged() { const r = this.round; return r ? r.rear.n + r.lead.n + r.kick.n + r.hip.length : 0; }
+  goodSoFar() { const r = this.round; const n = r.rear.n + r.lead.n + r.kick.n; return n && (r.rear.home + r.lead.home + r.kick.ok) / n >= 0.8; }
+
   // The engine asks between combos; returns a cue type or null.
   takeCue(t) {
     if (!this.cues.length || t - this.lastCue < this.cueGap) return null;
@@ -226,12 +256,17 @@ function report(r, base) {
     if (p < 75 || fade) parts.push({ w: 100 - p + (fade ? 15 : 0), say: `Hip turn on the 2 was ${p} percent of your best.${fade}` });
   }
   const ev = (k, n, say) => { const c = r.events[k].length; if (c >= n) { notes.push(say.replace('#', c)); parts.push({ w: c * 5, say: say.replace('#', c) + '.' }); } };
+  if (r.kick.n >= 3) {
+    const p = Math.round(100 * r.kick.ok / r.kick.n);
+    notes.push(`other hand stayed up on ${r.kick.ok} of ${r.kick.n} kicks (${p}%)`);
+    if (p < 85) parts.push({ w: 100 - p, say: `On ${r.kick.n - r.kick.ok} of ${r.kick.n} kicks the other hand dropped. Keep it up when you kick.` });
+  }
   ev('chin', 2, 'Chin came up or you stood tall # times');
   ev('square', 2, 'Stance turned square # times');
   ev('still', 3, 'Feet went still between combos # times');
   parts.sort((a, b) => b.w - a.w);
   let say = parts.slice(0, 2).map(p => p.say).join(' ');
-  if (!say) say = r.rear.n + r.lead.n >= 5 ? 'Clean round. Hands came home and the stance held.' : "I couldn't see enough to judge this round.";
+  if (!say) say = r.rear.n + r.lead.n + r.kick.n >= 5 ? 'Clean round. Hands came home and the stance held.' : "I couldn't see enough to judge this round.";
   const good = r.rear.n >= 5 && r.rear.home / r.rear.n >= 0.85 ? ' Rear hand discipline was good.' : '';
   if (parts.length && good && !parts.slice(0, 2).some(p => p.say.startsWith('Rear'))) say += good;
   return { say, text: `Round ${r.n} (${r.name}): ` + (notes.length ? notes.join('; ') : 'not enough tracking to judge') + '.' };
@@ -248,7 +283,7 @@ const Cam = {
     this.video = video;
     this.error = '';
     try {
-      this.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }, audio: false });
+      this.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 640 }, height: { ideal: 480 } }, audio: false });
       video.srcObject = this.stream;
       video.muted = true; video.setAttribute('playsinline', '');
       await video.play();

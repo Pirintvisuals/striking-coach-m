@@ -140,8 +140,10 @@ async function clip(id, text, who = 'coach') {
   const el = audio.el, end = c.s + c.d, started = clock.now();
   // Start a little early, inside the silence before the clip: iPhone can swallow the first few hundred ms
   // after a seek (worse after the phone's own voice was used), and short words like "One." vanished.
-  const cold = performance.now() - (audio.lastSprite || 0) > 1500 || (audio.lastSpeech || 0) > (audio.lastSprite || 0);
-  el.currentTime = Math.max(0, c.s - (cold ? 0.3 : 0.12));
+  // Start inside the silence before the clip: iPhone swallows the first moments after a seek, which turned
+  // "up jab" into "jab" and made short words like "teep" vanish. Newer sprites have 0.6 s of silence between clips.
+  const pre = Math.max(0.1, Math.min(0.45, (SPRITE.gap || 0.35) - 0.08));
+  el.currentTime = Math.max(0, c.s - pre);
   // A play() that never settles (or a sprite the browser can't decode) must not freeze the session.
   const played = await Promise.race([el.play().then(() => true, () => false), tick(1500).then(() => false)]);
   if (!played || el.error) {
@@ -163,7 +165,18 @@ async function clip(id, text, who = 'coach') {
 
 const NUM = { 1: 'one', 2: 'two', 3: 'three', 4: 'four' };
 const sayToken = t => { const s = t.split(' ').map(w => NUM[w] || w).join(' '); return s[0].toUpperCase() + s.slice(1) + '.'; };
+// A whole combo as one sentence; must match say_step() in tools/build_audio.py.
+const sayStep = ts => { const s = ts.map(t => t.split(' ').map(w => NUM[w] || w).join(' ')).join(', '); return s[0].toUpperCase() + s.slice(1) + '.'; };
 async function sayTokens(tokens) {
+  // Best: the whole combo as ONE recorded clip ("Up jab, two."), one seek, said fluently.
+  const key = 's:' + tokens.join(', '), text = sayStep(tokens);
+  if (hasClip(key, text) && settings.voice !== 'phone' && (audio.ok || SIM)) {
+    if (camOn()) { // spread the calls over the clip so the camera knows roughly when each strike starts
+      const d = SPRITE.clips[key].d * 1000 / tokens.length, t0 = performance.now();
+      tokens.forEach((t, i) => Cam.coach.onCall(t, t0 + i * d));
+    }
+    return clip(key, text);
+  }
   // If any call in this combo isn't in the recorded clips (or the phone voice is chosen), say the whole combo
   // in one sentence with the phone voice. Switching between the clips and the phone voice mid-combo is what
   // made numbers disappear on iPhone.
@@ -222,7 +235,7 @@ function pickWeighted(list, wfn) {
 const PACE = {
   warm:      { exec: 0.5,  rec: [1.8, 1.1],  react: 1.2, preDef: 1.5 },
   hard:      { exec: 0.3,  rec: [1.3, 0.45], react: 0.7, preDef: 1.2 },
-  technical: { exec: 0.55, rec: [2.8, 1.9],  react: 1.2, preDef: 1.8 },
+  technical: { exec: 0.5,  rec: [2.2, 1.5],  react: 1.1, preDef: 1.6 },
   slow:      { exec: 0.9,  rec: [3.6, 3.0],  react: 1.5, preDef: 2.0 },
 };
 const strikes = ts => ts.reduce((n, t) => n + (MOVE.test(t) ? 0.6 : 1), 0);
@@ -265,7 +278,8 @@ async function doItem(e, p) {
   if (e.kind === 'def') {
     await gapWait(p.preDef * 1000); // never straight after a combo: a clear silence first
     showCall('INCOMING · ' + e.attack, true);
-    await clip('fx:alert');
+    const ic = SPRITE && SPRITE.clips['in:' + e.attack];
+    if (!(ic && ic.alert && audio.ok && settings.voice !== 'phone')) await clip('fx:alert');
     await sayIncoming(e.attack);
     await gapWait(p.react * 1000);
     if (settings.sayAnswer) { if (!SIM) $('answer').textContent = '→ ' + e.answer; await sayTokens(e.answerSteps); }
@@ -347,7 +361,7 @@ function pickThemed(th, st, phase, mode) {
     if (r < 0.22) return or(su, fam);
     if (r < 0.55) return or(fam);
     if (r < 0.62) return or(() => pickTrap(th, st));
-    if (hard && r < 0.7) return makeString(th, st);
+    if (r < (hard ? 0.7 : 0.65)) return makeString(th, st);
     return core();
   }
   if (phase === 'hide') {
@@ -355,7 +369,7 @@ function pickThemed(th, st, phase, mode) {
     if (r < 0.25) return or(fam);
     if (r < 0.35) return or(() => makeCallback(st), () => pickTrap(th, st));
     if (r < 0.42) return or(() => pickTrap(th, st));
-    if (hard && r < 0.54) return makeString(th, st);
+    if (r < (hard ? 0.54 : 0.48)) return makeString(th, st);
     return core();
   }
   // push: last stretch of a technical round
@@ -372,6 +386,11 @@ async function camCue() { // between combos only
   if (type) { showCall('CAMERA · ' + LIB.phrases.camCue[type]); await say(LIB.phrases.camCue[type]); }
 }
 function camPause(p) { if (camOn()) Cam.coach.pause(p); }
+async function camCheckin() { // a third into the round: say whether it can actually see the work
+  const n = Cam.coach.judged();
+  if (n < 3) await say(LIB.phrases.camBlind);
+  else if (Cam.coach.goodSoFar()) await say(LIB.phrases.camGood);
+}
 async function camCalibrate() {
   const P = LIB.phrases;
   setPhase('Camera check', 45000, 'Phone diagonal in front of you, 2–3 m away, head to feet in view');
@@ -436,10 +455,14 @@ async function themedRound(spec) {
   await say(th.teach);
   if (camOn()) Cam.coach.startRound(n, th.name);
   run.inRound = true;
+  run.camCheckin = false;
 
-  // 1. Teach: drill the setup alone (technical pace even on hard days, so the shape is right first).
+  // 1. Teach: drill the setup (technical pace even on hard days, so the shape is right first).
+  // About 45 s, mixed with related calls from the 3rd rep, and the Skip button skips just this lesson.
   const setup = LIB.byId[th.setup];
-  const teachEnd = st.start + dur * 0.15;
+  const teachEnd = st.start + Math.min(dur * 0.12, Math.max(30000, dur * 0.075));
+  run.partName = 'lesson';
+  try {
   const teachPace = hard ? { ...PACE.technical, rec: [2.2, 1.6] } : PACE.technical;
   for (let rep = 0; clock.now() < teachEnd; rep++) {
     if (rep === 2 && setup.cue) await say(setup.cue);
@@ -448,16 +471,23 @@ async function themedRound(spec) {
     // Spinning setups are drilled every other rep, with straights in between.
     const e = !allowed(setup) ? pickFamily(th, st) || pickCore(th.weights, st)
       : setup.spins && rep % 2 ? pickCore({ snipe: 3, jab: 2 }, st, { short: true })
-      : rep >= 6 && rep % 3 === 2 ? pickFamily(th, st) || setup : setup;
+      : rep >= 2 && rep % 2 === 0 ? pickFamily(th, st) || setup : setup;
     if (estimateItem(e, teachPace) > end - clock.now() - 5000) break;
     remember(st, e);
     await doItem(e, teachPace);
   }
+  } catch (err) {
+    if (!(err instanceof Skip)) throw err;
+    run.skip = false; audio.el.pause(); try { speechSynthesis.cancel(); } catch {}
+    await say(LIB.phrases.lessonSkipped);
+  }
+  run.partName = 'round';
   st.spins = 0; // drilling the setup doesn't count against the round's spin limit
 
   // 2-4. Mix it in, hide it, push. Flurries on hard days; coaching cues throughout.
   const finalMs = hard ? Math.min(20000, dur * 0.12) : 0;
-  const flurryAt = hard ? [0.36, 0.66].map(f => st.start + dur * f) : [];
+  const flurryAt = (hard ? [0.36, 0.66] : [0.62]).map(f => st.start + dur * f);
+  let challengeAt = st.start + dur * (0.42 + rand() * 0.1);
   const kinds = [th.flurry, ...LIB.burnout[planOf(run.sess)]];
   let phase = 'mix', nextCue = clock.now() + (hard ? 50000 : 40000), cueI = 0;
   await say(LIB.phrases.mix);
@@ -469,10 +499,26 @@ async function themedRound(spec) {
     if (phase === 'hide' && !hard && prog >= 0.88) { phase = 'push'; await say(LIB.phrases.lastMin); }
     if (flurryAt.length && now >= flurryAt[0]) {
       flurryAt.shift();
-      const ms = Math.min(15000 + Math.floor(rand() * 2) * 5000, stopAt - now - 6000);
+      const ms = Math.min(hard ? 15000 + Math.floor(rand() * 2) * 5000 : 15000, stopAt - now - 6000);
       if (ms >= 8000) { await flurry(ms, kinds[run.flurries % kinds.length]); await say(LIB.phrases.time); await gapWait(3000); }
       continue;
     }
+    if (now >= challengeAt) { // a short challenge: something different to chase
+      challengeAt = Infinity;
+      const ch = pick(LIB.phrases.challenges);
+      if (stopAt - now > ch.dur * 1000 + 8000) {
+        camPause(true);
+        showCall('CHALLENGE');
+        const until = clock.now() + ch.dur * 1000;
+        await say(ch.say);
+        await gapWait(Math.max(0, until - clock.now()));
+        await clip('fx:beep');
+        await say(LIB.phrases.challengeEnd);
+        camPause(false);
+      }
+      continue;
+    }
+    if (camOn() && !run.camCheckin && st.prog() > 0.3) { run.camCheckin = true; await camCheckin(); }
     if (now >= nextCue) {
       const pool = cueI % 3 === 1 ? (hard ? LIB.phrases.cuesHard : LIB.phrases.cuesTech) : th.cues;
       await say(pool[Math.floor(cueI / 3) % pool.length] || pick(pool));
@@ -485,6 +531,11 @@ async function themedRound(spec) {
     remember(st, e);
     run.counts[e.kind] = (run.counts[e.kind] || 0) + 1;
     await doItem(e, p);
+    // "Again!": throw the same combo straight away, sometimes faster.
+    if (e.kind === 'combo' && phase !== 'push' && rand() < (hard ? 0.16 : 0.1) && estimateItem(e, p) < stopAt - clock.now()) {
+      await say(pick(LIB.phrases.again));
+      await doItem(e, p);
+    }
     await camCue();
   }
   if (finalMs) {
@@ -603,7 +654,8 @@ const totalMin = (s = LIB.sessions[chosen]) => {
 };
 
 // Runs one part of the session; the Skip button ends just that part.
-async function part(fn) {
+async function part(name, fn) {
+  run.partName = name;
   try { await fn(); }
   catch (e) {
     if (!(e instanceof Skip)) throw e;
@@ -623,20 +675,21 @@ async function runSession(sess) {
   const rounds = themes.map((theme, i) => ({ theme, n: i + 1, dur: T.round, mode: sess.mode }));
   run.nRounds = rounds.length;
   run.totalRounds = rounds.length + 1 + (T.warm ? 1 : 0);
-  await part(async () => {
+  await part('countdown', async () => {
     setPhase('Get ready', 10000, sess.name + ' · ' + sess.mode);
     run.st = newRoundState(10000, 0); run.st.warned = true;
     await say(sess.intro);
     await countIn(run.phase.end);
   });
-  if (run.cam) await part(camCalibrate);
-  if (T.warm) await part(() => warmupRound(T.warm));
+  if (run.cam) await part('camera check', camCalibrate);
+  if (T.warm) await part('warm-up', () => warmupRound(T.warm));
   for (const r of rounds) {
-    if (T.warm || r.n > 1) await part(() => runRest(T.rest, r.theme.tip));
-    await part(() => themedRound(r));
+    if ((T.warm || r.n > 1) && T.rest) await part('rest', () => runRest(T.rest, r.theme.tip));
+    await part('round', () => themedRound(r));
   }
-  await part(() => runRest(T.rest, sess.mode === 'hard' ? LIB.phrases.nextBurn : LIB.phrases.nextTech));
-  await part(() => sess.mode === 'hard' ? burnout(T.fin) : techFinisher(T.fin, themes));
+  if (T.rest) await part('rest', () => runRest(T.rest, sess.mode === 'hard' ? LIB.phrases.nextBurn : LIB.phrases.nextTech));
+  await part('finisher', () => sess.mode === 'hard' ? burnout(T.fin) : techFinisher(T.fin, themes));
+  run.partName = null;
   if (run.camReport) { run.camReports.push(run.camReport.text); run.camReport = null; }
   setPhase('Done', 0, '');
   await say(LIB.phrases.done);
@@ -749,7 +802,12 @@ $('startBtn').onclick = () => {
   $('pauseBtn').textContent = 'Pause';
   $('stopBtn').textContent = 'Stop';
   show('run');
-  run.timer = setInterval(renderClock, 200);
+  run.timer = setInterval(() => {
+    renderClock();
+    const label = run.partName ? 'Skip ' + run.partName + ' ⏭' : 'Skip ⏭';
+    if ($('skipBtn').textContent !== label) $('skipBtn').textContent = label;
+    if (camOn() && run.inRound && Cam.coach.round) $('camStats').textContent = Cam.coach.liveStats();
+  }, 200);
   unlocked.then(() => runSession(sess)).then(() => finish(true), e => { if (!(e instanceof Abort)) console.error(e); finish(false); });
 };
 $('pauseBtn').onclick = () => {

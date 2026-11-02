@@ -23,7 +23,7 @@ MOVES = {"pull", "slip", "roll", "parry", "check", "catch", "block", "step back"
 VOCAB = STRIKES | EXITS | MOVES
 REAR_HAND = {"2", "body 2"}
 REAR_KICK = {"rear head kick", "rear body kick", "low kick", "calf kick", "knee"}
-DOUBLE_OK = {"1", "teep", "front kick", "pull", "up jab", "parry"}
+DOUBLE_OK = {"1", "pull", "up jab", "parry"}  # no teep-teep / front kick-front kick: the bag moves away
 SPIN = re.compile(r"back kick|wheel kick|spinning|flying knee")
 
 problems, notes = [], []
@@ -51,7 +51,18 @@ for e in ALL:
             problems.append(f"{e['id']}: ends on '{s[-1]}' (should end on a strike or an exit)")
     if e.get("ok"):
         notes.append(f"{e['id']} ({e['calls']}): kept on purpose: {e['ok']}")
+def parry_check(eid, toks, rear_attack):
+    # The rear hand parries a jab/teep, so the lead hand fires first; only a parried cross is answered with the 2.
+    for a, b in zip(toks, toks[1:]):
+        if a == "parry" and b in REAR_HAND and not rear_attack:
+            problems.append(f"{eid}: 'parry, {b}': the rear hand just parried, so the lead hand fires first")
+
+
+for e in lib["combos"] + lib["traps"]:
+    for s_ in steps(e["calls"]):
+        parry_check(e["id"], s_, False)
 for d in lib["defence"]:
+    parry_check(d["id"], steps(d["answer"])[0], d["attack"] in ("cross", "rear hook", "overhand"))
     for t in steps(d["answer"])[0]:
         if t not in VOCAB:
             problems.append(f"{d['id']}: unknown token '{t}' in answer")
