@@ -79,7 +79,7 @@ def collect(lib):
             clips["s:" + ", ".join(st)] = (say_step(st), "+12%", VOICE)
         for t in tokens_of(d["answer"]):
             clips["t:" + t] = (say_token(t), "+15%", VOICE)
-    for group in ("combos", "traps", "themes", "sessions", "warmup", "flurries"):
+    for group in ("combos", "traps", "spotlights", "sessions", "warmup", "flurries"):
         for text in lines(lib[group]):
             clips["x:" + text] = (text, "+0%", VOICE)
     for text in lines(lib["phrases"], all_strings=True):
