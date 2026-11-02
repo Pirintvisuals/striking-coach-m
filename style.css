@@ -34,3 +34,5 @@ input[type=checkbox] { width:22px; height:22px; }
 .row label { min-width:0; }
 .cambox { display:flex; align-items:center; gap:10px; justify-content:center; }
 .cambox video { width:96px; height:72px; object-fit:cover; border-radius:8px; transform:scaleX(-1); background:#000; }
+.custom { display:flex; flex-direction:column; gap:10px; background:var(--card); border-radius:12px; padding:12px; }
+.rounds { display:flex; flex-direction:column; gap:8px; }

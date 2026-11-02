@@ -25,6 +25,13 @@
   <button id="startBtn" class="big">Start</button>
   <p class="label">Or pick another</p>
   <div id="pickList" class="chips"></div>
+  <div id="customBox" class="custom hidden">
+    <label>Intensity
+      <select id="cMode"><option value="hard">Hard (flurries, burnout)</option><option value="technical">Technical</option></select>
+    </label>
+    <div id="cRounds" class="rounds"></div>
+    <div class="row"><button id="cAdd">+ Round</button><button id="cDel">− Round</button></div>
+  </div>
   <nav class="row">
     <button id="histBtn">Log</button>
     <button id="setBtn">Settings</button>
@@ -41,6 +48,7 @@
   <div id="camBox" class="cambox hidden"><video id="camVideo" playsinline muted></video><span id="camInfo" class="small"></span></div>
   <div class="row">
     <button id="pauseBtn">Pause</button>
+    <button id="skipBtn">Skip ⏭</button>
     <button id="stopBtn" class="danger">Stop</button>
   </div>
   <p id="wakeInfo" class="small"></p>
@@ -86,7 +94,14 @@
       <select id="roundsN"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
     </label>
   </div>
+  <label>Warm-up
+    <select id="warmMin"><option value="0">None</option><option value="2">2 min</option><option value="3">3 min</option><option value="5">5 min</option></select>
+  </label>
   <p id="totalInfo" class="small"></p>
+  <label>Voice
+    <select id="voiceSel"><option value="clips">Recorded clips (best when they're complete)</option><option value="phone">Phone voice only</option></select>
+  </label>
+  <p class="small">If calls get cut off or numbers go missing, pick "Phone voice only". Every combo is then said as one sentence by the iPhone voice.</p>
   <label class="check"><input id="camera" type="checkbox"> Camera coach (experimental)</label>
   <p class="small">Uses the front camera to watch your guard, chin, feet and hip turn on the 2, and calls out fixes between combos, with a report after each round. Video stays on the phone. Stand the phone diagonal in front of you, 2–3 m away, head to feet in view. Adds a 40-second calibration before the warm-up. Uses more battery. Needs to be online the first time (downloads about 15 MB).</p>
   <label class="check"><input id="quick" type="checkbox"> Quick test mode (90-second rounds, 15-second rest)</label>

@@ -1,0 +1,39 @@
+# Builds the voice-clip sprite on GitHub's servers (edge-tts needs internet), commits it, and republishes the site.
+# Runs when library.json or the audio script changes, or by hand: Actions tab -> "Build voice clips" -> Run workflow.
+name: Build voice clips
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['library.json', 'tools/build_audio.py']
+permissions:
+  contents: write
+  pages: write
+concurrency: build-audio
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install ffmpeg and edge-tts
+        run: |
+          sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+          pip install edge-tts
+      - name: Build sprite
+        run: python tools/build_audio.py
+      - name: Commit clips and bump the app cache version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- audio; then echo "Clips unchanged"; exit 0; fi
+          sed -i -E "s/const VERSION = '([^']*)';/const VERSION = 'audio-${GITHUB_RUN_NUMBER}';/" sw.js
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add audio sw.js
+          git commit -m "Rebuild voice clips with edge-tts (run ${GITHUB_RUN_NUMBER})"
+          git push
+          # A push made with the workflow token doesn't start a Pages build by itself, so ask for one.
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" || echo "Pages build request failed; the next push will publish it"

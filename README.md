@@ -51,6 +51,17 @@ Spinning techniques, knees and elbows are capped: one spinning technique per rou
 the McGregor/Ruffy spin rounds. In a simulated hard snipe session there were 842 jab/straight calls and
 2 spinning ones.
 
+## During a session
+
+- **Skip ⏭** jumps to the next part: countdown → camera check → warm-up → rest → round → … → finisher.
+- **Stop**: tap twice. It works at any moment, including the countdown, and the voice stops at once.
+- **7. Build your own** on the home screen: pick hard or technical and 1–5 round themes from any day,
+  for example McGregor's straight and then Adesanya's feints. It doesn't move the rotation.
+- **Settings → Warm-up**: none, 2, 3 (default) or 5 min. Settings also has round length, rest and number of rounds.
+- **Settings → Voice**: "Recorded clips" or "Phone voice only". In both modes, a combo that isn't fully
+  in the recorded clips is said as one sentence by the phone voice. The app never switches voices mid-combo,
+  because that's what made numbers disappear on iPhone in v2.
+
 ## Camera coach (optional, experimental)
 
 Turn it on in **Settings → Camera coach**. It uses the front camera and MediaPipe Pose, which runs on the
@@ -111,10 +122,10 @@ The app uses a clip only if the sprite has that exact text. Any line that's miss
 falls back to the phone's built-in voice (`speechSynthesis`), and incoming attacks fall back to a
 US/female voice at a higher pitch. **Settings** shows how many lines are not in the clips yet.
 
-> **v2 note:** the sprite in the repo is still the v1 one. The v2 rebuild ran in a cloud
-> container that couldn't reach the edge-tts service, so the number calls and the old strike
-> names play from the sprite, and the new lines (theme coaching, incoming voice, new strikes)
-> use the phone's voice until you regenerate:
+The clips are rebuilt **automatically on GitHub** (`.github/workflows/build-audio.yml`) whenever
+`library.json` or `tools/build_audio.py` changes. The workflow commits the new sprite, bumps the cache version in `sw.js`
+and republishes the site. You can also start it by hand: **Actions → Build voice clips → Run workflow**.
+To build locally instead:
 
 ```bash
 pip install edge-tts

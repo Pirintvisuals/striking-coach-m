@@ -8,7 +8,8 @@ const LS = {
   get(k, d) { try { const v = localStorage.getItem('sc.' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem('sc.' + k, JSON.stringify(v)); } catch {} },
 };
-const DEFAULTS = { defPct: 15, sayAnswer: true, headKicks: true, quick: false, roundMin: 10, restMin: 2, rounds: 3, camera: false };
+const DEFAULTS = { defPct: 15, sayAnswer: true, headKicks: true, quick: false, roundMin: 10, restMin: 2, rounds: 3, camera: false,
+  warmMin: 3, voice: 'clips', custom: { mode: 'hard', themes: ['mc_straight', 'ad_feints'] } };
 const settings = Object.assign({}, DEFAULTS, LS.get('settings', {}));
 if (Q.has('quick')) settings.quick = true;
 const saveSettings = () => { if (!SIM) LS.set('settings', settings); };
@@ -37,14 +38,20 @@ const clock = {
 };
 let run = null; // current session state
 class Abort extends Error {}
+class Skip extends Error {} // the Skip button: jump to the next part of the session
 const tick = ms => SIM ? Promise.resolve() : new Promise(r => setTimeout(r, ms));
+function checkRun() {
+  if (!run) return;
+  if (run.aborted) throw new Abort();
+  if (run.skip) throw new Skip();
+}
 async function waitUntil(t) {
-  if (SIM) { if (run.aborted) throw new Abort(); if (vnow < t) vnow = t; return; }
+  if (SIM) { checkRun(); if (vnow < t) vnow = t; return; }
   while (clock.now() < t) {
-    if (run.aborted) throw new Abort();
+    checkRun();
     await tick(Math.max(5, Math.min(50, t - clock.now())));
   }
-  if (run.aborted) throw new Abort();
+  checkRun();
 }
 const wait = ms => waitUntil(clock.now() + ms);
 
@@ -82,6 +89,7 @@ function unlockAudio() {
 
 function speak(text, who) {
   if (!text || !('speechSynthesis' in window)) return tick(estimate(text) * 1000);
+  audio.lastSpeech = performance.now();
   return new Promise(res => {
     const u = new SpeechSynthesisUtterance(text);
     const inc = who === 'incoming';
@@ -90,8 +98,12 @@ function speak(text, who) {
     u.lang = inc ? 'en-US' : 'en-GB';
     u.rate = inc ? 1.15 : 1.1;
     u.pitch = inc ? 1.35 : 0.9; // keep the two voices apart even if the phone only has one
-    const t = setTimeout(res, 1000 + text.length * 120);
-    u.onend = u.onerror = () => { clearTimeout(t); res(); };
+    let done = false;
+    const end = () => { if (done) return; done = true; clearTimeout(t); clearInterval(iv); audio.lastSpeech = performance.now(); res(); };
+    const t = setTimeout(end, 1000 + text.length * 120);
+    // Stop and Skip cut the phone voice off at once instead of waiting for the sentence to finish.
+    const iv = setInterval(() => { if (run && (run.aborted || run.skip)) { try { speechSynthesis.cancel(); } catch {} end(); } }, 100);
+    u.onend = u.onerror = end;
     speechSynthesis.speak(u);
   });
 }
@@ -113,18 +125,23 @@ function trace(who, text) {
 }
 
 // Plays one clip. A clip is used only if the sprite has it with exactly this text; otherwise speechSynthesis.
+const hasClip = (id, text) => { const c = SPRITE && SPRITE.clips[id]; return !!c && (!text || !c.text || c.text === text); };
 async function clip(id, text, who = 'coach') {
-  if (run && run.aborted) throw new Abort();
+  checkRun();
   const c = SPRITE && SPRITE.clips[id];
-  const fresh = c && (!text || !c.text || c.text === text);
+  const fresh = hasClip(id, text) && (settings.voice !== 'phone' || id.startsWith('fx:'));
   trace(id.startsWith('fx:') ? 'fx' : who, text || id);
   if (SIM) { vnow += (fresh ? c.d : id.startsWith('fx:') ? 0.4 : estimate(text)) * 1000; return; }
   if (!fresh || !audio.ok) {
     if (id.startsWith('fx:')) return FX_FALLBACK[id] ? beep(...FX_FALLBACK[id]) : undefined;
-    return speak(text, who);
+    await speak(text, who);
+    return checkRun();
   }
   const el = audio.el, end = c.s + c.d, started = clock.now();
-  el.currentTime = c.s;
+  // Start a little early, inside the silence before the clip: iPhone can swallow the first few hundred ms
+  // after a seek (worse after the phone's own voice was used), and short words like "One." vanished.
+  const cold = performance.now() - (audio.lastSprite || 0) > 1500 || (audio.lastSpeech || 0) > (audio.lastSprite || 0);
+  el.currentTime = Math.max(0, c.s - (cold ? 0.3 : 0.12));
   // A play() that never settles (or a sprite the browser can't decode) must not freeze the session.
   const played = await Promise.race([el.play().then(() => true, () => false), tick(1500).then(() => false)]);
   if (!played || el.error) {
@@ -134,18 +151,30 @@ async function clip(id, text, who = 'coach') {
   }
   for (;;) {
     await tick(15);
-    if (run && run.aborted) { el.pause(); throw new Abort(); }
+    if (run && (run.aborted || run.skip)) { el.pause(); checkRun(); }
     if (clock.pausedAt != null) { if (!el.paused) el.pause(); continue; }
     if (el.paused && !el.ended) { try { await el.play(); } catch {} }
     if (el.currentTime >= end || el.ended) break;
-    if (clock.now() - started > c.d * 1000 + 1500) break; // safety net
+    if (clock.now() - started > c.d * 1000 + 1800) break; // safety net
   }
   el.pause();
+  audio.lastSprite = performance.now();
 }
 
 const NUM = { 1: 'one', 2: 'two', 3: 'three', 4: 'four' };
 const sayToken = t => { const s = t.split(' ').map(w => NUM[w] || w).join(' '); return s[0].toUpperCase() + s.slice(1) + '.'; };
 async function sayTokens(tokens) {
+  // If any call in this combo isn't in the recorded clips (or the phone voice is chosen), say the whole combo
+  // in one sentence with the phone voice. Switching between the clips and the phone voice mid-combo is what
+  // made numbers disappear on iPhone.
+  const whole = !SIM && (settings.voice === 'phone' || !audio.ok || !tokens.every(t => hasClip('t:' + t, sayToken(t))));
+  if (whole) {
+    if (camOn()) for (const t of tokens) Cam.coach.onCall(t, performance.now());
+    const text = tokens.map(t => t.split(' ').map(w => NUM[w] || w).join(' ')).join(', ') + '.';
+    trace('coach', text);
+    await speak(text[0].toUpperCase() + text.slice(1), 'coach');
+    return checkRun();
+  }
   for (const t of tokens) {
     if (camOn()) Cam.coach.onCall(t, performance.now()); // the camera knows exactly what was called and when
     await clip('t:' + t, sayToken(t));
@@ -191,7 +220,7 @@ function pickWeighted(list, wfn) {
 // exec: seconds per strike to throw it; rec: recovery after a combo, [start of round, end of round] (intensity rises);
 // react: time to defend after "Incoming ..."; preDef: forced silence before an incoming call.
 const PACE = {
-  warm:      { exec: 0.6,  rec: [2.4, 1.5],  react: 1.3, preDef: 1.6 },
+  warm:      { exec: 0.5,  rec: [1.8, 1.1],  react: 1.2, preDef: 1.5 },
   hard:      { exec: 0.3,  rec: [1.3, 0.45], react: 0.7, preDef: 1.2 },
   technical: { exec: 0.55, rec: [2.8, 1.9],  react: 1.2, preDef: 1.8 },
   slow:      { exec: 0.9,  rec: [3.6, 3.0],  react: 1.5, preDef: 2.0 },
@@ -429,7 +458,7 @@ async function themedRound(spec) {
   // 2-4. Mix it in, hide it, push. Flurries on hard days; coaching cues throughout.
   const finalMs = hard ? Math.min(20000, dur * 0.12) : 0;
   const flurryAt = hard ? [0.36, 0.66].map(f => st.start + dur * f) : [];
-  const kinds = [th.flurry, ...LIB.burnout[run.sess.plan]];
+  const kinds = [th.flurry, ...LIB.burnout[planOf(run.sess)]];
   let phase = 'mix', nextCue = clock.now() + (hard ? 50000 : 40000), cueI = 0;
   await say(LIB.phrases.mix);
   for (;;) {
@@ -500,7 +529,7 @@ async function burnout(dur) {
   run.st = newRoundState(dur, 0);
   const end = run.phase.end;
   await clip('fx:bell');
-  const kinds = LIB.burnout[run.sess.plan];
+  const kinds = LIB.burnout[planOf(run.sess)];
   const n = Math.max(1, Math.floor(dur / 30000));
   for (let i = 0; i < n; i++) {
     const on = Math.min(20000, (end - clock.now()) * 2 / 3);
@@ -563,29 +592,51 @@ async function countIn(end) {
 
 function timings() {
   return settings.quick
-    ? { warm: 40e3, round: 90e3, rest: 15e3, fin: 45e3 }
-    : { warm: 5 * 60e3, round: settings.roundMin * 60e3, rest: settings.restMin * 60e3, fin: 3 * 60e3 };
+    ? { warm: settings.warmMin ? 40e3 : 0, round: 90e3, rest: 15e3, fin: 45e3 }
+    : { warm: settings.warmMin * 60e3, round: settings.roundMin * 60e3, rest: settings.restMin * 60e3, fin: 3 * 60e3 };
 }
-const totalMin = () => { const T = timings(); return Math.round((T.warm + settings.rounds * T.round + T.fin + (settings.rounds + 1) * T.rest) / 60e3); };
+const themesOf = s => s.themes ? s.themes.map(id => LIB.themes[id]) : Array.from({ length: settings.rounds }, (_, i) => LIB.themes[LIB.plans[s.plan][i % 3]]);
+const planOf = s => s.plan || Object.keys(LIB.plans).find(p => LIB.plans[p].includes(s.themes[0])) || 'snipe';
+const totalMin = (s = LIB.sessions[chosen]) => {
+  const T = timings(), n = themesOf(s).length;
+  return Math.round((T.warm + n * T.round + T.fin + (n + (T.warm ? 1 : 0)) * T.rest) / 60e3);
+};
+
+// Runs one part of the session; the Skip button ends just that part.
+async function part(fn) {
+  try { await fn(); }
+  catch (e) {
+    if (!(e instanceof Skip)) throw e;
+    run.skip = false;
+    audio.el.pause();
+    try { speechSynthesis.cancel(); } catch {}
+    run.inRound = false;
+    if (camOn() && Cam.coach.round) run.camReport = Cam.coach.endRound();
+    if (run.cam && Cam.coach && !Cam.coach.base) { Cam.stop(); run.cam = false; } // calibration skipped: no camera
+    showCall('');
+  }
+}
 
 async function runSession(sess) {
   const T = timings();
-  const themes = LIB.plans[sess.plan].map(id => LIB.themes[id]);
-  const rounds = Array.from({ length: settings.rounds }, (_, i) => ({ theme: themes[i % themes.length], n: i + 1, dur: T.round, mode: sess.mode }));
+  const themes = themesOf(sess);
+  const rounds = themes.map((theme, i) => ({ theme, n: i + 1, dur: T.round, mode: sess.mode }));
   run.nRounds = rounds.length;
-  run.totalRounds = rounds.length + 2;
-  setPhase('Get ready', 10000, sess.name + ' · ' + sess.mode);
-  run.st = newRoundState(10000, 0); run.st.warned = true;
-  await say(sess.intro);
-  await countIn(run.phase.end);
-  if (run.cam) await camCalibrate();
-  await warmupRound(T.warm);
+  run.totalRounds = rounds.length + 1 + (T.warm ? 1 : 0);
+  await part(async () => {
+    setPhase('Get ready', 10000, sess.name + ' · ' + sess.mode);
+    run.st = newRoundState(10000, 0); run.st.warned = true;
+    await say(sess.intro);
+    await countIn(run.phase.end);
+  });
+  if (run.cam) await part(camCalibrate);
+  if (T.warm) await part(() => warmupRound(T.warm));
   for (const r of rounds) {
-    await runRest(T.rest, r.theme.tip);
-    await themedRound(r);
+    if (T.warm || r.n > 1) await part(() => runRest(T.rest, r.theme.tip));
+    await part(() => themedRound(r));
   }
-  await runRest(T.rest, sess.mode === 'hard' ? LIB.phrases.nextBurn : LIB.phrases.nextTech);
-  if (sess.mode === 'hard') await burnout(T.fin); else await techFinisher(T.fin, themes.slice(0, rounds.length));
+  await part(() => runRest(T.rest, sess.mode === 'hard' ? LIB.phrases.nextBurn : LIB.phrases.nextTech));
+  await part(() => sess.mode === 'hard' ? burnout(T.fin) : techFinisher(T.fin, themes));
   if (run.camReport) { run.camReports.push(run.camReport.text); run.camReport = null; }
   setPhase('Done', 0, '');
   await say(LIB.phrases.done);
@@ -622,19 +673,50 @@ let chosen = 0;
 const fmtSession = s => `${s.name} — ${s.mode}`;
 const fmtCfg = () => (settings.quick ? 'quick test' : `${settings.rounds}×${settings.roundMin} min, ${settings.restMin} min rest`) + (settings.camera ? ', camera coach' : '');
 
+// The 7th session: Milan's own mix of round themes (not part of the rotation).
+function customSession() {
+  const c = settings.custom;
+  return { id: 'custom', themes: c.themes, mode: c.mode, name: 'Own mix',
+    intro: c.mode === 'hard' ? LIB.phrases.customHard : LIB.phrases.customTech };
+}
+const sessionAt = i => i === LIB.sessions.length ? customSession() : LIB.sessions[i];
+
+function renderCustom() {
+  const c = settings.custom;
+  $('cMode').value = c.mode;
+  const opts = Object.entries(LIB.plans).map(([plan, ids]) => `<optgroup label="${plan[0].toUpperCase() + plan.slice(1)}">` +
+    ids.map(id => `<option value="${id}">${LIB.themes[id].name}</option>`).join('') + '</optgroup>').join('');
+  $('cRounds').innerHTML = '';
+  c.themes.forEach((id, i) => {
+    const l = document.createElement('label');
+    l.innerHTML = `Round ${i + 1}<select>${opts}</select>`;
+    const sel = l.querySelector('select');
+    sel.value = id;
+    sel.onchange = () => { c.themes[i] = sel.value; saveSettings(); renderHome(); };
+    $('cRounds').appendChild(l);
+  });
+  $('cAdd').disabled = c.themes.length >= 5;
+  $('cDel').disabled = c.themes.length <= 1;
+}
+$('cMode').onchange = e => { settings.custom.mode = e.target.value; saveSettings(); renderHome(); };
+$('cAdd').onclick = () => { const t = settings.custom.themes; t.push(t[t.length - 1]); saveSettings(); renderHome(); };
+$('cDel').onclick = () => { settings.custom.themes.pop(); saveSettings(); renderHome(); };
+
 function renderHome() {
   const next = LS.get('next', 0) % LIB.sessions.length;
-  const s = LIB.sessions[chosen];
+  const s = sessionAt(chosen);
   $('nextName').textContent = s.name;
   $('nextMode').textContent = s.mode === 'hard' ? 'Hard day' : 'Technical day';
-  const th = LIB.plans[s.plan].map(id => LIB.themes[id].name);
-  $('nextRounds').textContent = (chosen === next ? 'Next in rotation. ' : 'Picked manually. ') +
-    (settings.quick ? 'QUICK TEST MODE is on.' : `Warm-up 5 · ${settings.rounds} × ${settings.roundMin} min · finisher 3 · ${settings.restMin} min rest · about ${totalMin()} min.`);
-  $('nextThemes').textContent = 'Rounds: ' + Array.from({ length: settings.rounds }, (_, i) => th[i % th.length]).join(' → ');
+  const th = themesOf(s).map(t => t.name), T = timings();
+  $('nextRounds').textContent = (s.id === 'custom' ? 'Your own mix (does not move the rotation). ' : chosen === next ? 'Next in rotation. ' : 'Picked manually. ') +
+    (settings.quick ? 'QUICK TEST MODE is on.' : `${T.warm ? `Warm-up ${settings.warmMin} · ` : 'No warm-up · '}${th.length} × ${settings.roundMin} min · finisher 3 · ${settings.restMin} min rest · about ${totalMin(s)} min.`);
+  $('nextThemes').textContent = 'Rounds: ' + th.join(' → ');
+  $('customBox').classList.toggle('hidden', s.id !== 'custom');
+  if (s.id === 'custom') renderCustom();
   $('pickList').innerHTML = '';
-  LIB.sessions.forEach((x, i) => {
+  [...LIB.sessions, customSession()].forEach((x, i) => {
     const b = document.createElement('button');
-    b.textContent = `${i + 1}. ${x.name} (${x.mode === 'hard' ? 'hard' : 'tech'})`;
+    b.textContent = x.id === 'custom' ? '7. Build your own' : `${i + 1}. ${x.name} (${x.mode === 'hard' ? 'hard' : 'tech'})`;
     b.classList.toggle('on', i === chosen);
     b.onclick = () => { chosen = i; renderHome(); };
     $('pickList').appendChild(b);
@@ -648,7 +730,7 @@ function newRun(sess, idx) {
 }
 
 $('startBtn').onclick = () => {
-  const sess = LIB.sessions[chosen];
+  const sess = sessionAt(chosen);
   const unlocked = unlockAudio(); // synchronous part runs inside the tap
   keepAwake();
   run = newRun(sess, chosen);
@@ -665,6 +747,7 @@ $('startBtn').onclick = () => {
   } else $('camBox').classList.add('hidden');
   clock.reset();
   $('pauseBtn').textContent = 'Pause';
+  $('stopBtn').textContent = 'Stop';
   show('run');
   run.timer = setInterval(renderClock, 200);
   unlocked.then(() => runSession(sess)).then(() => finish(true), e => { if (!(e instanceof Abort)) console.error(e); finish(false); });
@@ -673,10 +756,25 @@ $('pauseBtn').onclick = () => {
   if (clock.pausedAt == null) { clock.pause(); camPause(true); $('pauseBtn').textContent = 'Resume'; }
   else { clock.resume(); if (run.inRound) camPause(false); $('pauseBtn').textContent = 'Pause'; }
 };
+// Stop: tap twice (no pop-up). Works at any moment, including the countdown, and stops the voice at once.
 $('stopBtn').onclick = () => {
-  if (!confirm('Stop the session?')) return;
+  if (!run || run.finished) return;
+  if (!run.stopArmed) {
+    run.stopArmed = true;
+    $('stopBtn').textContent = 'Tap again to stop';
+    setTimeout(() => { if (run && !run.finished) { run.stopArmed = false; $('stopBtn').textContent = 'Stop'; } }, 3000);
+    return;
+  }
   clock.resume();
   run.aborted = true;
+  finish(false);
+};
+$('skipBtn').onclick = () => {
+  if (!run || run.finished) return;
+  clock.resume(); $('pauseBtn').textContent = 'Pause';
+  run.skip = true;
+  audio.el.pause();
+  try { speechSynthesis.cancel(); } catch {}
 };
 
 function finish(completed) {
@@ -714,7 +812,7 @@ $('saveLog').onclick = () => {
     cam: run.camReports.length ? run.camReports : undefined,
   });
   LS.set('log', log);
-  LS.set('next', (run.idx + 1) % LIB.sessions.length);
+  if (run.sess.id !== 'custom') LS.set('next', (run.idx + 1) % LIB.sessions.length);
   chosen = LS.get('next', 0); run = null; renderHome();
 };
 $('discardLog').onclick = () => { run = null; renderHome(); };
@@ -782,7 +880,8 @@ function renderSettings() {
   $('sayAnswer').checked = settings.sayAnswer; $('headKicks').checked = settings.headKicks; $('quick').checked = settings.quick; $('camera').checked = settings.camera;
   $('camera').disabled = !Cam.supported();
   $('roundMin').value = settings.roundMin; $('restMin').value = settings.restMin; $('roundsN').value = settings.rounds;
-  $('totalInfo').textContent = `Session length: about ${totalMin()} min (5 min warm-up and 3 min finisher included).`;
+  $('warmMin').value = settings.warmMin; $('voiceSel').value = settings.voice;
+  $('totalInfo').textContent = `Rotation sessions: about ${totalMin(LIB.sessions[0])} min (warm-up and 3 min finisher included).`;
   $('rotSel').innerHTML = LIB.sessions.map((s, i) => `<option value="${i}">${i + 1}. ${fmtSession(s)}</option>`).join('');
   $('rotSel').value = LS.get('next', 0);
   $('audioInfo').textContent = spriteInfo();
@@ -794,7 +893,8 @@ $('sayAnswer').onchange = e => { settings.sayAnswer = e.target.checked; saveSett
 $('headKicks').onchange = e => { settings.headKicks = e.target.checked; saveSettings(); };
 $('quick').onchange = e => { settings.quick = e.target.checked; saveSettings(); };
 $('camera').onchange = e => { settings.camera = e.target.checked; saveSettings(); };
-for (const [id, key] of [['roundMin', 'roundMin'], ['restMin', 'restMin'], ['roundsN', 'rounds']]) {
+$('voiceSel').onchange = e => { settings.voice = e.target.value; saveSettings(); };
+for (const [id, key] of [['roundMin', 'roundMin'], ['restMin', 'restMin'], ['roundsN', 'rounds'], ['warmMin', 'warmMin']]) {
   $(id).onchange = e => { settings[key] = +e.target.value; saveSettings(); renderSettings(); };
 }
 $('rotSel').onchange = e => { LS.set('next', +e.target.value); chosen = +e.target.value; };
@@ -814,7 +914,7 @@ for (const b of document.querySelectorAll('.back')) b.onclick = renderHome;
 // ---------- ?sim: whole session in virtual time, trace on screen and in window.__trace ----------
 async function simulate() {
   const idx = (+Q.get('session') || 1) - 1;
-  const sess = LIB.sessions[idx];
+  const sess = sessionAt(idx);
   run = newRun(sess, idx);
   clock.reset();
   await runSession(sess);
