@@ -7,12 +7,14 @@
 // The analysis (Coach) is plain JS with no browser APIs so it can be tested with synthetic frames.
 
 const POSE = { nose: 0, ls: 11, rs: 12, lw: 15, rw: 16, lh: 23, rh: 24, la: 27, ra: 28 };
-const LEAD_TOKENS = new Set(['1', 'body jab', 'up jab', '3', 'body 3', 'check hook', 'lead elbow']);
-const REAR_TOKENS = new Set(['2', 'body 2', '4', 'rear elbow']);
+const LEAD_TOKENS = new Set(['1', 'body jab', 'up jab', '3', 'body 3', 'check hook', 'lead elbow', 'liver shot', 'lead uppercut']);
+const REAR_TOKENS = new Set(['2', 'body 2', '4', 'rear elbow', 'rear uppercut', 'superman punch']);
 const HIP_TOKENS = new Set(['2', 'body 2']);
 // Kicks: the hand on the other side has to stay up. Lead-leg kick -> rear hand at the chin;
 // rear-leg kick -> lead hand stays up (the rear arm may swing).
-const LEAD_KICKS = new Set(['lead body kick', 'lead head kick', 'front kick', 'oblique kick', 'question mark kick', 'teep']);
+const LEAD_KICKS = new Set(['lead body kick', 'lead head kick', 'front kick', 'oblique kick', 'question mark kick', 'teep', 'side kick']);
+const ROUND_KICKS = new Set(['lead body kick', 'rear body kick', 'lead head kick', 'rear head kick', 'low kick', 'calf kick', 'question mark kick']);
+const HEAD_KICKS = new Set(['lead head kick', 'rear head kick', 'question mark kick']);
 const REAR_KICKS = new Set(['low kick', 'calf kick', 'rear body kick', 'rear head kick', 'knee']);
 
 const mid = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, z: ((a.z || 0) + (b.z || 0)) / 2 });
@@ -33,7 +35,9 @@ function features(lm, world) {
   const rel = i => ({ x: (g(i).x - n.x) / torso, y: (g(i).y - n.y) / torso });
   const w = world || lm;
   const ank = mid(g(POSE.la), g(POSE.ra));
+  const foot = i => ({ x: (g(i).x - hip.x) / torso, y: (g(i).y - sh.y) / torso }); // y < 0: above the shoulders
   return {
+    la: foot(POSE.la), ra: foot(POSE.ra),
     lw: rel(POSE.lw), rw: rel(POSE.rw),
     wristsSeen: vis(POSE.lw) && vis(POSE.rw),
     feetSeen: vis(POSE.la) && vis(POSE.ra),
@@ -78,7 +82,8 @@ class Coach {
     // A new strike with the same hand closes the previous check for that hand at this moment.
     if (hand) for (const c of this.calls) if (c.hand === hand && !c.done && c.until == null) c.until = t;
     const kick = LEAD_KICKS.has(token) ? 'lead' : REAR_KICKS.has(token) ? 'rear' : null;
-    this.calls.push({ token, t, hand, kick, hip: HIP_TOKENS.has(token) && this.base.hipRot >= 8 });
+    this.calls.push({ token, t, hand, kick, hip: HIP_TOKENS.has(token) && this.base.hipRot >= 8,
+      kickHip: ROUND_KICKS.has(token) && this.base.kickRot >= 15, head: HEAD_KICKS.has(token) });
   }
 
   // ---- calibration ----
@@ -120,11 +125,15 @@ class Coach {
       this.base.shRot = pct(fs.map(f => angDiff(f.shYaw, this.base.shYaw)), 0.92);
       return this.base.hipRot >= 8 ? 'ok' : 'nohip';
     }
+    if (step === 'kicks') { // three of his best rear body kicks: the hip-turn baseline for kicks
+      this.base.kickRot = pct(fs.map(f => angDiff(f.hipYaw, this.base.hipYaw)), 0.92);
+      return this.base.kickRot >= 15 ? 'ok' : 'nohip';
+    }
   }
 
   // ---- rounds ----
   startRound(n, name) {
-    this.round = { n, name, t0: null, rear: { n: 0, home: 0, slow: [] }, lead: { n: 0, home: 0, slow: [] }, kick: { n: 0, ok: 0 },
+    this.round = { n, name, t0: null, rear: { n: 0, home: 0, slow: [] }, lead: { n: 0, home: 0, slow: [] }, kick: { n: 0, ok: 0 }, kickHip: [], head: { n: 0, ok: 0 }, ret: { n: 0, ok: 0 },
       hip: [], events: { rearDrop: [], leadDrop: [], chin: [], square: [], still: [] } };
     this.calls = []; this.cues = []; this.gap = {}; this.paused = false;
   }
@@ -166,6 +175,33 @@ class Coach {
           r.kick.n++;
           if (seen.filter(x => okFrame(x.f)).length / seen.length >= 0.6) r.kick.ok++;
           else this.flag('kickGuard', c.t, false);
+        }
+      }
+      if (c.kick) {
+        // Which ankle kicked: lead leg = the ankle on the lead-hand side.
+        const ank = (c.kick === 'lead') === (this.base.lead === 'lw') ? 'la' : 'ra';
+        const ys = win.map(x => x.f[ank].y), iTop = ys.indexOf(Math.min(...ys));
+        const start = win[0].f[ank];
+        const lift = start.y - ys[iTop]; // how far the foot came up, torso units
+        if (lift > 0.6) { // a kick we could actually see
+          if (c.head) {
+            r.head.n++;
+            if (ys[iTop] < 0.15) r.head.ok++; // foot reached about shoulder height or higher
+            else this.flag('kickHigh', c.t, false);
+          }
+          const back = win.findIndex((x, i) => i > iTop && dist(x.f[ank], start) < 0.35);
+          r.ret.n++;
+          if (back >= 0 && win[back].t - win[iTop].t <= 900) r.ret.ok++;
+          else this.flag('kickReturn', c.t, false);
+        }
+        if (c.kickHip) {
+          const y0 = median(win.slice(0, 3).map(x => x.f.hipYaw));
+          const rot = Math.max(...win.map(x => angDiff(x.f.hipYaw, y0)));
+          if (lift > 0.6) {
+            r.kickHip.push({ t: c.t, ratio: rot / this.base.kickRot });
+            const recent = r.kickHip.slice(-4);
+            if (recent.length >= 4 && median(recent.map(h => h.ratio)) < 0.6) this.flag('kickHip', c.t, false);
+          }
         }
       }
       if (c.hip) {
@@ -216,6 +252,9 @@ class Coach {
     if (r.lead.n) parts.push(`Lead home ${r.lead.home}/${r.lead.n}`);
     if (r.hip.length) parts.push(`Hip ${Math.round(100 * median(r.hip.map(h => h.ratio)))}%`);
     if (r.kick.n) parts.push(`Kick guard ${r.kick.ok}/${r.kick.n}`);
+    if (r.kickHip.length) parts.push(`Kick hip ${Math.round(100 * median(r.kickHip.map(h => h.ratio)))}%`);
+    if (r.head.n) parts.push(`Head height ${r.head.ok}/${r.head.n}`);
+    if (r.ret.n) parts.push(`Leg back ${r.ret.ok}/${r.ret.n}`);
     return parts.length ? parts.join(' · ') : 'Watching… nothing judged yet';
   }
   judged() { const r = this.round; return r ? r.rear.n + r.lead.n + r.kick.n + r.hip.length : 0; }
@@ -255,11 +294,25 @@ function report(r, base) {
     notes.push(`hip turn on the 2: ${p}% of your calibration 2s (${r.hip.length} measured)`);
     if (p < 75 || fade) parts.push({ w: 100 - p + (fade ? 15 : 0), say: `Hip turn on the 2 was ${p} percent of your best.${fade}` });
   }
-  const ev = (k, n, say) => { const c = r.events[k].length; if (c >= n) { notes.push(say.replace('#', c)); parts.push({ w: c * 5, say: say.replace('#', c) + '.' }); } };
+  const ev = (k, n, say) => { const c = r.events[k].length; if (c >= n) { notes.push(say.replace('#', c)); parts.push({ w: Math.min(30, c * 5), say: say.replace('#', c) + '.' }); } };
   if (r.kick.n >= 3) {
     const p = Math.round(100 * r.kick.ok / r.kick.n);
     notes.push(`other hand stayed up on ${r.kick.ok} of ${r.kick.n} kicks (${p}%)`);
     if (p < 85) parts.push({ w: 100 - p, say: `On ${r.kick.n - r.kick.ok} of ${r.kick.n} kicks the other hand dropped. Keep it up when you kick.` });
+  }
+  if (r.kickHip.length >= 4) {
+    const p = Math.round(100 * median(r.kickHip.map(h => h.ratio)));
+    notes.push(`hip turn on kicks: ${p}% of your calibration kicks (${r.kickHip.length} measured)`);
+    if (p < 75) parts.push({ w: 100 - p + 10, say: `Hip turn on your kicks was ${p} percent of your best. Turn it over.` });
+  }
+  if (r.head.n >= 2) {
+    notes.push(`head kicks reached head height ${r.head.ok} of ${r.head.n}`);
+    if (r.head.ok / r.head.n < 0.7) parts.push({ w: 40, say: `Only ${r.head.ok} of ${r.head.n} head kicks got to head height.` });
+  }
+  if (r.ret.n >= 4) {
+    const p = Math.round(100 * r.ret.ok / r.ret.n);
+    notes.push(`kicking leg back to stance fast on ${r.ret.ok} of ${r.ret.n} kicks`);
+    if (p < 75) parts.push({ w: 100 - p, say: `The kicking leg came back slow on ${r.ret.n - r.ret.ok} of ${r.ret.n} kicks.` });
   }
   ev('chin', 2, 'Chin came up or you stood tall # times');
   ev('square', 2, 'Stance turned square # times');

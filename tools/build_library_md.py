@@ -15,15 +15,16 @@ BY_ID = {e["id"]: e for e in ALL + lib["defence"]}
 STRIKES = {"1", "2", "3", "4", "body jab", "body 2", "body 3", "up jab", "check hook",
            "teep", "front kick", "low kick", "calf kick", "oblique kick", "lead body kick", "rear body kick",
            "lead head kick", "rear head kick", "question mark kick", "back kick", "wheel kick", "spinning back fist",
-           "knee", "flying knee", "lead elbow", "rear elbow"}
-EXITS = {"step out", "pivot out", "angle out"}
+           "knee", "flying knee", "lead elbow", "rear elbow",
+           "liver shot", "lead uppercut", "rear uppercut", "side kick", "superman punch"}
+EXITS = {"step out", "pivot out", "angle out", "frame out"}
 MOVES = {"pull", "slip", "roll", "parry", "check", "catch", "block", "step back", "step in", "shoulder roll",
-         "hop back", "sprawl", "circle left", "circle right",
+         "hop back", "sprawl", "circle left", "circle right", "clinch",
          "feint 1", "feint 2", "feint kick", "feint low kick", "feint level change", "shoulder feint", "hip feint"}
 VOCAB = STRIKES | EXITS | MOVES
 REAR_HAND = {"2", "body 2"}
 REAR_KICK = {"rear head kick", "rear body kick", "low kick", "calf kick", "knee"}
-DOUBLE_OK = {"1", "pull", "up jab", "parry"}  # no teep-teep / front kick-front kick: the bag moves away
+DOUBLE_OK = {"1", "pull", "up jab", "parry", "knee"}  # no teep-teep / front kick-front kick: the bag moves away
 SPIN = re.compile(r"back kick|wheel kick|spinning|flying knee")
 
 problems, notes = [], []
@@ -42,6 +43,8 @@ for e in ALL:
                 problems.append(f"{e['id']}: unknown token '{t}'")
             if re.search(r"\bcross\b", t) or (re.search(r"\bhook\b", t) and t != "check hook"):
                 problems.append(f"{e['id']}: '{t}' names a punch in words; offence uses numbers")
+        if ", ".join(s).replace(" ", "").find("1,2,3") >= 0 and "1, 2, 3" in ", ".join(s):
+            problems.append(f"{e['id']}: '1, 2, 3' (Milan: use 1, 3, 2)")
         for a, b in zip(s, s[1:]):
             if a == b and a not in DOUBLE_OK:
                 problems.append(f"{e['id']}: '{a}, {b}' repeats a token")
@@ -70,14 +73,14 @@ for e in ALL + lib["defence"]:
     for k in e["src"]:
         if k not in S:
             problems.append(f"{e['id']}: unknown source '{k}'")
-for tid, th in lib["themes"].items():
-    for i in [th["setup"], *th["family"]]:
+for sid, sp in lib["spotlights"].items():
+    for i in [sp["setup"], *sp["family"]]:
         if i not in BY_ID:
-            problems.append(f"theme {tid}: unknown id '{i}'")
-for plan in lib["plans"].values():
-    for tid in plan:
-        if tid not in lib["themes"]:
-            problems.append(f"plan: unknown theme '{tid}'")
+            problems.append(f"spotlight {sid}: unknown id '{i}'")
+for se in lib["sessions"]:
+    for sid in se["spotlights"]:
+        if sid not in lib["spotlights"]:
+            problems.append(f"session {se['id']}: unknown spotlight '{sid}'")
 
 
 # ---------- markdown ----------
@@ -96,22 +99,19 @@ out = ["# Combo & defence library", "",
        "`|` separates the calls of a trap sequence. McGregor is southpaw: his straight left is Milan's **2**, and his "
        "kicks to his right side are mirrored here.", "",
        f"**Totals:** {len(lib['combos'])} combos, {len(lib['traps'])} trap sequences, {len(lib['defence'])} incoming attacks with answers, "
-       f"{len(lib['themes'])} round themes. {n_spin} entries contain a spinning or flying technique; the engine caps them "
-       "per round (1 per round, 4 in the McGregor/Ruffy spin themes), so jabs and straights stay far more frequent.", ""]
+       f"{len(lib['spotlights'])} spotlights. {n_spin} entries contain a spinning or flying technique; the engine caps them "
+       "per round (1 per round, more during the McGregor/Ruffy spin spotlights), so jabs and straights stay far more frequent.", ""]
 
-out += ["## Round themes", "",
-        "Each 10-minute round teaches one setup: the coach explains it in one line, you drill it (first ~15% of the round), "
-        "then it is mixed in with related calls (to ~50%), then hidden among everything else with traps and callbacks "
-        "to earlier traps (to the end). Intensity rises through the round.", ""]
-for plan, ids in lib["plans"].items():
-    out.append(f"**{plan.capitalize()} days**")
-    out.append("")
-    out += ["| round | theme | setup taught | spoken teach line | related calls |", "|---|---|---|---|---|"]
-    for i, tid in enumerate(ids):
-        th = lib["themes"][tid]; su = BY_ID[th["setup"]]
-        su_txt = su.get("calls") or f"incoming {su['attack']} → {su['answer']}"
-        out.append(f"| {i + 1} | {th['name']} | `{su_txt}` | {th['teach']} | {', '.join(th['family'])} |")
-    out.append("")
+out += ["## Sessions and spotlights", "",
+        "Three options, all hard. Every round mixes everything. Every ~2 minutes a **spotlight** "
+        "(one short spoken line) makes one setup and its family come up more often, then the next spotlight takes over.", ""]
+for se in lib["sessions"]:
+    out.append(f"- **{se['name']}**: incoming attacks ×{se['def']}, spotlights: " + ", ".join(lib["spotlights"][x]["name"] for x in se["spotlights"]))
+out += ["", "| spotlight | spoken | setup | family |", "|---|---|---|---|"]
+for sid, sp in lib["spotlights"].items():
+    su = BY_ID[sp["setup"]]
+    out.append(f"| {sp['name']} | {sp['say']} | `{su.get('calls') or 'incoming ' + su['attack'] + ' → ' + su['answer']}` | {', '.join(sp['family'])} |")
+out.append("")
 
 out += ["## Combos", "", "| id | call | fighter | tags | why it works | src |", "|---|---|---|---|---|---|"]
 out += [f"| {e['id']} | {e['calls']} | {fighter(e)} | {' '.join(e['tags'])} | {e['why']} | {refs(e)} |" for e in lib["combos"]]

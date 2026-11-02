@@ -8,9 +8,11 @@ const LS = {
   get(k, d) { try { const v = localStorage.getItem('sc.' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem('sc.' + k, JSON.stringify(v)); } catch {} },
 };
-const DEFAULTS = { defPct: 15, sayAnswer: true, headKicks: true, quick: false, roundMin: 10, restMin: 2, rounds: 3, camera: false,
-  warmMin: 2, voice: 'clips', custom: { mode: 'hard', themes: ['mc_straight', 'ad_feints'] } };
+const DEFAULTS = { sayAnswer: true, headKicks: true, quick: false, roundMin: 10, restMin: 2, rounds: 3, camera: false,
+  warmMin: 2, voice: 'clips', tempo: 1, defPct: 25 };
 const settings = Object.assign({}, DEFAULTS, LS.get('settings', {}));
+delete settings.custom;
+if (settings.defPct === 15) settings.defPct = 25; // v6: more incoming attacks (old default was 15%)
 if (Q.has('quick')) settings.quick = true;
 const saveSettings = () => { if (!SIM) LS.set('settings', settings); };
 
@@ -199,7 +201,7 @@ const sayIncoming = attack => clip('in:' + attack, `Incoming ${attack}!`, 'incom
 // ---------- library ----------
 const SPIN = /back kick|wheel kick|spinning|flying knee/;
 const HEAD = /head kick|question mark kick|wheel kick/;
-const MOVE = /^(pull|slip|roll|parry|check|catch|block|step back|step out|step in|pivot out|angle out|shoulder roll|hop back|sprawl|circle left|circle right)$|feint/;
+const MOVE = /^(pull|slip|roll|parry|check|catch|block|step back|step out|step in|pivot out|angle out|shoulder roll|hop back|sprawl|circle left|circle right|clinch|frame out)$|feint/;
 const parse = s => s.split('|').map(st => st.split(',').map(t => t.trim()).filter(Boolean));
 function prepLibrary() {
   for (const k of ['combos', 'traps']) for (const e of LIB[k]) {
@@ -207,7 +209,7 @@ function prepLibrary() {
     e.steps = parse(e.calls);
     e.tags = e.tags || [];
     e.spins = (e.calls.match(new RegExp(SPIN, 'g')) || []).length;
-    e.short = e.kind === 'combo' && e.steps[0].length <= 3 && e.steps[0].every(t => /^(1|2|3|4|body 2|body jab|up jab)$/.test(t));
+    e.short = e.kind === 'combo' && e.steps[0].length <= 3 && e.steps[0].every(t => /^(1|2|3|4|body 2|body jab|up jab|liver shot|lead uppercut|rear uppercut)$/.test(t));
   }
   for (const d of LIB.defence) {
     d.kind = 'def';
@@ -234,13 +236,15 @@ function pickWeighted(list, wfn) {
 // react: time to defend after "Incoming ..."; preDef: forced silence before an incoming call.
 const PACE = {
   warm:      { exec: 0.5,  rec: [1.8, 1.1],  react: 1.2, preDef: 1.5 },
-  hard:      { exec: 0.3,  rec: [1.3, 0.45], react: 0.7, preDef: 1.2 },
+  hard:      { exec: 0.28, rec: [1.1, 0.4],  react: 0.7, preDef: 1.1 },
   technical: { exec: 0.5,  rec: [2.2, 1.5],  react: 1.1, preDef: 1.6 },
   slow:      { exec: 0.9,  rec: [3.6, 3.0],  react: 1.5, preDef: 2.0 },
 };
 const strikes = ts => ts.reduce((n, t) => n + (MOVE.test(t) ? 0.6 : 1), 0);
 const recNow = p => lerp(p.rec[0], p.rec[1], run.st ? run.st.prog() : 0);
-const stepGap = (ts, p) => (strikes(ts) * p.exec + recNow(p)) * 1000;
+// Tempo (Faster / Slower buttons during a session): scales how long you get to throw and recover.
+const tempo = () => SIM ? 1 : settings.tempo || 1;
+const stepGap = (ts, p) => (strikes(ts) * p.exec + recNow(p)) * 1000 / tempo();
 function estimateItem(e, p) { // ms, rough: ~0.45 s of speech per token
   if (e.kind === 'def') return (p.preDef + 1.6 + p.react + e.answerSteps.length * 0.45) * 1000 + stepGap(e.answerSteps, p);
   if (e.kind === 'string') return e.list.reduce((ms, c) => ms + c.steps[0].length * 450 + strikes(c.steps[0]) * p.exec * 1000 + 250, 800);
@@ -291,9 +295,9 @@ async function doItem(e, p) {
     for (const c of e.list) {
       showCall(c.calls);
       await sayTokens(c.steps[0]);
-      await gapWait(strikes(c.steps[0]) * p.exec * 1000 + 250);
+      await gapWait((strikes(c.steps[0]) * p.exec * 1000 + 250) / tempo());
     }
-    await gapWait(recNow(p) * 1000);
+    await gapWait(recNow(p) * 1000 / tempo());
     return;
   }
   let steps = e.steps, trap = e;
@@ -318,28 +322,28 @@ function pickCore(w, st, opts = {}) {
     && (!opts.short || e.short);
   return pickWeighted(LIB.combos.filter(ok), e => weightOf(e, w)) || pickWeighted(LIB.combos.filter(e => e.short), () => 1);
 }
-function pickTrap(th, st) {
-  const tags = Object.keys(th.weights);
+function pickTrap(w, st, prefer = []) {
   return pickWeighted(LIB.traps.filter(t => allowed(t) && !st.recent.includes(t.id) && t.spins + st.spins <= st.spinMax),
-    t => (th.family.includes(t.id) ? 3 : 0) + t.tags.filter(x => tags.includes(x)).length * 0.3);
+    t => (prefer.includes(t.id) ? 4 : 0) + weightOf(t, w) * 0.3 + 0.2);
 }
-function pickDef(groups, st, prefer = []) {
-  return pickWeighted(LIB.defence.filter(d => allowed(d) && groups.includes(d.group) && !st.recent.includes(d.id)),
-    d => prefer.includes(d.id) ? 4 : 1);
+function pickDef(st, kickShare = 0.35) {
+  const group = rand() < kickShare ? 'kick' : 'punch';
+  return pickWeighted(LIB.defence.filter(d => allowed(d) && d.group === group && !st.recent.includes(d.id)), () => 1);
 }
-function pickFamily(th, st) {
-  const fam = th.family.map(id => LIB.byId[id]).filter(e => allowed(e) && !st.recent.includes(e.id) && st.spins + e.spins <= st.spinMax);
+function pickSpot(sp, st) {
+  const fam = [sp.setup, ...sp.family].map(id => LIB.byId[id])
+    .filter(e => allowed(e) && !st.recent.slice(-3).includes(e.id) && st.spins + (e.spins || 0) <= st.spinMax);
   return fam.length ? pick(fam) : null;
 }
-function makeString(th, st) {
+function makeString(st) { // rapid fire: 3-4 short punch combos back to back
   const list = [];
-  for (let i = 0, n = 3 + Math.floor(rand() * 2); i < n; i++) list.push(pickCore({ snipe: 3, jab: 2, pull: 0.5 }, st, { short: true }));
+  for (let i = 0, n = 3 + Math.floor(rand() * 2); i < n; i++) list.push(pickCore({ snipe: 3, jab: 2, hook: 2, liver: 1.5, upper: 1 }, st, { short: true }));
   return { kind: 'string', id: 'string', list, spins: 0 };
 }
 function makeCallback(st) {
   // At most 3 per round, 60 s apart, and prefer traps from earlier rounds.
   if (st.callbacks >= 3 || clock.now() - st.lastCallback < 60000) return null;
-  const old = run.trapsDone.filter(x => !st.recent.includes(x.id) && (x.round < run.roundNo || !st.recent.includes('cb:' + x.id)));
+  const old = run.trapsDone.filter(x => !st.recent.includes(x.id));
   const earlier = old.filter(x => x.round < run.roundNo);
   const x = earlier.length ? pick(earlier) : old.length ? pick(old) : null;
   const trap = x && LIB.byId[x.id];
@@ -347,35 +351,21 @@ function makeCallback(st) {
   st.callbacks++; st.lastCallback = clock.now();
   return { kind: 'callback', id: 'cb:' + x.id, trap, from: x.round, spins: 0 };
 }
-
-function pickThemed(th, st, phase, mode) {
-  const setup = LIB.byId[th.setup];
-  const defP = Math.min(0.55, (settings.defPct / 100) * th.def);
-  if (rand() < defP) { const d = pickDef(th.defTags, st, th.family); if (d) return d; }
-  const r = rand(), hard = mode === 'hard';
-  const or = (...fns) => { for (const f of fns) { const e = f(); if (e) return e; } return pickCore(th.weights, st); };
-  const core = () => pickCore(th.weights, st);
-  const fam = () => pickFamily(th, st);
-  const su = () => allowed(setup) && !st.recent.slice(-2).includes(setup.id) && setup.spins + st.spins <= st.spinMax ? setup : null;
-  if (phase === 'mix') {
-    if (r < 0.22) return or(su, fam);
-    if (r < 0.55) return or(fam);
-    if (r < 0.62) return or(() => pickTrap(th, st));
-    if (r < (hard ? 0.7 : 0.65)) return makeString(th, st);
-    return core();
+// Everything is in the mix; the current spotlight just comes up more often.
+function pickMix(sess, st, spot) {
+  const defP = Math.min(0.55, (settings.defPct / 100) * sess.def);
+  if (rand() < defP) {
+    const fromSpot = spot && rand() < 0.5 && LIB.byId[spot.setup].kind === 'def' ? pickSpot(spot, st) : null;
+    const d = (fromSpot && fromSpot.kind === 'def' && fromSpot) || pickDef(st, sess.defKick ?? 0.35);
+    if (d) return d;
   }
-  if (phase === 'hide') {
-    if (r < 0.1) return or(su, fam);
-    if (r < 0.25) return or(fam);
-    if (r < 0.35) return or(() => makeCallback(st), () => pickTrap(th, st));
-    if (r < 0.42) return or(() => pickTrap(th, st));
-    if (r < (hard ? 0.54 : 0.48)) return makeString(th, st);
-    return core();
-  }
-  // push: last stretch of a technical round
-  if (r < 0.5) return or(su, fam);
-  if (r < 0.7) return or(fam);
-  return core();
+  const r = rand();
+  const or = (...fns) => { for (const f of fns) { const e = f(); if (e) return e; } return pickCore(sess.weights, st); };
+  if (spot && r < 0.25) return or(() => pickSpot(spot, st));
+  if (r < 0.3) return or(() => makeCallback(st), () => pickTrap(sess.weights, st, spot ? spot.family : []));
+  if (r < 0.37) return or(() => pickTrap(sess.weights, st, spot ? spot.family : []));
+  if (r < 0.37 + (sess.rapid ?? 0.15)) return makeString(st);
+  return pickCore(sess.weights, st);
 }
 
 // ---------- camera coach (optional) ----------
@@ -414,6 +404,7 @@ async function camCalibrate() {
   await say(P.camJabs); c.startStep('jabs'); await wait(5000); c.endStep();
   await say(P.camTwos); c.startStep('twos'); await wait(6000);
   if (c.endStep() === 'nohip') await say(P.camNoHip);
+  await say(P.camKicks); c.startStep('kicks'); await wait(7000); c.endStep();
   await say(P.camDone);
   return true;
 }
@@ -423,7 +414,8 @@ function newRoundState(dur, spinMax) {
   const start = clock.now();
   return { recent: [], warned: false, spins: 0, spinMax, start, dur, callbacks: 0, lastCallback: -1e9, prog: () => (clock.now() - start) / dur };
 }
-const remember = (st, e) => { st.recent.push(e.id); if (st.recent.length > 6) st.recent.shift(); };
+const remember = (st, e) => { st.recent.push(e.id); if (st.recent.length > 8) st.recent.shift(); };
+const setFocus = t => { if (!SIM) $('focus').textContent = t; };
 
 async function flurry(ms, kind, opener) {
   camPause(true); // all-out flurries aren't judged
@@ -441,107 +433,81 @@ async function flurry(ms, kind, opener) {
   if (run.inRound) camPause(false);
 }
 
-async function themedRound(spec) {
-  const { theme: th, n, dur, mode } = spec;
-  const p = PACE[mode];
-  const hard = mode === 'hard';
+async function challenge() {
+  const ch = pick(LIB.phrases.challenges);
+  camPause(true);
+  showCall('CHALLENGE');
+  const until = clock.now() + ch.dur * 1000;
+  await say(ch.say);
+  await gapWait(Math.max(0, until - clock.now()));
+  await clip('fx:beep');
+  await say(LIB.phrases.challengeEnd);
+  camPause(false);
+}
+
+// One round: everything mixed, a new spotlight every ~2 minutes, flurries, a challenge, rapid fire, incoming attacks.
+async function mixRound(spec) {
+  const { n, dur, sess, spots } = spec;
+  const p = PACE.hard;
   run.roundNo = n;
-  setPhase(`Round ${n} of ${run.nRounds}`, dur, th.name);
-  const st = run.st = newRoundState(dur, th.spinMax && hard ? th.spinMax : th.spinMax ? th.spinMax - 1 : 1);
+  setPhase(`Round ${n} of ${run.nRounds}`, dur, '');
+  const st = run.st = newRoundState(dur, 1);
   const end = run.phase.end;
   await clip('fx:bell');
   await say(LIB.phrases.round[n - 1] || LIB.phrases.round.at(-1));
-  await say(th.focus);
-  await say(th.teach);
-  if (camOn()) Cam.coach.startRound(n, th.name);
+  if (camOn()) Cam.coach.startRound(n, spots.map(x => x.name).join(', '));
   run.inRound = true;
   run.camCheckin = false;
-
-  // 1. Teach: drill the setup (technical pace even on hard days, so the shape is right first).
-  // About 45 s, mixed with related calls from the 3rd rep, and the Skip button skips just this lesson.
-  const setup = LIB.byId[th.setup];
-  const teachEnd = st.start + Math.min(dur * 0.12, Math.max(30000, dur * 0.075));
-  run.partName = 'lesson';
-  try {
-  const teachPace = hard ? { ...PACE.technical, rec: [2.2, 1.6] } : PACE.technical;
-  for (let rep = 0; clock.now() < teachEnd; rep++) {
-    if (rep === 2 && setup.cue) await say(setup.cue);
-    else if (rep === 4) await say(th.cues[0]);
-    // Straight reps first; after 6, every third rep is a related call so it stays a drill, not a loop.
-    // Spinning setups are drilled every other rep, with straights in between.
-    const e = !allowed(setup) ? pickFamily(th, st) || pickCore(th.weights, st)
-      : setup.spins && rep % 2 ? pickCore({ snipe: 3, jab: 2 }, st, { short: true })
-      : rep >= 2 && rep % 2 === 0 ? pickFamily(th, st) || setup : setup;
-    if (estimateItem(e, teachPace) > end - clock.now() - 5000) break;
-    remember(st, e);
-    await doItem(e, teachPace);
-  }
-  } catch (err) {
-    if (!(err instanceof Skip)) throw err;
-    run.skip = false; audio.el.pause(); try { speechSynthesis.cancel(); } catch {}
-    await say(LIB.phrases.lessonSkipped);
-  }
-  run.partName = 'round';
-  st.spins = 0; // drilling the setup doesn't count against the round's spin limit
-
-  // 2-4. Mix it in, hide it, push. Flurries on hard days; coaching cues throughout.
-  const finalMs = hard ? Math.min(20000, dur * 0.12) : 0;
-  const flurryAt = (hard ? [0.36, 0.66] : [0.62]).map(f => st.start + dur * f);
-  let challengeAt = st.start + dur * (0.42 + rand() * 0.1);
-  const kinds = [th.flurry, ...LIB.burnout[planOf(run.sess)]];
-  let phase = 'mix', nextCue = clock.now() + (hard ? 50000 : 40000), cueI = 0;
-  await say(LIB.phrases.mix);
+  const finalMs = Math.min(20000, dur * 0.1);
+  const flurryAt = [0.33, 0.66].map(f => st.start + dur * f);
+  let challengeAt = st.start + dur * (0.45 + rand() * 0.1);
+  const spotLen = (dur - finalMs) / spots.length;
+  let si = -1, spot = null, nextCue = clock.now() + 50000, cueI = 0;
+  const kinds = LIB.burnout;
   for (;;) {
-    const now = clock.now(), prog = st.prog();
+    const now = clock.now();
     const stopAt = end - finalMs - 2500;
     if (now >= stopAt) break;
-    if (phase === 'mix' && prog >= 0.5) { phase = 'hide'; await say(LIB.phrases.hide); }
-    if (phase === 'hide' && !hard && prog >= 0.88) { phase = 'push'; await say(LIB.phrases.lastMin); }
-    if (flurryAt.length && now >= flurryAt[0]) {
-      flurryAt.shift();
-      const ms = Math.min(hard ? 15000 + Math.floor(rand() * 2) * 5000 : 15000, stopAt - now - 6000);
-      if (ms >= 8000) { await flurry(ms, kinds[run.flurries % kinds.length]); await say(LIB.phrases.time); await gapWait(3000); }
+    const want = Math.min(spots.length - 1, Math.floor((now - st.start) / spotLen));
+    if (want !== si) { // new spotlight: one short line, then show it once straight away
+      si = want; spot = spots[si];
+      st.spinMax = 1 + (spot.spin || 0);
+      setFocus(spot.name);
+      await say(spot.say);
+      const su = LIB.byId[spot.setup];
+      if (allowed(su) && estimateItem(su, p) < stopAt - clock.now()) { remember(st, su); await doItem(su, p); }
       continue;
     }
-    if (now >= challengeAt) { // a short challenge: something different to chase
+    if (flurryAt.length && now >= flurryAt[0]) {
+      flurryAt.shift();
+      const ms = Math.min(15000 + Math.floor(rand() * 2) * 5000, stopAt - now - 6000);
+      if (ms >= 8000) { await flurry(ms, kinds[run.flurries % kinds.length]); await say(LIB.phrases.time); await gapWait(2500); }
+      continue;
+    }
+    if (now >= challengeAt) {
       challengeAt = Infinity;
-      const ch = pick(LIB.phrases.challenges);
-      if (stopAt - now > ch.dur * 1000 + 8000) {
-        camPause(true);
-        showCall('CHALLENGE');
-        const until = clock.now() + ch.dur * 1000;
-        await say(ch.say);
-        await gapWait(Math.max(0, until - clock.now()));
-        await clip('fx:beep');
-        await say(LIB.phrases.challengeEnd);
-        camPause(false);
-      }
+      if (stopAt - now > 25000) await challenge();
       continue;
     }
     if (camOn() && !run.camCheckin && st.prog() > 0.3) { run.camCheckin = true; await camCheckin(); }
     if (now >= nextCue) {
-      const pool = cueI % 3 === 1 ? (hard ? LIB.phrases.cuesHard : LIB.phrases.cuesTech) : th.cues;
-      await say(pool[Math.floor(cueI / 3) % pool.length] || pick(pool));
-      cueI++;
-      nextCue = clock.now() + (hard ? 55000 : 45000) * (0.8 + rand() * 0.4);
+      await say(LIB.phrases.cuesHard[cueI++ % LIB.phrases.cuesHard.length]);
+      nextCue = clock.now() + 70000 * (0.8 + rand() * 0.4);
     }
-    let e = pickThemed(th, st, phase, mode);
-    for (let tries = 0; estimateItem(e, p) > stopAt - clock.now() && tries < 12; tries++) e = pickCore(th.weights, st, { short: true });
+    let e = pickMix(sess, st, spot);
+    for (let tries = 0; estimateItem(e, p) > stopAt - clock.now() && tries < 12; tries++) e = pickCore(sess.weights, st, { short: true });
     if (estimateItem(e, p) > stopAt - clock.now()) break;
     remember(st, e);
     run.counts[e.kind] = (run.counts[e.kind] || 0) + 1;
     await doItem(e, p);
-    // "Again!": throw the same combo straight away, sometimes faster.
-    if (e.kind === 'combo' && phase !== 'push' && rand() < (hard ? 0.16 : 0.1) && estimateItem(e, p) < stopAt - clock.now()) {
+    if (e.kind === 'combo' && rand() < 0.15 && estimateItem(e, p) < stopAt - clock.now()) { // "Again!"
       await say(pick(LIB.phrases.again));
       await doItem(e, p);
     }
     await camCue();
   }
-  if (finalMs) {
-    await gapWait(Math.max(0, end - finalMs - clock.now()));
-    await flurry(Math.max(0, end - clock.now()), kinds[run.flurries % kinds.length], LIB.phrases.last20);
-  }
+  await gapWait(Math.max(0, end - finalMs - clock.now()));
+  await flurry(Math.max(0, end - clock.now()), kinds[run.flurries % kinds.length], LIB.phrases.last20);
   showCall('');
   await gapWait(Math.max(0, end - clock.now()));
   await clip('fx:bell3');
@@ -563,8 +529,8 @@ async function warmupRound(dur) {
     const next = segs[si + 1];
     if (next && st.prog() >= next.at) { si++; await say(next.say); continue; }
     const seg = segs[Math.max(0, si)];
-    let e = seg.def && rand() < seg.def ? pickDef(['punch'], st) : pickCore(seg.weights, st);
-    if (estimateItem(e, PACE.warm) > end - clock.now() - 1500) e = pickCore({ foot: 1, warm: 1 }, st, {});
+    let e = seg.def && rand() < seg.def ? pickDef(st) : pickCore(seg.weights, st);
+    if (estimateItem(e, PACE.warm) > end - clock.now() - 1500) e = pickCore({ warm: 1 }, st, { short: true });
     if (estimateItem(e, PACE.warm) > end - clock.now() - 1500) break;
     remember(st, e);
     await doItem(e, PACE.warm);
@@ -580,7 +546,7 @@ async function burnout(dur) {
   run.st = newRoundState(dur, 0);
   const end = run.phase.end;
   await clip('fx:bell');
-  const kinds = LIB.burnout[planOf(run.sess)];
+  const kinds = LIB.burnout;
   const n = Math.max(1, Math.floor(dur / 30000));
   for (let i = 0; i < n; i++) {
     const on = Math.min(20000, (end - clock.now()) * 2 / 3);
@@ -592,34 +558,8 @@ async function burnout(dur) {
   run.roundsDone++;
 }
 
-async function techFinisher(dur, themes) {
-  run.roundNo = run.nRounds + 1;
-  setPhase('Finisher', dur, "Slow and perfect: today's setups");
-  const st = run.st = newRoundState(dur, 2);
-  const end = run.phase.end;
-  await clip('fx:bell');
-  await say(LIB.phrases.techFinal);
-  const queue = [];
-  for (const th of themes) {
-    const su = LIB.byId[th.setup];
-    queue.push(...(su.spins ? [su] : [su, su])); // spinning setups once: straights stay the bulk
-    const done = run.trapsDone.find(x => th.family.includes(x.id));
-    if (done) queue.push({ kind: 'callback', id: 'cb:' + done.id, trap: LIB.byId[done.id], from: done.round, spins: 0 });
-  }
-  for (;;) {
-    const e = queue.length ? queue.shift() : pickCore({ snipe: 3, pull: 1, jab: 1 }, st);
-    if (!allowed(e.trap || e)) continue;
-    if (estimateItem(e, PACE.slow) > end - clock.now() - 3000) break;
-    remember(st, e);
-    await doItem(e, PACE.slow);
-  }
-  await gapWait(Math.max(0, end - clock.now()));
-  await clip('fx:bell3');
-  run.roundsDone++;
-}
-
-async function runRest(dur, tip) {
-  setPhase('Rest', dur, tip || '');
+async function runRest(dur, line) {
+  setPhase('Rest', dur, '');
   run.st = newRoundState(dur, 0);
   run.st.warned = true;
   const end = run.phase.end;
@@ -631,7 +571,7 @@ async function runRest(dur, tip) {
     await say(LIB.phrases.camReport);
     await clip('x:' + r.say, r.say); // has numbers in it: spoken by the phone's voice
   }
-  if (tip) { await wait(Math.min(4000, dur / 6)); await say(tip); }
+  if (line) await say(line);
   if (end - clock.now() > 10500) { await waitUntil(end - 10000); await say(LIB.phrases.ten); }
   await countIn(end);
 }
@@ -643,13 +583,11 @@ async function countIn(end) {
 
 function timings() {
   return settings.quick
-    ? { warm: settings.warmMin ? 40e3 : 0, round: 90e3, rest: 15e3, fin: 45e3 }
+    ? { warm: settings.warmMin ? 40e3 : 0, round: 120e3, rest: 15e3, fin: 45e3 }
     : { warm: settings.warmMin * 60e3, round: settings.roundMin * 60e3, rest: settings.restMin * 60e3, fin: 3 * 60e3 };
 }
-const themesOf = s => s.themes ? s.themes.map(id => LIB.themes[id]) : Array.from({ length: settings.rounds }, (_, i) => LIB.themes[LIB.plans[s.plan][i % 3]]);
-const planOf = s => s.plan || Object.keys(LIB.plans).find(p => LIB.plans[p].includes(s.themes[0])) || 'snipe';
-const totalMin = (s = LIB.sessions[chosen]) => {
-  const T = timings(), n = themesOf(s).length;
+const totalMin = () => {
+  const T = timings(), n = settings.rounds;
   return Math.round((T.warm + n * T.round + T.fin + (n + (T.warm ? 1 : 0)) * T.rest) / 60e3);
 };
 
@@ -669,26 +607,35 @@ async function part(name, fn) {
   }
 }
 
+// Spotlights continue where the last session of this type stopped, so every session is different.
+function spotlightsFor(sess, nRounds, roundMs) {
+  const per = Math.max(1, Math.round(roundMs / 120000));
+  const pool = sess.spotlights, key = 'spot.' + sess.id;
+  const off = SIM ? Math.floor(rand() * pool.length) : LS.get(key, 0);
+  if (!SIM) LS.set(key, (off + nRounds * per) % pool.length);
+  return Array.from({ length: nRounds }, (_, i) => Array.from({ length: per }, (_, j) => LIB.spotlights[pool[(off + i * per + j) % pool.length]]));
+}
+
 async function runSession(sess) {
   const T = timings();
-  const themes = themesOf(sess);
-  const rounds = themes.map((theme, i) => ({ theme, n: i + 1, dur: T.round, mode: sess.mode }));
+  const spots = spotlightsFor(sess, settings.rounds, T.round);
+  const rounds = spots.map((sp, i) => ({ n: i + 1, dur: T.round, sess, spots: sp }));
   run.nRounds = rounds.length;
   run.totalRounds = rounds.length + 1 + (T.warm ? 1 : 0);
   await part('countdown', async () => {
-    setPhase('Get ready', 10000, sess.name + ' · ' + sess.mode);
-    run.st = newRoundState(10000, 0); run.st.warned = true;
+    setPhase('Get ready', 8000, sess.name);
+    run.st = newRoundState(8000, 0); run.st.warned = true;
     await say(sess.intro);
     await countIn(run.phase.end);
   });
   if (run.cam) await part('camera check', camCalibrate);
   if (T.warm) await part('warm-up', () => warmupRound(T.warm));
   for (const r of rounds) {
-    if ((T.warm || r.n > 1) && T.rest) await part('rest', () => runRest(T.rest, r.theme.tip));
-    await part('round', () => themedRound(r));
+    if ((T.warm || r.n > 1) && T.rest) await part('rest', () => runRest(T.rest));
+    await part('round', () => mixRound(r));
   }
-  if (T.rest) await part('rest', () => runRest(T.rest, sess.mode === 'hard' ? LIB.phrases.nextBurn : LIB.phrases.nextTech));
-  await part('finisher', () => sess.mode === 'hard' ? burnout(T.fin) : techFinisher(T.fin, themes));
+  if (T.rest) await part('rest', () => runRest(T.rest, LIB.phrases.nextBurn));
+  await part('finisher', () => burnout(T.fin));
   run.partName = null;
   if (run.camReport) { run.camReports.push(run.camReport.text); run.camReport = null; }
   setPhase('Done', 0, '');
@@ -723,53 +670,28 @@ function show(id) {
   window.scrollTo(0, 0);
 }
 let chosen = 0;
-const fmtSession = s => `${s.name} — ${s.mode}`;
-const fmtCfg = () => (settings.quick ? 'quick test' : `${settings.rounds}×${settings.roundMin} min, ${settings.restMin} min rest`) + (settings.camera ? ', camera coach' : '');
+const fmtSession = s => s.name;
+const fmtCfg = () => (settings.quick ? 'quick test' : `${settings.rounds}×${settings.roundMin} min, ${settings.restMin} min rest`) +
+  `, tempo ${Math.round(100 * settings.tempo)}%` + (settings.camera ? ', camera coach' : '');
 
-// The 7th session: Milan's own mix of round themes (not part of the rotation).
-function customSession() {
-  const c = settings.custom;
-  return { id: 'custom', themes: c.themes, mode: c.mode, name: 'Own mix',
-    intro: c.mode === 'hard' ? LIB.phrases.customHard : LIB.phrases.customTech };
+function previewSpots(sess) {
+  const pool = sess.spotlights, off = LS.get('spot.' + sess.id, 0);
+  const per = Math.max(1, Math.round(timings().round / 120000));
+  return Array.from({ length: Math.min(6, pool.length, settings.rounds * per) }, (_, i) => LIB.spotlights[pool[(off + i) % pool.length]].name);
 }
-const sessionAt = i => i === LIB.sessions.length ? customSession() : LIB.sessions[i];
-
-function renderCustom() {
-  const c = settings.custom;
-  $('cMode').value = c.mode;
-  const opts = Object.entries(LIB.plans).map(([plan, ids]) => `<optgroup label="${plan[0].toUpperCase() + plan.slice(1)}">` +
-    ids.map(id => `<option value="${id}">${LIB.themes[id].name}</option>`).join('') + '</optgroup>').join('');
-  $('cRounds').innerHTML = '';
-  c.themes.forEach((id, i) => {
-    const l = document.createElement('label');
-    l.innerHTML = `Round ${i + 1}<select>${opts}</select>`;
-    const sel = l.querySelector('select');
-    sel.value = id;
-    sel.onchange = () => { c.themes[i] = sel.value; saveSettings(); renderHome(); };
-    $('cRounds').appendChild(l);
-  });
-  $('cAdd').disabled = c.themes.length >= 5;
-  $('cDel').disabled = c.themes.length <= 1;
-}
-$('cMode').onchange = e => { settings.custom.mode = e.target.value; saveSettings(); renderHome(); };
-$('cAdd').onclick = () => { const t = settings.custom.themes; t.push(t[t.length - 1]); saveSettings(); renderHome(); };
-$('cDel').onclick = () => { settings.custom.themes.pop(); saveSettings(); renderHome(); };
 
 function renderHome() {
   const next = LS.get('next', 0) % LIB.sessions.length;
-  const s = sessionAt(chosen);
+  const s = LIB.sessions[chosen], T = timings();
   $('nextName').textContent = s.name;
-  $('nextMode').textContent = s.mode === 'hard' ? 'Hard day' : 'Technical day';
-  const th = themesOf(s).map(t => t.name), T = timings();
-  $('nextRounds').textContent = (s.id === 'custom' ? 'Your own mix (does not move the rotation). ' : chosen === next ? 'Next in rotation. ' : 'Picked manually. ') +
-    (settings.quick ? 'QUICK TEST MODE is on.' : `${T.warm ? `Warm-up ${settings.warmMin} · ` : 'No warm-up · '}${th.length} × ${settings.roundMin} min · finisher 3 · ${settings.restMin} min rest · about ${totalMin(s)} min.`);
-  $('nextThemes').textContent = 'Rounds: ' + th.join(' → ');
-  $('customBox').classList.toggle('hidden', s.id !== 'custom');
-  if (s.id === 'custom') renderCustom();
+  $('nextMode').textContent = 'Hard · everything mixed';
+  $('nextRounds').textContent = (chosen === next ? 'Next in rotation. ' : 'Picked manually. ') +
+    (settings.quick ? 'QUICK TEST MODE is on.' : `${T.warm ? `Warm-up ${settings.warmMin} · ` : 'No warm-up · '}${settings.rounds} × ${settings.roundMin} min · burnout 3 · ${settings.restMin ? settings.restMin + ' min rest' : 'no rest'} · about ${totalMin()} min.`);
+  $('nextThemes').textContent = 'Coming up: ' + previewSpots(s).join(' → ') + ' …';
   $('pickList').innerHTML = '';
-  [...LIB.sessions, customSession()].forEach((x, i) => {
+  LIB.sessions.forEach((x, i) => {
     const b = document.createElement('button');
-    b.textContent = x.id === 'custom' ? '7. Build your own' : `${i + 1}. ${x.name} (${x.mode === 'hard' ? 'hard' : 'tech'})`;
+    b.textContent = `${i + 1}. ${x.name}`;
     b.classList.toggle('on', i === chosen);
     b.onclick = () => { chosen = i; renderHome(); };
     $('pickList').appendChild(b);
@@ -777,13 +699,26 @@ function renderHome() {
   show('home');
 }
 
+// Combo list: everything the coach can call, with why it works.
+function renderCombos() {
+  const esc = t => t.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  const FN = { mcgregor: 'McGregor', adesanya: 'Adesanya', ruffy: 'Ruffy' };
+  const row = (call, why, who) => `<div class="hist"><b>${esc(call)}</b>${who ? ` <span class="small">${FN[who]}</span>` : ''}<div class="small">${esc(why)}</div></div>`;
+  $('comboList').innerHTML =
+    `<h3>Combos (${LIB.combos.length})</h3>` + LIB.combos.map(e => row(e.calls, e.why, e.fighter)).join('') +
+    `<h3>Traps (${LIB.traps.length})</h3><p class="small">Repeat the pattern, then break it.</p>` + LIB.traps.map(e => row(e.calls.replace(/ \| /g, '  →  '), e.why, e.fighter)).join('') +
+    `<h3>Incoming attacks (${LIB.defence.length})</h3>` + LIB.defence.map(d => row(`${d.attack} → ${d.answer}`, d.why, d.fighter)).join('');
+  show('combos');
+}
+$('combosBtn').onclick = renderCombos;
+
 function newRun(sess, idx) {
   return { sess, idx, aborted: false, finished: false, roundsDone: 0, totalRounds: 5, started: new Date(),
     trace: [], trapsDone: [], flurries: 0, counts: {}, roundNo: 0, cam: false, camReports: [], inRound: false };
 }
 
 $('startBtn').onclick = () => {
-  const sess = sessionAt(chosen);
+  const sess = LIB.sessions[chosen];
   const unlocked = unlockAudio(); // synchronous part runs inside the tap
   keepAwake();
   run = newRun(sess, chosen);
@@ -801,15 +736,23 @@ $('startBtn').onclick = () => {
   clock.reset();
   $('pauseBtn').textContent = 'Pause';
   $('stopBtn').textContent = 'Stop';
+  setTempo(0);
   show('run');
   run.timer = setInterval(() => {
     renderClock();
-    const label = run.partName ? 'Skip ' + run.partName + ' ⏭' : 'Skip ⏭';
+    const label = run.partName ? 'Skip ' + run.partName : 'Skip';
     if ($('skipBtn').textContent !== label) $('skipBtn').textContent = label;
     if (camOn() && run.inRound && Cam.coach.round) $('camStats').textContent = Cam.coach.liveStats();
   }, 200);
   unlocked.then(() => runSession(sess)).then(() => finish(true), e => { if (!(e instanceof Abort)) console.error(e); finish(false); });
 };
+function setTempo(d) {
+  settings.tempo = Math.round(Math.min(1.8, Math.max(0.5, (settings.tempo || 1) + d)) * 100) / 100;
+  saveSettings();
+  $('tempoInfo').textContent = `Tempo ${Math.round(settings.tempo * 100)}%`;
+}
+$('slowerBtn').onclick = () => setTempo(-0.15);
+$('fasterBtn').onclick = () => setTempo(0.15);
 $('pauseBtn').onclick = () => {
   if (clock.pausedAt == null) { clock.pause(); camPause(true); $('pauseBtn').textContent = 'Resume'; }
   else { clock.resume(); if (run.inRound) camPause(false); $('pauseBtn').textContent = 'Pause'; }
@@ -870,7 +813,7 @@ $('saveLog').onclick = () => {
     cam: run.camReports.length ? run.camReports : undefined,
   });
   LS.set('log', log);
-  if (run.sess.id !== 'custom') LS.set('next', (run.idx + 1) % LIB.sessions.length);
+  LS.set('next', (run.idx + 1) % LIB.sessions.length);
   chosen = LS.get('next', 0); run = null; renderHome();
 };
 $('discardLog').onclick = () => { run = null; renderHome(); };
@@ -928,7 +871,7 @@ function neededClips() { // [id, text] the app can say; mirrors collect() in too
   const tok = s => parse(s).flat().forEach(t => out.push(['t:' + t, sayToken(t)]));
   LIB.combos.forEach(e => tok(e.calls)); LIB.traps.forEach(e => tok(e.calls));
   LIB.defence.forEach(d => { out.push(['in:' + d.attack, `Incoming ${d.attack}!`]); tok(d.answer); });
-  for (const th of Object.values(LIB.themes)) [th.focus, th.teach, th.tip, ...th.cues].forEach(t => out.push(['x:' + t, t]));
+  for (const sp of Object.values(LIB.spotlights)) out.push(['x:' + sp.say, sp.say]);
   const walk = v => typeof v === 'string' ? out.push(['x:' + v, v]) : Object.values(v).forEach(walk);
   walk(LIB.phrases);
   return out;
@@ -972,7 +915,7 @@ for (const b of document.querySelectorAll('.back')) b.onclick = renderHome;
 // ---------- ?sim: whole session in virtual time, trace on screen and in window.__trace ----------
 async function simulate() {
   const idx = (+Q.get('session') || 1) - 1;
-  const sess = sessionAt(idx);
+  const sess = LIB.sessions[idx];
   run = newRun(sess, idx);
   clock.reset();
   await runSession(sess);

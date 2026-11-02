@@ -151,3 +151,15 @@ mix themes (some snipe, some kicks) without sitting through whole sessions or sl
 - Skip says what it skips (rest, lesson, round…); "Skip lesson" keeps the round; rest can be set to none.
 - Camera: back camera; checks that the other hand stays up on kicks; live numbers on screen; a spoken check-in a third of the way
   into each round, so it's clear whether it can see him.
+
+## v6 (2026-11-02): "too many categories, too boring"
+
+- Three hard options (Fight mix / Counters and defence / Kicks), every round mixes everything; the 9 fighter
+  themes became 14 two-minute spotlights. Intros and rests are short.
+- New material: hooks (1, 3, 2: Milan's favourite; no 1, 2, 3, enforced by the audit), liver shot, uppercuts,
+  clinch on the bag (grab, knees, elbow, frame out), lead side kick, superman punch, 16 long fast strings.
+- More incoming attacks (default 25%), faster base tempo, Faster/Slower buttons, a Combos screen.
+- Camera: kick checks (hip turn against calibration kicks, head kicks reaching head height, leg back to stance, other hand up).
+- Asked and answered: comparing Milan to McGregor / Adesanya / Ruffy / O'Malley footage isn't done. There's no
+  pose data of their strikes to compare with, and measuring it from fight video from one phone angle would be guesswork. The camera
+  compares him with his own calibration instead.

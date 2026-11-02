@@ -37,3 +37,6 @@ input[type=checkbox] { width:22px; height:22px; }
 .camstats { font-size:15px; color:var(--fg); }
 .custom { display:flex; flex-direction:column; gap:10px; background:var(--card); border-radius:12px; padding:12px; }
 .rounds { display:flex; flex-direction:column; gap:8px; }
+.tempo { align-items:center; } .tempo span { text-align:center; flex:0.8; }
+#comboList h3 { margin:16px 0 8px; }
+#comboList .hist { margin-bottom:6px; }

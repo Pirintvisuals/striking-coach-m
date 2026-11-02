@@ -4,119 +4,131 @@ Generated from `library.json` by `tools/build_library_md.py`. Edit the JSON, not
 
 Orthodox stance. 1 jab, 2 cross, 3 lead hook, 4 rear hook; **up jab** = lead-hand long uppercut from range; **check hook** = lead hook thrown while pivoting off the line. `|` separates the calls of a trap sequence. McGregor is southpaw: his straight left is Milan's **2**, and his kicks to his right side are mirrored here.
 
-**Totals:** 125 combos, 29 trap sequences, 37 incoming attacks with answers, 9 round themes. 16 entries contain a spinning or flying technique; the engine caps them per round (1 per round, 4 in the McGregor/Ruffy spin themes), so jabs and straights stay far more frequent.
+**Totals:** 168 combos, 17 trap sequences, 43 incoming attacks with answers, 15 spotlights. 15 entries contain a spinning or flying technique; the engine caps them per round (1 per round, more during the McGregor/Ruffy spin spotlights), so jabs and straights stay far more frequent.
 
-## Round themes
+## Sessions and spotlights
 
-Each 10-minute round teaches one setup: the coach explains it in one line, you drill it (first ~15% of the round), then it is mixed in with related calls (to ~50%), then hidden among everything else with traps and callbacks to earlier traps (to the end). Intensity rises through the round.
+Three options, all hard. Every round mixes everything. Every ~2 minutes a **spotlight** (one short spoken line) makes one setup and its family come up more often, then the next spotlight takes over.
 
-**Snipe days**
+- **Fight mix**: incoming attacks ×1.3, spotlights: The liver, McGregor's straight, Body kicks, Hooks and uppercuts, Superman punch, Adesanya's feints, Ruffy in and out, Long strings, Lead side kick, Clinch, Pull counters, Question mark kick, McGregor's kicks and spins, Ruffy's spins
+- **Counters and defence**: incoming attacks ×2.6, spotlights: Pull counters, Adesanya's check hook, The liver, Hooks and uppercuts, Long strings, Body kicks, McGregor's straight, Lead side kick, Clinch
+- **Kicks**: incoming attacks ×1.6, spotlights: Body kicks, Adesanya's feints, Lead side kick, Question mark kick, Superman punch, McGregor's kicks and spins, The liver, Long strings, Ruffy's spins, Hooks and uppercuts
 
-| round | theme | setup taught | spoken teach line | related calls |
-|---|---|---|---|---|
-| 1 | McGregor's straight | `feint 1, 2` | The setup: feint the jab with your shoulder. When they flinch, two, straight down the middle. Drill it. | s01, s02, s16, s18, s26, t03, t16, mc01, s10, s29, s31 |
-| 2 | Ruffy's in and out | `step in, 2, 3, step out` | The setup: one long step in, 2, 3, and step out before they answer. Hands can be low, feet never stop. Drill it. | ru02, ru08, s08, s19, e01, e02, e04, s25, tr2, s28, s32 |
-| 3 | McGregor's pull counter | `1, pull, 2` | The setup: jab, lean back just out of their answer, and fire the 2 over it. Drill it. | p02, p09, p20, p21, p24, t08, t09, tm3, t19, p08, s30 |
-
-**Kicks days**
-
-| round | theme | setup taught | spoken teach line | related calls |
-|---|---|---|---|---|
-| 1 | Adesanya's feints into kicks | `feint 1, calf kick` | The setup: fake the jab. While they're frozen, calf kick the front leg. Drill it. | ad01, ad02, ad06, s26, k07, k18, ta2, ta4, k11, k20, k25 |
-| 2 | Front kick and question mark kick | `front kick | front kick | question mark kick` | The setup: front kick to the body, twice. They drop their hands to catch it. The third one chambers the same and turns over to the head. Drill it. | ad05, ad07, ad08, ad04, ta3, mc01, k05, t13, s14, k26, k24 |
-| 3 | McGregor's kicks and spins | `front kick, 2 | front kick, 2 | front kick, back kick` | The setup: front kick, 2. Twice. Then front kick and spin into the back kick while they brace for the 2. Drill it. | mc01, mc02, mc03, mc04, mc05, mc06, mc07, tm2, mc08, k21, k22, k23 |
-
-**Counter days**
-
-| round | theme | setup taught | spoken teach line | related calls |
-|---|---|---|---|---|
-| 1 | Pull counter defence | `incoming cross → pull, 2` | The setup: when you hear incoming cross, lean back just out of range and fire your 2 straight back. Drill it. | d02, d06, d33, d37, p02, p04, p05, p19, p21, x07 |
-| 2 | Adesanya's counters | `incoming blitz → check hook, pivot out` | The setup: when they rush in, don't back up straight. Pivot as you throw the lead hook, and you're off the line. That's how Adesanya finished Whittaker. Drill it. | d34, d35, d09, d11, p22, p23, p17, d12 |
-| 3 | Ruffy's counters and spins | `feint 1, wheel kick` | The setup: fake the jab, and let the turn of the feint become the spinning wheel kick. The King Green knockout. Drill it slow first. | ru04, ru05, ru06, ru07, tr1, d19, d22, d24, d26, d28, d30 |
+| spotlight | spoken | setup | family |
+|---|---|---|---|
+| McGregor's straight | Spotlight: McGregor. Feint, then the 2. | `feint 1, 2` | c02, c14, c10, mc01, c09, p21 |
+| Ruffy in and out | Spotlight: Ruffy. In, 2, 3, out. | `step in, 2, 3, step out` | h06, h04, c08, L14, l10 |
+| Pull counters | Spotlight: pull counters. Make them miss, make them pay. | `1, pull, 2` | p02, p09, p21, p22, t09, tm3, L04 |
+| The liver | Spotlight: the liver. Go downstairs. | `1, liver shot, 3` | l01, l02, l03, l06, l09, l11, tl1, k10, l14 |
+| Hooks and uppercuts | Spotlight: hooks and uppercuts. | `1, rear uppercut, 3` | h01, h02, u01, u02, u06, u08, tu1, h14 |
+| Adesanya's feints | Spotlight: Adesanya. Feint, then kick. | `feint 1, calf kick` | ad01, ad02, ad06, ta2, k07, L06 |
+| Question mark kick | Spotlight: front kick, then the question mark. | `front kick | front kick | question mark kick` | ad05, ad07, ad08, mc02, L16 |
+| Body kicks | Spotlight: body kicks. Both sides. | `2, 3, rear body kick` | k20, k21, k23, k24, k26, l14, tm2 |
+| McGregor's kicks and spins | Spotlight: McGregor. Kick them back, spin, 2. | `front kick, 2 | front kick, 2 | front kick, back kick` | mc03, mc04, mc05, mc06, mc07 |
+| Clinch | Spotlight: clinch. Knees, elbow, frame out. | `3, clinch, knee, knee, frame out` | cl2, cl3, cl4, cl5, cl6, e05, L08 |
+| Long strings | Spotlight: long strings. Don't stop. | `1, 2, lead head kick, slip, pull, body jab, step in, liver shot, 3` | L02, L03, L05, L07, L09, L10, L11, L12, L13, L15 |
+| Adesanya's check hook | Spotlight: Adesanya's check hook. Let them rush in. | `incoming blitz → check hook, pivot out` | d35, d09, p23, p22, d43 |
+| Ruffy's spins | Spotlight: Ruffy. Fake the jab, then spin. | `feint 1, wheel kick` | ru04, ru05, tr1, x05 |
+| Lead side kick | Spotlight: the lead side kick. Keep them long. | `side kick, 1, 2` | sk1, sk2, sk4, sk5, sk6 |
+| Superman punch | Spotlight: the superman punch. Sell the kick. | `rear body kick | rear body kick | superman punch` | sm1, sm2, sm3, sm4, sm5 |
 
 ## Combos
 
 | id | call | fighter | tags | why it works | src |
 |---|---|---|---|---|---|
-| s01 | 1, 2 |  | snipe jab warm | The jab measures and blinds; the cross travels down the same line. | [coach] |
-| s02 | 1, 1, 2 |  | snipe jab | The double jab steals distance, and the second jab hides the cross. | [coach] |
-| s03 | 1, body 2 |  | snipe jab | Jab high lifts the guard; the cross goes under it to the body. | [coach] |
-| s04 | body jab, 2 |  | snipe jab | Jab to the body drops the hands; the cross goes to the open chin. | [coach] |
-| s05 | up jab, 2 |  | snipe jab | The up jab splits the guard from below; the cross follows through the gap. | [coach] |
-| s06 | 1, up jab, 2 |  | snipe jab | The normal jab makes them shell high; the up jab comes under the gloves. | [coach] |
-| s07 | up jab, step out | Ruffy | snipe jab warm exit | Touch with the up jab from range and leave before they can answer. | [lowkick_ruffy] |
-| s08 | 1, 2, step out | Ruffy | snipe exit warm | Land the one two and leave on an angle. Never stay to admire it. | [lowkick_ruffy] |
-| s09 | feint 1, 2 | McGregor | snipe | The jab feint freezes them; the cross lands while they are still reacting. | [sherdog_mcg], [fox_ufc205] |
-| s10 | feint 2, 1, 2 |  | snipe | Fake the cross so they cover; jab and cross land as they open back up. | [coach] |
-| s11 | 1, 2, 1 |  | snipe jab | Finishing on the jab keeps them on the end of your reach while you reset. | [coach] |
-| s12 | 1, body 2, 2 |  | snipe | Same cross on two levels: they can only guard one of them. | [coach] |
-| s13 | 1, 2, teep |  | snipe teep warmkick | The teep after the cross pushes them straight back out to your range. | [coach] |
-| s14 | teep, 1, 2 |  | snipe teep | The teep stops their step; the jab and cross catch them while they reset. | [coach] |
-| s15 | 1, teep |  | snipe teep jab warmkick | The jab lifts their hands and eyes; the teep lands in the open belly. | [coach] |
-| s16 | feint 1, body 2 | McGregor | snipe | A jab feint makes them lift the guard; drive the cross into the body. | [sherdog_mcg], [fox_ufc205] |
-| s17 | 1, pivot out |  | snipe jab warm exit | Jab and angle off: they reset facing an empty spot. | [coach] |
-| s18 | 1, 1, 1, 2 |  | snipe jab | Pumping jabs set a rhythm; the cross breaks it. | [coach] |
-| s19 | 2, step out | McGregor | snipe exit | A long cross from outside, then leave on the angle before they answer. | [be_mcg_siver] |
-| s20 | body 2, up jab |  | snipe jab | The body cross pulls their elbows down; the up jab rises straight through. | [coach] |
-| s21 | 1, 2, 1, 2 |  | snipe | Four straights: every hand comes straight back to the face. | [coach] |
-| s22 | 1, 1 |  | snipe jab warm | The double jab: the first finds the range, the second scores. | [coach] |
-| s23 | body 2, 2 |  | snipe | Body then head with the same hand: the eyes follow the first one down. | [coach] |
-| s24 | feint level change, 2 |  | snipe | In MMA a level change sells the takedown; the cross lands as they sprawl. | [coach] |
-| s25 | 1, 2, 3, step out |  | snipe exit | They move away from the cross into the hook. Then you leave. | [coach] |
-| e01 | 3, 2, step out |  | exit | The lead hook pulls their guard wide; the cross goes down the middle, then step out. | [coach] |
-| e02 | 2, 3, 2, pivot out |  | exit | Cross, hook, cross turns them; pivot out so they punch where you were. | [coach] |
-| e03 | body 3, 3, step out |  | exit | The hook to the liver drops their elbow; the same hook goes up top. Then leave. | [coach] |
-| e04 | 2, 3, angle out |  | exit | Punish on the inside, then angle off before they can clinch or trade. | [coach] |
-| p01 | 1, pull, 2 |  | pull counter snipe | Your jab invites their jab back; pull just out of range and fire the cross over it. | [evolve_pull], [ds_pull] |
-| p02 | pull, 2 | McGregor | pull counter warm | Let their punch fall short, then hit the space it left open. | [evolve_pull], [sherdog_mcg] |
-| p03 | pull, 2, 3, step out |  | pull counter exit | Pull, then cross and hook while they are overextended. Then leave. | [evolve_pullcombos] |
-| p04 | pull, 1, 2 |  | pull counter | After the miss they are stretched out; jab and cross before they recover. | [evolve_pullcombos] |
-| p05 | pull, body 2 |  | pull counter | A missed punch leaves the body open; drive the cross into it. | [evolve_pullcombos] |
-| p06 | pull, up jab, 2 |  | pull counter jab | The up jab comes up under their returning hand; the cross follows. | [coach] |
-| p07 | pull, 2, lead head kick |  | pull counter kick | The cross loads your hips; ride that turn into the lead head kick. | [evolve_pull], [evolve_headkick] |
-| p08 | feint 1, pull, 2 | McGregor | pull counter | The feint draws their counter; pull out of it and punish. | [sherdog_mcg], [evolve_pull] |
-| p09 | 1, 2, pull, 2 |  | pull counter snipe | They answer your one two; pull out of it and cross again. | [evolve_pullcombos] |
-| p10 | pull, 2, pivot out |  | pull counter exit | Counter, then pivot: they turn into nothing. | [evolve_pull] |
-| p11 | slip, 2 |  | counter | Slip outside their jab and your cross is already loaded. | [evolve_counter5] |
-| p12 | slip, 2, 3 |  | counter | Slip outside, cross over the top, hook behind it. | [evolve_counter5] |
-| p13 | roll, 3, 2 |  | counter | Roll under the hook and come back with your own hook and cross. | [evolve_headmove] |
-| p14 | parry, 1, 2 |  | counter warm | The rear hand parries their jab, so your lead hand is free: jab back, then the cross. | [evolve_counter5] |
-| p15 | pull, teep |  | pull counter teep | If they keep walking after the miss, teep them back to range. | [coach] |
-| p16 | pull, lead head kick |  | pull counter kick | After the pull your weight is on the back leg, so the lead leg is free to kick. | [coach] |
-| p17 | pull, 3 |  | pull counter | Pull, and come back with the lead hook as they reach. | [evolve_pullcombos] |
-| p18 | step back, 2 |  | counter snipe | Stepping back draws them in; the cross meets them on the step. | [evolve_lowkick_def] |
-| p19 | pull, pull, 2 |  | pull counter | Pull from the one two and fire your cross as their second hand comes back. | [evolve_pullcombos] |
-| p20 | 1, pull, 2, step out | McGregor | pull counter exit | Bait, pull, punish, leave. The whole sniper game in one combo. | [evolve_pull], [lowkick_ruffy] |
-| k01 | body 2, rear head kick |  | kick | The body cross pulls their elbow down; the rear kick goes over it to the head. | [evolve_headkick] |
+| c01 | 1, 2 |  | snipe jab warm | The jab measures and blinds; the cross travels down the same line. | [coach] |
+| c02 | 1, 1, 2 |  | snipe jab | The double jab steals distance and hides the cross. | [coach] |
+| c03 | 1, body 2 |  | snipe body | Jab high lifts the guard; the cross goes under it to the body. | [coach] |
+| c04 | body jab, 2 |  | snipe jab body warm | Jab to the body drops the hands; the cross goes to the open chin. | [coach] |
+| c05 | up jab, 2 |  | snipe jab | The up jab splits the guard from below; the cross follows through the gap. | [coach] |
+| c06 | 2, up jab |  | snipe jab | The 2 makes them shell high; the up jab comes up through the middle. | [coach] |
+| c07 | feint 1, 2 | McGregor | snipe feint | The jab feint freezes them; the 2 lands while they are still reacting. | [sherdog_mcg], [fox_ufc205] |
+| c08 | 1, 2, step out | Ruffy | snipe exit warm | Land the one two and leave on an angle. | [lowkick_ruffy] |
+| c09 | 2, step out | McGregor | snipe exit | A long cross from outside, then leave before they answer. | [be_mcg_siver] |
+| c10 | feint 2, 1, 2 |  | snipe feint | Fake the cross so they cover; jab and cross land as they open back up. | [coach] |
+| c12 | up jab, 2, up jab |  | snipe jab | Up jab and 2 set each other up: under, over, under. | [coach] |
+| c13 | 1, 2, up jab, 2 |  | snipe jab | The up jab splits the guard after the one two; the last 2 goes through the gap. | [coach] |
+| c14 | shoulder feint, 1, 2 | Adesanya | snipe feint | A shoulder twitch makes them react; the one two lands on the reaction. | [sherdog_adesanya], [sk_adesanya_feints] |
+| c15 | feint level change, 2 |  | snipe feint | A level change sells the takedown; the cross lands as they drop their hands. | [coach] |
+| c16 | 1, 2, pivot out |  | snipe exit warm | One two, then turn off the line so they punch air. | [coach] |
+| h01 | 1, 3, 2 |  | hook snipe warm | Jab, lead hook round the guard, then the cross straight through the middle it opened. | [coach] |
+| h02 | 1, 3, 2, 3 |  | hook | Same start, and the last hook catches them leaning away from the cross. | [coach] |
+| h03 | 3, 2 |  | hook | The hook pulls the guard wide; the cross goes down the middle. | [coach] |
+| h04 | 2, 3, 2 | Ruffy | hook snipe | Right, left, right: each punch loads the next. | [cageside_ruffy_mullarkey] |
+| h06 | 2, 3, step out | Ruffy | hook exit | Cross, hook, and out before they answer. | [cageside_ruffy_mullarkey] |
+| h07 | 1, 3, 2, pivot out |  | hook exit | Land the 1, 3, 2 and turn off the line. | [coach] |
+| h08 | 3, 2, 3, step out |  | hook exit | Hook, cross, hook, gone. | [coach] |
+| h09 | 3, 4, 3, step out |  | hook exit | Close range: punish with hooks both sides, then leave. | [coach] |
+| h10 | up jab, 3, 2 |  | hook jab | The up jab lifts the chin; the hook comes round while they look up. | [coach] |
+| h11 | body jab, 3, 2 |  | hook body | Body jab drops the hands; hook and cross go upstairs. | [coach] |
+| h12 | feint 2, 3, 2 |  | hook feint | They cover the centre for the cross; the hook comes round the side. | [coach] |
+| h13 | step in, 2, 3, step out | Ruffy | hook snipe exit | Ruffy's dart: one long step in, right hand, left hook, and out. | [cageside_ruffy_mullarkey], [cageside_ruffy_llontop] |
+| h14 | 1, 3, 2, 3, 2 |  | hook | Five-punch burst, all off the 1, 3, 2 rhythm. | [coach] |
+| l01 | 1, liver shot |  | liver body | The jab raises their eyes; the lead hook digs into the liver. | [coach] |
+| l02 | 2, liver shot |  | liver body | The cross turns you; the lead hook comes back off that turn into the liver. | [coach] |
+| l03 | liver shot, 3 |  | liver hook | Liver first drops the right elbow; the same hook goes up to the head. | [coach] |
+| l04 | 1, liver shot, 3 |  | liver hook | Jab, liver, head: body-head with the same hand. | [coach] |
+| l05 | 1, 2, liver shot |  | liver | After the one two they shell high; the liver is open. | [coach] |
+| l06 | 1, 2, liver shot, 3 |  | liver hook | One two, liver, then the hook upstairs as their elbow drops. | [coach] |
+| l07 | liver shot, 3, 2 |  | liver hook | Down, up, and the cross through the middle. | [coach] |
+| l08 | feint 1, liver shot |  | liver feint | The jab feint lifts their guard; go under it to the liver. | [coach] |
+| l09 | 2, liver shot, 3, step out |  | liver hook exit | Cross, liver, head hook, out. | [coach] |
+| l10 | step in, liver shot, 3, step out |  | liver exit | Step in low to the liver, come up with the hook, leave. | [coach] |
+| l11 | slip, liver shot, 3 |  | liver counter | Slip their jab outside and you are already loaded for the liver. | [coach] |
+| l12 | body jab, 2, liver shot |  | liver body | Three to the body in a row: jab, cross, liver. | [coach] |
+| l13 | up jab, 2, liver shot |  | liver jab | Up jab and 2 lift the guard; finish on the liver. | [coach] |
+| l14 | liver shot, rear body kick |  | liver kick body | The lead hook turns your hips; the rear kick lands on the same side as the liver. | [coach] |
+| l15 | liver shot, rear head kick |  | liver kick | Liver brings the elbow down; the rear kick goes high on the same side. | [coach] |
+| u01 | lead uppercut, 2 |  | upper | The lead uppercut splits the guard; the cross follows. | [coach] |
+| u02 | rear uppercut, 3 |  | upper hook | Rear uppercut up the middle, lead hook round the side. | [coach] |
+| u03 | 1, rear uppercut, 3 |  | upper hook | Jab to close the gap, then rear uppercut and lead hook. | [coach] |
+| u04 | 1, 2, lead uppercut, 2 |  | upper | One two, the lead uppercut through the shell, and the 2 again. | [coach] |
+| u06 | 3, rear uppercut, 3 |  | upper hook | Hook, uppercut, hook: they cover the side and get split down the middle. | [coach] |
+| u07 | liver shot, lead uppercut |  | upper liver | Liver, then the same hand comes up the middle as they fold. | [coach] |
+| u08 | rear uppercut, 3, 2 |  | upper hook | Uppercut, hook, cross. | [coach] |
+| u09 | slip, rear uppercut, 3 |  | upper counter | Slip inside and the rear uppercut is loaded. | [coach] |
+| u10 | roll, 3, rear uppercut |  | upper counter | Roll under their hook, answer with hook and uppercut. | [coach] |
+| u11 | body 2, lead uppercut, 2 |  | upper body | Body cross folds them; the uppercut meets them coming down. | [coach] |
+| u12 | 1, 3, rear uppercut, 3, step out |  | upper hook exit | Hook-uppercut-hook burst after the jab, then leave. | [coach] |
+| k01 | body 2, rear head kick |  | kick body | The body cross pulls their elbow down; the rear kick goes over it to the head. | [evolve_headkick] |
 | k02 | 2, lead head kick |  | kick | The cross turns your hips; let the lead leg ride that turn up to the head. | [ds_ludwig], [be_highkicks] |
-| k03 | 1, low kick |  | kick warm warmkick | The jab raises their eyes; the rear low kick lands where they aren't looking. | [evolve_headkick] |
-| k04 | 1, rear head kick |  | kick jab | The jab blinds them; the rear head kick comes around the side. | [ds_moraes] |
+| k03 | 1, low kick |  | kick warm warmkick | The jab raises their eyes; the low kick lands where they aren't looking. | [coach] |
+| k04 | 1, rear head kick |  | kick jab | The jab blinds them; the rear head kick comes round the side. | [ds_moraes] |
 | k05 | teep, rear head kick |  | kick teep | The teep makes them guard the middle; the head kick goes around it. | [evolve_headkick] |
-| k06 | 1, 2, 3, rear body kick |  | kick | The lead hook turns them and reloads your hips; the rear kick lands on the open side. | [coach] |
-| k07 | feint kick, 2 |  | kick snipe | Fake the kick so they lift the leg; the cross lands while they stand on one foot. | [evolve_headkick] |
+| k06 | 1, 3, rear body kick |  | kick hook body | The lead hook turns them and reloads your hips for the rear kick. | [coach] |
+| k07 | feint kick, 2 |  | kick feint | Fake the kick so they lift the leg; the cross lands while they stand on one foot. | [evolve_headkick] |
 | k08 | up jab, rear head kick |  | kick jab | The up jab splits the guard upward; the head kick comes around it. | [coach] |
-| k09 | lead body kick, 2 |  | kick | The lead kick to the body brings their elbow down; the cross follows straight. | [coach] |
-| k10 | 1, 2, 3, low kick |  | kick | Dutch style: punches up top hide the low kick finish. | [evolve_headkick] |
+| k09 | lead body kick, 2 |  | kick body warmkick | The lead kick brings their elbow down; the cross follows straight. | [coach] |
+| k10 | 1, 2, liver shot, low kick |  | kick liver | Dutch style: hands high, liver, then the low kick off the hook. | [coach] |
 | k11 | calf kick, 2 |  | kick | The calf kick makes them shift their weight; the cross catches them flat. | [coach] |
-| k12 | 1, 2, 3, rear head kick |  | kick | The hook pulls their guard to one side; the rear kick lands on the other. | [evolve_headkick] |
-| k13 | feint 2, lead head kick |  | kick | Fake the cross so they cover the centre; the lead kick comes around the side. | [ds_ludwig] |
-| k14 | 2, lead body kick |  | kick | The cross turns you; the lead kick lands on the liver side. | [coach] |
+| k12 | 1, 3, rear head kick |  | kick hook | The hook pulls their guard to one side; the rear kick lands on the other. | [coach] |
+| k13 | feint 2, lead head kick |  | kick feint | Fake the cross so they cover the centre; the lead kick comes round. | [ds_ludwig] |
+| k14 | 2, lead body kick |  | kick body | The cross turns you; the lead kick lands on the liver side. | [coach] |
 | k15 | low kick, 2 |  | kick warmkick | The low kick drops their eyes; the cross follows up top. | [coach] |
 | k16 | body jab, lead head kick |  | kick jab | The body jab pulls their hands down; the lead leg goes high. | [evolve_headkick] |
-| k17 | teep, 2, lead head kick |  | kick teep | Teep to set range, cross to turn them, lead kick to finish on the open side. | [coach] |
-| k18 | feint low kick, rear head kick |  | kick | Fake low, go high: their guard follows the fake down. | [evolve_headkick] |
-| k19 | teep, 1, 2 |  | kick teep warm warmkick | The teep stops them; jab and cross land while they come back in. | [evolve_pereira] |
-| s26 | shoulder feint, 1, 2 | Adesanya | snipe feint | A shoulder twitch costs nothing and makes them react; the one two lands on the reaction. | [sherdog_adesanya], [sk_adesanya_feints] |
-| s27 | 1, 2, 3, 2 |  | snipe | The hook turns their head into the line of the last cross. | [coach] |
-| s28 | 2, 3, 2 | Ruffy | snipe | Cross, hook, cross: each punch loads the next one. | [cageside_ruffy_mullarkey] |
-| e05 | 3, rear elbow, step out |  | exit elbow | Close range is punish and exit: the hook turns them, the elbow comes across, then you leave. | [coach] |
-| e06 | 2, lead elbow, pivot out |  | exit elbow | If the cross gets you too close, turn it into a lead elbow and pivot off the line. | [coach] |
-| e07 | 2, 3, knee, step out |  | exit knee | Cross and hook bend them over; the knee comes up the middle. Short knee, the bag moves. | [coach] |
-| p21 | hop back, 2 | McGregor | pull counter snipe | McGregor's back-skip: hop back and to your right, and the 2 meets them as they square up chasing. | [vice_mcg_alvarez], [fox_ufc205] |
-| p22 | 1, pull, 3 | Adesanya | pull counter | When they overextend on the answer, the lead hook catches them. Adesanya finished Whittaker this way. | [1news_whittaker], [cbs_ufc243] |
-| p23 | pull, check hook, pivot out | Adesanya | pull counter | Pull from the punch, then the lead hook as you pivot: they fall into it and you are already off the line. | [1news_whittaker] |
-| p24 | 1, hop back, 2 | McGregor | pull counter snipe | Jab to make them answer, back-skip out of the answer, 2 on the way in. | [vice_mcg_alvarez], [mmatorch_pull] |
-| ad01 | shoulder feint, lead body kick | Adesanya | kick feint | Adesanya's shoulder feint makes them guard high; the lead kick goes to the open body. | [sherdog_adesanya], [fightprimer_adesanya] |
+| k17 | teep, 2, lead head kick |  | kick teep | Teep to set range, cross to turn them, lead kick to finish. | [coach] |
+| k18 | feint low kick, rear head kick |  | kick feint | Fake low, go high: their guard follows the fake down. | [evolve_headkick] |
+| k19 | teep, 1, 2 |  | kick teep warmkick | The teep stops them; jab and cross land while they come back in. | [evolve_pereira] |
+| k20 | 1, rear body kick |  | kick body warmkick | The jab raises their hands; the rear body kick lands under the elbow. | [coach] |
+| k21 | 3, rear body kick |  | kick body hook | The lead hook turns your hips the right way; the rear kick comes off that turn. | [coach] |
+| k22 | 2, 3, rear body kick |  | kick body hook | Cross, hook, and the hook loads the rear body kick. | [coach] |
+| k23 | lead body kick, 2, 3, rear body kick |  | kick body hook | Body kicks on both sides with the hands in between. | [coach] |
+| k24 | rear body kick, 1, 2 |  | kick body | Land the body kick, step down forward, one two. | [coach] |
+| k25 | up jab, lead body kick |  | kick jab body | The up jab lifts their guard; the lead body kick goes under it. | [coach] |
+| k26 | 1, 2, lead body kick |  | kick body | The cross turns your hips; the lead body kick comes off that turn. | [coach] |
+| k27 | 2, lead head kick, 2 |  | kick | Cross, lead head kick, and the cross again as they recover. | [coach] |
+| sk1 | side kick, 2 |  | kick body | The lead side kick stops them on the way in; the cross catches them as they reset. | [coach] |
+| sk2 | 1, side kick |  | kick jab | The jab freezes their front foot; the side kick goes straight into the body. | [coach] |
+| sk3 | side kick, 1, 2 |  | kick snipe | Side kick to keep them long, then snipe with the one two. | [coach] |
+| sk4 | feint 1, side kick |  | kick feint | The jab feint draws them forward into the side kick. | [coach] |
+| sk5 | side kick, 3, 2, step out |  | kick hook exit | Side kick, step down forward into the hook and cross, then out. | [coach] |
+| sk6 | pull, side kick |  | kick pull counter | Pull from their punch, and the side kick meets them stepping in. | [coach] |
+| sm1 | feint kick, superman punch |  | kick feint snipe | Fake the rear kick so they drop the hands for it; the superman punch comes over the top. | [coach] |
+| sm2 | 1, superman punch |  | snipe jab | The jab measures; the superman punch covers the extra distance with the 2. | [coach] |
+| sm3 | superman punch, 3 |  | snipe hook | Land the superman punch and the lead hook comes round as you land forward. | [coach] |
+| sm4 | rear body kick, superman punch, 3, step out |  | kick body hook exit | Real kick first, then the fake of it becomes the superman punch, hook, out. | [coach] |
+| sm5 | superman punch, liver shot |  | snipe liver | They cover high from the superman punch; the liver is open as you land. | [coach] |
+| ad01 | shoulder feint, lead body kick | Adesanya | kick feint body | Adesanya's shoulder feint makes them guard high; the lead kick goes to the open body. | [sherdog_adesanya], [fightprimer_adesanya] |
 | ad02 | hip feint, rear head kick | Adesanya | kick feint | The hip feint covers distance and fakes a kick; the real one goes high. | [fightprimer_adesanya], [sk_adesanya_feints] |
 | ad03 | feint 1, calf kick | Adesanya | kick feint jab | The jab fake freezes their hands and front foot; the calf kick lands on the planted leg. | [fightprimer_adesanya], [user_lead] |
 | ad04 | 1, 1, lead head kick | Adesanya | kick jab | Two jabs make them slip outside; the lead head kick is waiting where their head goes. | [user_lead], [be_highkicks] |
@@ -132,37 +144,66 @@ Each 10-minute round teaches one setup: the coach explains it in one line, you d
 | mc06 | wheel kick, 2 | McGregor | kick | The wheel kick stops them moving to the centre; they turn back into the straight. | [sherdog_prev189], [sk_mcg_unorthodox] |
 | mc07 | 1, 2, back kick | McGregor | kick | After the one two they expect a hook; turn and drive the back kick straight up the middle to the body. | [sk_mcg_unorthodox] |
 | mc08 | feint kick, knee | McGregor | kick knee feint | Cerrone flinched at the body kick; the knee came while he defended the kick. | [be_mcg_cerrone] |
-| ru01 | step in, 2, 3, step out | Ruffy | snipe exit | Ruffy's dart: one long step in, right hand, left hook, and out before they answer. | [cageside_ruffy_mullarkey], [cageside_ruffy_llontop] |
-| ru02 | step in, 2, step out | Ruffy | snipe exit | In with the right hand and straight back out: hit and don't be there. | [cageside_ruffy_mullarkey] |
 | ru03 | feint 1, wheel kick | Ruffy | kick feint | The UFC 313 knockout: a jab feint raises their hands for the punch and the turn of the feint becomes the wheel kick. | [keviniole_ruffy], [lowkick_ruffy_koty] |
 | ru04 | back kick, wheel kick | Ruffy | kick | Spinning back kick to the body, then the spinning kick high. He dropped Chandler with that rhythm. | [cageside_ruffy_chandler] |
 | ru05 | 2, 3, back kick | Ruffy | kick | The lead hook already turns you clockwise; keep turning into the back kick. | [cageside_ruffy_llontop], [user_lead] |
-| ru06 | 1, 2, 3, wheel kick | Ruffy | kick | Fast hands bring their guard tight; the hook turns you into the wheel kick round the side. | [cageside_ruffy_llontop], [user_lead] |
+| ru06 | 2, 3, wheel kick | Ruffy | kick | The hook turns you into the wheel kick round the side. | [cageside_ruffy_llontop], [user_lead] |
 | ru07 | 2, flying knee | Ruffy | knee | The right hand stumbles them and the flying knee meets them. That's how Mullarkey went. | [cageside_ruffy_mullarkey] |
-| ru08 | 2, 3, 2, step out | Ruffy | snipe exit | Right, left, right, and leave. The basic Ruffy burst. | [cageside_ruffy_mullarkey] |
-| s29 | 2, up jab |  | snipe jab | The 2 makes them shell high; the up jab comes up through the middle of the shell. | [coach] |
-| s30 | up jab, 2, up jab |  | snipe jab | Up jab and 2 set each other up: under, over, under. | [coach] |
-| s31 | 1, 2, up jab, 2 |  | snipe jab | The up jab splits the guard after the one two; the last 2 goes through the gap. | [coach] |
-| s32 | up jab, 2, 3, 2 |  | snipe jab | Up jab lifts the chin, then cross, hook, cross while they are still looking up. | [coach] |
-| k20 | 1, rear body kick |  | kick warmkick body | The jab raises their eyes and hands; the rear body kick lands under the elbow. | [evolve_headkick] |
-| k21 | 3, rear body kick |  | kick body | The lead hook turns your hips the right way; the rear kick comes off that turn. | [coach] |
-| k22 | 2, 3, rear body kick |  | kick body | Cross, hook, and the hook loads the rear body kick. Dutch style. | [evolve_headkick] |
-| k23 | lead body kick, 2, 3, rear body kick |  | kick body | Body kicks on both sides with the hands in between: they can't guard both. | [coach] |
-| k24 | rear body kick, 1, 2 |  | kick body | Land the body kick, step down forward, and the one two follows. | [coach] |
-| k25 | up jab, lead body kick |  | kick jab body | The up jab lifts their guard; the lead body kick goes under it. | [coach] |
-| k26 | 1, 2, lead body kick |  | kick body | The cross turns your hips; the lead body kick comes off that turn to the liver. | [coach] |
+| p01 | 1, pull, 2 |  | pull counter snipe | Your jab invites their jab back; pull just out of range and fire the cross over it. | [evolve_pull], [ds_pull] |
+| p02 | pull, 2 | McGregor | pull counter warm | Let their punch fall short, then hit the space it left open. | [evolve_pull], [sherdog_mcg] |
+| p03 | pull, 2, 3, step out |  | pull counter exit | Pull, then cross and hook while they are overextended. Then leave. | [evolve_pullcombos] |
+| p04 | pull, 1, 2 |  | pull counter | After the miss they are stretched out; jab and cross before they recover. | [evolve_pullcombos] |
+| p05 | pull, body 2 |  | pull counter | A missed punch leaves the body open; drive the cross into it. | [evolve_pullcombos] |
+| p06 | pull, up jab, 2 |  | pull counter jab | The up jab comes up under their returning hand; the cross follows. | [coach] |
+| p07 | pull, 2, lead head kick |  | pull counter kick | The cross loads your hips; ride that turn into the lead head kick. | [evolve_pull], [evolve_headkick] |
+| p08 | feint 1, pull, 2 | McGregor | pull counter | The feint draws their counter; pull out of it and punish. | [sherdog_mcg], [evolve_pull] |
+| p09 | 1, 2, pull, 2 |  | pull counter snipe | They answer your one two; pull out of it and cross again. | [evolve_pullcombos] |
+| p10 | pull, 2, pivot out |  | pull counter exit | Counter, then pivot: they turn into nothing. | [evolve_pull] |
+| p11 | slip, 2 |  | counter | Slip outside their jab and your cross is already loaded. | [evolve_counter5] |
+| p12 | slip, 2, 3 |  | counter | Slip outside, cross over the top, hook behind it. | [evolve_counter5] |
+| p13 | roll, 3, 2 |  | counter | Roll under the hook and come back with your own hook and cross. | [evolve_headmove] |
+| p14 | parry, 1, 2 |  | counter warm | The rear hand parries their jab, so your lead hand is free: jab back, then the cross. | [evolve_counter5] |
+| p16 | pull, lead head kick |  | pull counter kick | After the pull your weight is on the back leg, so the lead leg is free to kick. | [coach] |
+| p17 | pull, 3 |  | pull counter | Pull, and come back with the lead hook as they reach. | [evolve_pullcombos] |
+| p18 | step back, 2 |  | counter snipe | Stepping back draws them in; the cross meets them on the step. | [evolve_lowkick_def] |
+| p20 | 1, pull, 2, step out | McGregor | pull counter exit | Bait, pull, punish, leave. The whole sniper game in one combo. | [evolve_pull], [lowkick_ruffy] |
+| p21 | hop back, 2 | McGregor | pull counter snipe | McGregor's back-skip: hop back and to your right, and the 2 meets them as they square up chasing. | [vice_mcg_alvarez], [fox_ufc205] |
+| p22 | 1, pull, 3 | Adesanya | pull counter | When they overextend on the answer, the lead hook catches them. Adesanya finished Whittaker this way. | [1news_whittaker], [cbs_ufc243] |
+| p23 | pull, check hook, pivot out | Adesanya | pull counter | Pull from the punch, then the lead hook as you pivot: they fall into it and you are already off the line. | [1news_whittaker] |
+| p25 | 1, 2, slip, 2 |  | counter snipe | They answer your one two; slip it and the cross is loaded. | [coach] |
+| p26 | 1, 3, 2, roll, 3 |  | counter hook | Roll under their return hook and hook back. | [coach] |
+| p27 | slip, roll, 3, 2 |  | counter hook | Slip the jab, roll the hook, answer with hook and cross. | [coach] |
+| cl1 | 3, clinch, knee, knee, frame out |  | clinch knee hook | The hook gets you inside; grab, two knees, frame off and leave. | [coach] |
+| cl2 | 2, clinch, knee, rear elbow, frame out |  | clinch knee elbow | Cross to close the gap, grab, knee, elbow, frame out. | [coach] |
+| cl3 | clinch, knee, knee, frame out, 2 |  | clinch knee | Knees in the clinch, frame off, and the 2 as they come back to you. | [coach] |
+| cl4 | liver shot, clinch, knee, frame out, 2 |  | clinch knee liver | Liver shot, grab them as they fold, knee, frame out, 2. | [coach] |
+| cl5 | 1, 2, clinch, knee, frame out, rear head kick |  | clinch knee kick | Close with the one two, knee in the clinch, frame them off into the head kick. | [coach] |
+| cl6 | clinch, lead elbow, frame out, 2 |  | clinch elbow | Short elbow off the clinch, frame, cross. | [coach] |
+| e05 | 3, rear elbow, step out |  | exit elbow hook | The hook turns them, the elbow comes across, then you leave. | [coach] |
+| e06 | 2, lead elbow, pivot out |  | exit elbow | If the cross gets you too close, lead elbow and pivot off the line. | [coach] |
 | x06 | sprawl, 1, 2 |  | counter | Sprawl the shot, back up to stance, punish as they stand. | [coach] |
-| x07 | 1, 2, sprawl, 2 |  | counter | They duck under your one two for a takedown: sprawl and cross as they come up. | [coach] |
+| x07 | 1, 2, sprawl, 2 |  | counter | They duck under your one two: sprawl and cross as they come up. | [coach] |
 | x01 | low kick, wheel kick |  | kick | The low kick drops their eyes; the wheel kick comes around high. | [coach] |
 | x02 | teep, flying knee |  | knee | The teep makes them rebound forward, straight into the knee. | [coach] |
 | x03 | 1, flying knee |  | knee | The jab freezes their guard high; the flying knee comes from underneath. | [coach] |
 | x04 | feint 2, back kick |  | kick | They brace for the cross; the back kick goes into the belly. | [coach] |
 | x05 | 3, spinning back fist |  |  | The hook turns you; keep turning and the back fist lands on the same side. | [coach] |
-| f01 | step in, step out |  |  | In and out: range is the first thing you control. | [coach] |
-| f02 | circle left |  |  | Circle away from their power hand. | [coach] |
-| f03 | circle right |  |  | Change direction so they can't time you. | [coach] |
-| f04 | step in, pivot out |  |  | Step in, then turn off the line. | [coach] |
-| f05 | step in, step out, circle left |  |  | In, out, and off the line. | [coach] |
+| L01 | 1, 2, lead head kick, slip, pull, body jab, step in, liver shot, 3 |  | long kick liver | Milan's string: attack, defend, and attack again, high and low, without a break. | [coach] |
+| L02 | 1, 3, 2, slip, 2, liver shot, step out |  | long hook liver | 1, 3, 2, slip their answer, cross, liver, out. | [coach] |
+| L03 | up jab, 2, roll, 3, rear body kick |  | long hook kick body | Up jab, cross, roll their hook, and hook into the rear body kick. | [coach] |
+| L04 | 1, 1, 2, pull, 2, lead head kick |  | long pull kick | Double jab and cross, pull their answer, cross, lead head kick off the turn. | [coach] |
+| L05 | liver shot, 3, 2, slip, 2, step out |  | long liver hook | Down, up, through, slip, cross, gone. | [coach] |
+| L06 | feint 1, calf kick, 1, 3, 2, pivot out |  | long kick hook | Adesanya's calf kick setup, then the 1, 3, 2 and off the line. | [coach] |
+| L07 | teep, 1, 2, slip, liver shot, 3, rear body kick |  | long liver kick | Teep, one two, slip, liver, hook, and the hook loads the body kick. | [coach] |
+| L08 | 2, 3, clinch, knee, knee, frame out, 2 |  | long clinch knee | Punch in, knees in the clinch, frame out, cross. | [coach] |
+| L09 | 1, 2, roll, 3, rear uppercut, 3, step out |  | long upper hook | One two, roll their answer, hook-uppercut-hook, out. | [coach] |
+| L10 | body jab, 2, 3, lead uppercut, 2, step out |  | long upper body | Body jab, cross, hook, uppercut, cross, out. | [coach] |
+| L11 | slip, 2, liver shot, 3, roll, 3, 2 |  | long liver hook counter | Counter, body-head, roll, and the 3, 2 again. | [coach] |
+| L12 | oblique kick, 1, 2, slip, 2, liver shot |  | long kick liver | Stop them with the oblique, one two, slip, cross, liver. | [coach] |
+| L13 | 1, 3, 2, pull, 2, lead body kick |  | long hook pull kick | 1, 3, 2, pull their answer, cross, and the lead body kick off the turn. | [coach] |
+| L14 | step in, 2, 3, 2, pull, 2, step out |  | long hook pull exit | Ruffy-style entry, pull the counter, cross, gone. | [coach] |
+| L15 | up jab, 2, 3, rear uppercut, 3, rear head kick |  | long upper kick | Six strikes: the last hook loads the rear head kick. | [coach] |
+| L16 | front kick, 1, 2, liver shot, 3, step out |  | long kick liver | Front kick to stop them, then hands high and low, out. | [coach] |
 
 ## Trap sequences
 
@@ -170,35 +211,23 @@ The repeated calls condition the opponent; the last call breaks the pattern. Lat
 
 | id | sequence | fighter | why it works | src |
 |---|---|---|---|---|
-| t01 | 1, body 2 | 1, body 2 | 1, body 2 | body 2, rear head kick |  | Three body crosses teach them to drop the elbow; the fourth goes high. | [evolve_headkick], [be_highkicks] |
+| t01 | 1, body 2 | 1, body 2 | body 2, rear head kick |  | Two body crosses teach them to drop the elbow; the third goes high. | [evolve_headkick], [be_highkicks] |
 | t02 | 1, 2 | 1, 2 | 2, lead head kick |  | After repeated one twos they cover high and centre; the lead kick goes around. | [ds_ludwig] |
-| t03 | 1 | 1 | 1 | feint 1, 2 |  | Three identical jabs set the rhythm; the feint breaks it and the cross lands on the flinch. | [sherdog_mcg] |
-| t04 | 1 | 1 | up jab, 2 |  | Straight jabs make them cover high; the up jab comes underneath on the third. | [coach] |
-| t05 | teep | teep | feint kick, 2 |  | Two teeps make them reach for the leg; fake the third and cross over the lowered hand. | [evolve_teep_def] |
-| t06 | body jab, body 2 | body jab, body 2 | body jab, 2 |  | Twice to the body drops their guard; the same entry goes to the head the third time. | [evolve_headkick] |
-| t07 | low kick | low kick | 1, rear head kick |  | Low kicks pull their eyes and guard down; the same leg comes up high. | [evolve_headkick] |
-| t08 | 1, step back | 1, step back | 1, pull, 2 | McGregor | Jab and step back teaches them to chase; the third time, pull and catch them chasing. | [evolve_pull], [sherdog_mcg] |
 | t09 | 1, 2, step out | 1, 2, step out | 1, 2, pull, 2 | McGregor | Leaving after the one two invites them to follow; the third time you stay and counter. | [evolve_pull] |
 | t10 | lead body kick | lead body kick | lead head kick |  | Body kicks make them drop the arm; the same kick goes upstairs. Jones did it to Cormier. | [evolve_headkick] |
-| t11 | 1, 2 | 1, 2 | 1, body 2 |  | Two one twos make them shell high; the third cross goes under, to the body. | [coach] |
-| t12 | up jab | up jab | up jab, rear head kick |  | Up jabs make them squeeze the guard tight in the middle; the head kick goes around it. | [coach] |
-| t13 | teep | 1, teep | 1, rear head kick |  | Teeps make them guard the middle; after the jab, the kick goes high instead. | [evolve_headkick] |
 | t14 | pull, 2 | pull, 2 | pull, lead head kick |  | Twice they eat the pull counter and cover for the cross; the third answer is the kick. | [evolve_pull], [evolve_headkick] |
-| t15 | 1, 2, 3, low kick | 1, 2, 3, low kick | 1, 2, 3, rear head kick |  | Dutch style: they learn to check after the punches; now the same kick goes high. | [evolve_headkick] |
-| t16 | feint 1 | feint 1 | 1, 2 |  | Feints with no follow-up teach them to ignore it; the next one is real. | [sherdog_mcg] |
-| t17 | calf kick | calf kick | feint kick, 2 |  | Calf kicks make them lift the leg early; fake it and cross while they stand on one foot. | [coach] |
-| t18 | 1 | 1, 2 | 1, 2, 3, step out |  | Each combo adds a strike; they defend the last pattern, not the new one. | [coach] |
-| t19 | 1, pull | 1, pull | 1, pull, 2 |  | Two empty pulls make them commit to the counter; the third time it's waiting for them. | [evolve_pull], [ds_pull] |
-| t20 | feint 2 | feint 2 | 1, body 2 |  | Cross feints make them cover their face; the real cross goes to the body. | [coach] |
+| t15 | 1, 2, liver shot, low kick | 1, 2, liver shot, low kick | 1, 2, liver shot, rear head kick |  | Dutch style: they learn to check the low kick after the punches; the same kick goes high. | [evolve_headkick] |
+| tl1 | liver shot, 2 | liver shot, 2 | liver shot, 3 |  | After two liver-cross they drop the right elbow for the body; the hook goes to the head. | [coach] |
+| tl2 | 1, 3, 2 | 1, 3, 2 | 1, liver shot, 3 |  | They wait for the hook high; this time it goes to the liver first. | [coach] |
+| tu1 | 3, 2 | 3, 2 | 3, rear uppercut, 3 |  | Hooks make them cover the sides; the uppercut splits the middle. | [coach] |
 | ta1 | front kick | front kick | question mark kick | Adesanya | Two real front kicks to the body teach them to drop the hands; the third chambers the same and turns over to the head. | [fightprimer_adesanya], [sk_adesanya_qmark] |
 | ta2 | feint 1, calf kick | feint 1, calf kick | feint 1, 2 | Adesanya | After two calf kicks they lift the leg on every jab fake; the third time the 2 lands on a man standing on one foot. | [fightprimer_adesanya], [user_lead] |
-| ta3 | 1 | 1 | 1, lead head kick | Adesanya | Jabs teach them to slip outside; the third time the kick is waiting where they slip. | [user_lead], [be_highkicks] |
-| ta4 | shoulder feint | hip feint | shoulder feint, rear head kick | Adesanya | Feints with nothing behind them teach them to stop reacting; then the real kick comes off the same look. | [sherdog_adesanya], [sk_adesanya_feints] |
 | tm1 | front kick, 2 | front kick, 2 | front kick, back kick | McGregor | Front kick and straight walks them to the fence; the third time the spinning back kick lands as they brace for the straight. | [sk_mcg_unorthodox], [sherdog_prev189] |
 | tm2 | rear body kick | rear body kick | feint kick, 2 | McGregor | Two body kicks and they flinch at any kick; fake it and the 2 lands on the flinch. | [be_mcg_cerrone] |
 | tm3 | 1, step out | 1, step out | 1, hop back, 2 | McGregor | Jab and leave twice so they start to chase; the third time back-skip and counter as they come. | [vice_mcg_alvarez], [fox_ufc205] |
 | tr1 | 1, 2 | 1, 2 | feint 1, wheel kick | Ruffy | One twos make them raise the hands at any jab; the feint does the rest and the wheel kick goes round the guard. | [keviniole_ruffy], [lowkick_ruffy_koty] |
-| tr2 | step in, 2, step out | step in, 2, step out | step in, 2, 3, back kick | Ruffy | Darting in and out makes them wait for the exit; this time keep turning into the back kick. | [cageside_ruffy_llontop], [user_lead] |
+| t19 | 1, pull | 1, pull | 1, pull, 2 |  | Two empty pulls make them commit to the counter; the third time it's waiting for them. | [evolve_pull], [ds_pull] |
+| ts1 | rear body kick | rear body kick | superman punch |  | Two body kicks make them drop the elbow and wait for the kick; the same start becomes the superman punch. | [coach] |
 
 ## Incoming attacks
 
@@ -243,6 +272,12 @@ A forced pause after the last combo, an alert chirp, then a **different voice** 
 | d35 | jab cross | pull, 3 | Adesanya | Pull from the cross; they overextend and the lead hook catches them coming in. | [1news_whittaker], [cbs_ufc243] |
 | d36 | takedown | sprawl, 1, 2 |  | Hips back and down, then back up and punish as they stand. | [coach] |
 | d37 | blitz | pull, 2, step out | McGregor | Pull from the rush, straight down the middle, then leave on the angle. | [evolve_pull], [fox_ufc205] |
+| d38 | body hook | block, 3, 2 |  | Elbow down on the body hook, then hook and cross straight back. | [evolve_mt_def] |
+| d39 | uppercut | pull, 2 |  | Lean back from the uppercut; it passes in front of you and the cross is open. | [evolve_pull] |
+| d40 | clinch | frame out, 2 |  | Frame on the neck and shoulder, push off, and cross as they let go. | [coach] |
+| d41 | body hook | step back, 2 |  | Step back out of the body hook; it falls short and the cross lands. | [coach] |
+| d42 | jab | slip, liver shot, 3 |  | Slip outside the jab and dig the liver, then hook up top. | [coach] |
+| d43 | cross | roll, 3, 2 |  | Roll under the cross, come up with the hook and the cross. | [evolve_headmove] |
 
 ## Flurries
 
@@ -255,10 +290,11 @@ Hard days: two 15–20 s all-out flurries in the middle of every round, plus the
 | jabs | Jabs only. As fast as you can. |
 | upjab | Up jab, two, up jab, two. Nonstop. |
 | pull2 | Pull and two. Pull and two. Nonstop. |
-| hooks | Three, two. Hook and cross. Nonstop. |
+| hooks | Three, two, three, two. Nonstop. |
 | kicks | Body kicks. Switch legs every kick. |
 | teeps | Teep, one two, teep. Nonstop. |
 | sprawls | Sprawl, back up, one two. Nonstop. |
+| liver | Liver shot, hook up top. Nonstop. |
 
 ## Audit
 
@@ -272,11 +308,13 @@ Changes from v1:
 - v1 rare r01 became mc07 (McGregor's spinning back kick to the body after the one two). The rest of the rare list moved into combos, capped by the spin limit.
 - Every offence call is checked by tools/build_library_md.py: no 'cross'/'hook' words in offence (numbers only), no doubled tokens except pumped jabs/kicks/pulls, combos end on a strike or an exit, rear hand straight into a rear kick is flagged, every token is in the known vocabulary, every source key exists.
 - v4: no teep-teep or double front kick inside one combo (a freestanding bag moves away after the first one); after parrying a jab with the rear hand the lead hand fires first (parry, 1, 2), and only a parried cross is answered with the 2. The audit now enforces both.
+- v6: Milan found single-theme rounds boring. Now there are 3 options (Fight mix hard / technical, Counters and defence), every round mixes everything, and the fighter setups are 2-minute spotlights. Added hooks (1, 3, 2), the liver shot, uppercuts, clinch on the bag, and long fast strings. No '1, 2, 3' (Milan: it doesn't make sense to him; 1, 3, 2 instead), and the audit enforces that. Lone-jab traps (1 | 1 | 1 ...) and near-duplicates removed.
+- v6: all sessions are hard (Milan: no easy options). Third option is Kicks (everything, kick-heavy). Added the lead side kick.
 
 Automatic checks (run on every build of this file): **all passed.**
 
 - k01 (body 2, rear head kick): kept on purpose: rear hand into rear kick on purpose: Milan's favourite, the body cross dips the hips and the kick comes off that dip
-- t01 (1, body 2 | 1, body 2 | 1, body 2 | body 2, rear head kick): kept on purpose: builds on k01 (body 2, rear head kick), Milan's favourite
+- t01 (1, body 2 | 1, body 2 | body 2, rear head kick): kept on purpose: builds on k01 (body 2, rear head kick), Milan's favourite
 
 ## Sources
 

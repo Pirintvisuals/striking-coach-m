@@ -25,14 +25,9 @@
   <button id="startBtn" class="big">Start</button>
   <p class="label">Or pick another</p>
   <div id="pickList" class="chips"></div>
-  <div id="customBox" class="custom hidden">
-    <label>Intensity
-      <select id="cMode"><option value="hard">Hard (flurries, burnout)</option><option value="technical">Technical</option></select>
-    </label>
-    <div id="cRounds" class="rounds"></div>
-    <div class="row"><button id="cAdd">+ Round</button><button id="cDel">− Round</button></div>
-  </div>
+
   <nav class="row">
+    <button id="combosBtn">Combos</button>
     <button id="histBtn">Log</button>
     <button id="setBtn">Settings</button>
   </nav>
@@ -46,12 +41,24 @@
   <div id="call" class="call"></div>
   <p id="answer" class="answer"></p>
   <div id="camBox" class="cambox hidden"><video id="camVideo" playsinline muted></video><div><div id="camInfo" class="small"></div><div id="camStats" class="camstats"></div></div></div>
+  <div class="row tempo">
+    <button id="slowerBtn">− Slower</button>
+    <span id="tempoInfo" class="small">Tempo 100%</span>
+    <button id="fasterBtn">Faster +</button>
+  </div>
   <div class="row">
     <button id="pauseBtn">Pause</button>
     <button id="skipBtn">Skip ⏭</button>
     <button id="stopBtn" class="danger">Stop</button>
   </div>
   <p id="wakeInfo" class="small"></p>
+</section>
+
+<!-- COMBO LIST -->
+<section id="combos" class="screen hidden">
+  <h2>Combo list</h2>
+  <div id="comboList"></div>
+  <button class="back">Back</button>
 </section>
 
 <!-- LOG ENTRY -->
@@ -78,9 +85,9 @@
 <section id="settings" class="screen hidden">
   <h2>Settings</h2>
   <label>Defence calls: <b id="defVal"></b>
-    <input id="defPct" type="range" min="0" max="40" step="5">
+    <input id="defPct" type="range" min="0" max="50" step="5">
   </label>
-  <p class="small">Base share of calls that are incoming attacks. Each round theme multiplies it (×1 on snipe/kick rounds, ×1.5 to ×2.5 on pull-counter and defence rounds).</p>
+  <p class="small">Base share of calls that are incoming attacks. Fight mix ×1.3, Kicks ×1.6, Counters and defence ×2.6.</p>
   <label class="check"><input id="sayAnswer" type="checkbox"> Say the defence + counter after an incoming attack</label>
   <label class="check"><input id="headKicks" type="checkbox"> Head kicks (untick if the bag doesn't reach head height)</label>
   <div class="row">

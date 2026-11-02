@@ -5,59 +5,30 @@ web app (PWA) for one person: no accounts, no backend, and it works offline once
 The spec is in [PLAN.md](PLAN.md), and every combo, trap and defence call with its
 "why" and sources is in [LIBRARY.md](LIBRARY.md).
 
-## What a session is (v2)
+## What a session is (v6)
 
-About 46 minutes with the defaults: 10 s countdown → **5-min warm-up** (footwork, then light
-hands, light kicks, first incoming calls) → **3 × 10-min themed rounds** → **3-min finisher**,
-with **2 min rest** before every round. Round length, rest and number of rounds are in
-**Settings**.
+There are three options, all hard, and every round mixes **everything**: straights, hooks (1, 3, 2), the liver
+shot, uppercuts, kicks (body, head, calf, side kick, front kick, question mark), superman punch, clinch on the bag,
+long fast strings, rapid fire, flurries, a challenge, and a lot of incoming attacks.
 
-Every themed round teaches one real setup from McGregor, Adesanya or Ruffy:
+- **1. Fight mix**: everything.
+- **2. Counters and defence**: everything, with about twice as many incoming attacks and more pull counters.
+- **3. Kicks**: everything, but kick-heavy, and most incoming attacks are kicks.
 
-1. **Teach** (first ~15%): the coach says the theme and explains the setup in one sentence, then
-   you drill it alone. After a few reps comes a short form cue.
-2. **Mix** (to ~50%): the setup is mixed with related calls and its trap sequences.
-3. **Hide** (to the end): the setup is hidden among everything else: straights, traps,
-   incoming attacks, and **callbacks** to traps from earlier rounds ("Callback. The trap
-   from round one." Then the pattern once, then the break).
-4. Short coaching cues come about once a minute. Recovery between calls shrinks through the round,
-   so intensity rises.
+Every ~2 minutes a **spotlight** changes: one short line ("Spotlight: the liver. Go downstairs."),
+the setup once, and then that family of combos comes up more often among everything else. The spotlights
+come from the McGregor / Adesanya / Ruffy research and continue where the last session stopped.
 
-**Hard days** use short gaps, "Rapid fire" strings (3–4 short punch combos back to back), two
-15–20 s all-out **flurries** in the middle of each round, and a flurry for the last 20 s. The
-finisher is a **burnout**: 6 × (20 s all out, 10 s easy). **Technical days** have no flurries.
-They use longer recovery and end each round with "Last minute. Perfect reps of the setup." The
-finisher drills the day's setups slowly.
-
-Rotation (the app always opens on the next one): Snipe hard → Kicks technical →
-Pull counters & defence hard → Snipe technical → Kicks hard → Pull counters &
-defence technical. You can pick another session on the home screen. Saving the log
-moves the rotation on to the one after the session you did.
-
-| | round 1 | round 2 | round 3 |
-|---|---|---|---|
-| Snipe | McGregor's straight (feint 1, 2) | Ruffy's in and out (step in, 2, 3, step out) | McGregor's pull counter (1, pull, 2) |
-| Kicks | Adesanya's feints (feint 1, calf kick) | Front kick → question mark kick trap | McGregor's kicks and spins (front kick, 2 ×2 → back kick) |
-| Counters | Pull counter defence (incoming cross → pull, 2) | Adesanya's check hook (incoming blitz → check hook, pivot out) | Ruffy's chaos (feint 1, wheel kick) |
-
-**Incoming attacks** never come straight after a combo. First there's a clear silence, then an alert
-chirp, then a **different voice** (female, US) says "Incoming cross!". The screen turns blue.
-After a short reaction window the coach says the defence and counter ("Pull, two"). Offence
-calls are always numbers in the coach's voice, so "one, two, cross" can't happen any more.
-The share of incoming calls is set in **Settings** (15% by default). Each round theme multiplies
-it, up to about 40% on defence rounds.
-
-Spinning techniques, knees and elbows are capped: one spinning technique per round, or about 4 in
-the McGregor/Ruffy spin rounds. In a simulated hard snipe session there were 842 jab/straight calls and
-2 spinning ones.
+Session: short intro → 2-min warm-up (real combos) → 3 × 10-min rounds → 3-min burnout, with 2-min rests.
+Rests are short: "Rest", the camera report if it's on, and "Ten seconds". During a session, **Faster / Slower**
+changes the tempo (it's remembered). **Combos** on the home screen lists every combo, trap and incoming
+attack with why it works.
 
 ## During a session
 
 - **Skip** says what it skips: countdown, camera check, warm-up, **rest**, **lesson** (just the teach part, the round
   carries on) or round. **Settings → Rest → None** removes the rests completely.
 - **Stop**: tap twice. It works at any moment, including the countdown, and the voice stops at once.
-- **7. Build your own** on the home screen: pick hard or technical and 1–5 round themes from any day,
-  for example McGregor's straight and then Adesanya's feints. It doesn't move the rotation.
 - **Settings → Warm-up**: none, 2 (default), 3 or 5 min. It's real combos from the first call, with no footwork-only part. Settings also has round length, rest and number of rounds.
 - **Settings → Voice**: "Recorded clips" or "Phone voice only". In both modes, a combo that isn't fully
   in the recorded clips is said as one sentence by the phone voice. The app never switches voices mid-combo,
@@ -76,7 +47,9 @@ phone, so no video leaves it. Use it like this:
    - **Rear hand home**: after every 2, rear hook or rear elbow, the rear hand should be back within about 0.65 s, and stay at the chin between combos.
    - **Lead hand**: back after jabs and hooks. Between combos it only flags drops well below your own low guard.
    - **Hip turn on the 2**: how far your hips rotate on each called 2, compared with your calibration 2s.
-   - **Kicks**: on a lead-leg kick the rear hand stays at the chin; on a rear-leg kick the lead hand stays up.
+   - **Kicks** (calibration adds 3 rear body kicks): hip turn on round kicks against your calibration kicks; head kicks reaching
+     head height; the kicking leg back to stance within ~0.9 s; and the other hand staying up (rear hand on lead-leg kicks,
+     lead hand on rear-leg kicks).
    - **Chin up / standing tall**, **stance turning square**, and **feet going still** between combos.
 4. The run screen shows live numbers ("Rear home 12/14 · Hip 82% · Kick guard 5/7"). A third of the way into a round it says
    whether it can see your work ("Camera check: hands are coming home", or "I can't see your punches well").
