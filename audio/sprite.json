@@ -1,5 +1,6 @@
 {
 "voice": "en-GB-RyanNeural",
+"voiceIncoming": "en-US-AriaNeural",
 "clips": {
 "fx:silence": {
 "s": 0.0,
@@ -35,985 +36,1030 @@
 "d": 0.3,
 "text": "Two."
 },
-"w:s01": {
-"s": 7.774,
-"d": 3.387,
-"text": "The jab measures and blinds; the cross travels down the same line."
-},
-"w:s02": {
-"s": 11.51,
-"d": 3.555,
-"text": "The double jab steals distance, and the second jab hides the cross."
-},
 "t:body 2": {
-"s": 15.416,
+"s": 7.774,
 "d": 0.56,
 "text": "Body two."
 },
-"w:s03": {
-"s": 16.326,
-"d": 3.11,
-"text": "Jab high lifts the guard; the cross goes under it to the body."
-},
 "t:body jab": {
-"s": 19.786,
+"s": 8.684,
 "d": 0.643,
 "text": "Body jab."
 },
-"w:s04": {
-"s": 20.78,
-"d": 3.552,
-"text": "Jab to the body drops the hands; the cross goes to the open chin."
-},
 "t:up jab": {
-"s": 24.682,
+"s": 9.678,
 "d": 0.574,
 "text": "Up jab."
 },
-"w:s05": {
-"s": 25.606,
-"d": 3.538,
-"text": "The up jab splits the guard from below; the cross follows through the gap."
-},
-"w:s06": {
-"s": 29.494,
-"d": 3.811,
-"text": "The normal jab makes them shell high; the up jab comes under the gloves."
-},
 "t:step out": {
-"s": 33.655,
+"s": 10.601,
 "d": 0.579,
 "text": "Step out."
 },
-"w:s07": {
-"s": 34.584,
-"d": 2.963,
-"text": "Touch with the up jab from range and leave before they can answer."
-},
-"w:s08": {
-"s": 37.897,
-"d": 4.431,
-"text": "Land the one two and leave on an angle. Never stay to admire it."
-},
 "t:feint 1": {
-"s": 42.678,
+"s": 11.53,
 "d": 0.522,
 "text": "Feint one."
 },
-"w:s09": {
-"s": 43.55,
-"d": 3.601,
-"text": "The jab feint freezes them; the cross lands while they are still reacting."
-},
 "t:feint 2": {
-"s": 47.501,
+"s": 12.402,
 "d": 0.551,
 "text": "Feint two."
 },
-"w:s10": {
-"s": 48.402,
-"d": 3.752,
-"text": "Fake the cross so they cover; jab and cross land as they open back up."
-},
-"w:s11": {
-"s": 52.504,
-"d": 3.248,
-"text": "Finishing on the jab keeps them on the end of your reach while you reset."
-},
-"w:s12": {
-"s": 56.102,
-"d": 2.998,
-"text": "Same cross on two levels: they can only guard one of them."
-},
 "t:teep": {
-"s": 59.45,
+"s": 13.303,
 "d": 0.326,
 "text": "Teep."
 },
-"w:s13": {
-"s": 60.126,
-"d": 3.102,
-"text": "The teep after the cross pushes them straight back out to your range."
-},
-"w:s14": {
-"s": 63.578,
-"d": 3.747,
-"text": "The teep stops their step; the jab and cross catch them while they reset."
-},
-"w:s15": {
-"s": 67.675,
-"d": 3.687,
-"text": "The jab lifts their hands and eyes; the teep lands in the open belly."
-},
-"w:s16": {
-"s": 71.712,
-"d": 3.368,
-"text": "A jab feint makes them lift the guard; drive the cross into the body."
-},
 "t:pivot out": {
-"s": 75.429,
+"s": 13.979,
 "d": 0.532,
 "text": "Pivot out."
 },
-"w:s17": {
-"s": 76.311,
-"d": 3.208,
-"text": "Jab and angle off: they reset facing an empty spot."
-},
-"w:s18": {
-"s": 79.869,
-"d": 2.565,
-"text": "Pumping jabs set a rhythm; the cross breaks it."
-},
-"w:s19": {
-"s": 82.784,
-"d": 3.509,
-"text": "A long cross from outside, then leave on the angle before they answer."
-},
-"w:s20": {
-"s": 86.643,
-"d": 3.773,
-"text": "The body cross pulls their elbows down; the up jab rises straight through."
-},
-"w:s21": {
-"s": 90.766,
-"d": 2.865,
-"text": "Four straights: every hand comes straight back to the face."
-},
-"w:s22": {
-"s": 93.981,
-"d": 3.558,
-"text": "The double jab: the first finds the range, the second scores."
-},
-"w:s23": {
-"s": 97.889,
-"d": 3.498,
-"text": "Body then head with the same hand: the eyes follow the first one down."
-},
 "t:feint level change": {
-"s": 101.737,
-"d": 0.941,
+"s": 14.861,
+"d": 0.942,
 "text": "Feint level change."
 },
-"w:s24": {
-"s": 103.028,
-"d": 3.962,
-"text": "In MMA a level change sells the takedown; the cross lands as they sprawl."
-},
 "t:3": {
-"s": 107.34,
+"s": 16.152,
 "d": 0.351,
 "text": "Three."
 },
-"w:s25": {
-"s": 108.042,
-"d": 3.68,
-"text": "They move away from the cross into the hook. Then you leave."
-},
-"w:e01": {
-"s": 112.071,
-"d": 4.143,
-"text": "The lead hook pulls their guard wide; the cross goes down the middle, then step out."
-},
-"w:e02": {
-"s": 116.564,
-"d": 4.068,
-"text": "Cross, hook, cross turns them; pivot out so they punch where you were."
-},
 "t:body 3": {
-"s": 120.983,
+"s": 16.854,
 "d": 0.62,
 "text": "Body three."
 },
-"w:e03": {
-"s": 121.953,
-"d": 4.759,
-"text": "The hook to the liver drops their elbow; the same hook goes up top. Then leave."
-},
 "t:angle out": {
-"s": 127.061,
+"s": 17.824,
 "d": 0.578,
 "text": "Angle out."
 },
-"w:e04": {
-"s": 127.989,
-"d": 3.613,
-"text": "Punish on the inside, then angle off before they can clinch or trade."
-},
 "t:pull": {
-"s": 131.952,
+"s": 18.752,
 "d": 0.243,
 "text": "Pull."
 },
-"w:p01": {
-"s": 132.545,
-"d": 4.39,
-"text": "Your jab invites their jab back; pull just out of range and fire the cross over it."
-},
-"w:p02": {
-"s": 137.285,
-"d": 3.062,
-"text": "Let their punch fall short, then hit the space it left open."
-},
-"w:p03": {
-"s": 140.697,
-"d": 4.512,
-"text": "Pull, then cross and hook while they are overextended. Then leave."
-},
-"w:p04": {
-"s": 145.56,
-"d": 3.505,
-"text": "After the miss they are stretched out; jab and cross before they recover."
-},
-"w:p05": {
-"s": 149.415,
-"d": 3.253,
-"text": "A missed punch leaves the body open; drive the cross into it."
-},
-"w:p06": {
-"s": 153.018,
-"d": 3.402,
-"text": "The up jab comes up under their returning hand; the cross follows."
-},
 "t:lead head kick": {
-"s": 156.77,
-"d": 0.733,
+"s": 19.345,
+"d": 0.732,
 "text": "Lead head kick."
 },
-"w:p07": {
-"s": 157.852,
-"d": 3.4,
-"text": "The cross loads your hips; ride that turn into the lead head kick."
-},
-"w:p08": {
-"s": 161.603,
-"d": 2.656,
-"text": "The feint draws their counter; pull out of it and punish."
-},
-"w:p09": {
-"s": 164.609,
-"d": 2.975,
-"text": "They answer your one two; pull out of it and cross again."
-},
-"w:p10": {
-"s": 167.934,
-"d": 2.661,
-"text": "Counter, then pivot: they turn into nothing."
-},
 "t:slip": {
-"s": 170.945,
+"s": 20.427,
 "d": 0.384,
 "text": "Slip."
 },
-"w:p11": {
-"s": 171.68,
-"d": 2.722,
-"text": "Slip outside their jab and your cross is already loaded."
-},
-"w:p12": {
-"s": 174.751,
-"d": 3.26,
-"text": "Slip outside, cross over the top, hook behind it."
-},
 "t:roll": {
-"s": 178.362,
+"s": 21.161,
 "d": 0.366,
 "text": "Roll."
 },
-"w:p13": {
-"s": 179.078,
-"d": 2.749,
-"text": "Roll under the hook and come back with your own hook and cross."
-},
 "t:parry": {
-"s": 182.177,
+"s": 21.877,
 "d": 0.348,
 "text": "Parry."
 },
-"w:p14": {
-"s": 182.875,
-"d": 2.307,
-"text": "Parry the jab down and the cross is right there."
-},
-"w:p15": {
-"s": 185.532,
-"d": 3.076,
-"text": "If they keep walking after the miss, teep them back to range."
-},
-"w:p16": {
-"s": 188.958,
-"d": 3.595,
-"text": "After the pull your weight is on the back leg, so the lead leg is free to kick."
-},
-"w:p17": {
-"s": 192.903,
-"d": 2.382,
-"text": "Pull, and come back with the lead hook as they reach."
-},
 "t:step back": {
-"s": 195.635,
+"s": 22.575,
 "d": 0.612,
 "text": "Step back."
 },
-"w:p18": {
-"s": 196.596,
-"d": 3.041,
-"text": "Stepping back draws them in; the cross meets them on the step."
-},
-"w:p19": {
-"s": 199.987,
-"d": 3.804,
-"text": "Pull from the one two and fire your cross as their second hand comes back."
-},
-"w:p20": {
-"s": 204.142,
-"d": 5.4,
-"text": "Bait, pull, punish, leave. The whole sniper game in one combo."
-},
 "t:rear head kick": {
-"s": 209.891,
-"d": 0.767,
+"s": 23.537,
+"d": 0.769,
 "text": "Rear head kick."
 },
-"w:k01": {
-"s": 211.008,
-"d": 3.918,
-"text": "The body cross pulls their elbow down; the rear kick goes over it to the head."
-},
-"w:k02": {
-"s": 215.276,
-"d": 3.579,
-"text": "The cross turns your hips; let the lead leg ride that turn up to the head."
-},
 "t:low kick": {
-"s": 219.205,
+"s": 24.656,
 "d": 0.527,
 "text": "Low kick."
 },
-"w:k03": {
-"s": 220.082,
-"d": 3.231,
-"text": "Punches raise their eyes; the low kick lands where they aren't looking."
-},
-"w:k04": {
-"s": 223.663,
-"d": 3.265,
-"text": "The jab blinds them; the rear head kick comes around the side."
-},
-"w:k05": {
-"s": 227.278,
-"d": 3.03,
-"text": "The teep makes them guard the middle; the head kick goes around it."
-},
 "t:rear body kick": {
-"s": 230.658,
+"s": 25.533,
 "d": 0.813,
 "text": "Rear body kick."
 },
-"w:k06": {
-"s": 231.821,
-"d": 3.378,
-"text": "After the cross the rear kick is already loaded; land it on the body."
-},
 "t:feint kick": {
-"s": 235.549,
+"s": 26.696,
 "d": 0.556,
 "text": "Feint kick."
 },
-"w:k07": {
-"s": 236.455,
-"d": 4.0,
-"text": "Fake the kick so they lift the leg; the cross lands while they stand on one foot."
-},
-"w:k08": {
-"s": 240.805,
-"d": 3.354,
-"text": "The up jab splits the guard upward; the head kick comes around it."
-},
 "t:lead body kick": {
-"s": 244.509,
-"d": 0.743,
+"s": 27.602,
+"d": 0.744,
 "text": "Lead body kick."
 },
-"w:k09": {
-"s": 245.602,
-"d": 3.618,
-"text": "The lead kick to the body brings their elbow down; the cross follows straight."
-},
-"w:k10": {
-"s": 249.57,
-"d": 2.974,
-"text": "Dutch style: punches up top hide the low kick finish."
-},
 "t:calf kick": {
-"s": 252.894,
+"s": 28.696,
 "d": 0.599,
 "text": "Calf kick."
 },
-"w:k11": {
-"s": 253.843,
-"d": 3.471,
-"text": "The calf kick makes them shift their weight; the cross catches them flat."
-},
-"w:k12": {
-"s": 257.663,
-"d": 3.646,
-"text": "The hook pulls their guard to one side; the rear kick lands on the other."
-},
-"w:k13": {
-"s": 261.659,
-"d": 3.734,
-"text": "Fake the cross so they cover the centre; the lead kick comes around the side."
-},
-"w:k14": {
-"s": 265.743,
-"d": 2.891,
-"text": "The cross turns you; the lead kick lands on the liver side."
-},
-"w:k15": {
-"s": 268.984,
-"d": 2.903,
-"text": "The low kick drops their eyes; the cross follows up top."
-},
-"w:k16": {
-"s": 272.237,
-"d": 3.237,
-"text": "The body jab pulls their hands down; the lead leg goes high."
-},
-"w:k17": {
-"s": 275.824,
-"d": 4.361,
-"text": "Teep to set range, cross to turn them, lead kick to finish on the open side."
-},
 "t:feint low kick": {
-"s": 280.535,
-"d": 0.684,
+"s": 29.645,
+"d": 0.685,
 "text": "Feint low kick."
 },
-"w:k18": {
-"s": 281.57,
-"d": 3.219,
-"text": "Fake low, go high: their guard follows the fake down."
+"t:shoulder feint": {
+"s": 30.679,
+"d": 0.719,
+"text": "Shoulder feint."
 },
-"w:k19": {
-"s": 285.139,
-"d": 3.849,
-"text": "Double teep: the first stops them, the second pushes them out of range."
+"t:rear elbow": {
+"s": 31.748,
+"d": 0.674,
+"text": "Rear elbow."
+},
+"t:lead elbow": {
+"s": 32.772,
+"d": 0.59,
+"text": "Lead elbow."
+},
+"t:knee": {
+"s": 33.712,
+"d": 0.375,
+"text": "Knee."
+},
+"t:hop back": {
+"s": 34.437,
+"d": 0.496,
+"text": "Hop back."
+},
+"t:check hook": {
+"s": 35.283,
+"d": 0.542,
+"text": "Check hook."
+},
+"t:hip feint": {
+"s": 36.175,
+"d": 0.525,
+"text": "Hip feint."
+},
+"t:front kick": {
+"s": 37.049,
+"d": 0.602,
+"text": "Front kick."
+},
+"t:question mark kick": {
+"s": 38.001,
+"d": 0.966,
+"text": "Question mark kick."
+},
+"t:oblique kick": {
+"s": 39.317,
+"d": 0.62,
+"text": "Oblique kick."
 },
 "t:back kick": {
-"s": 289.338,
+"s": 40.287,
 "d": 0.526,
 "text": "Back kick."
 },
-"w:r01": {
-"s": 290.214,
-"d": 3.738,
-"text": "After the cross they expect a hook; turn and back kick straight up the middle."
-},
 "t:wheel kick": {
-"s": 294.302,
+"s": 41.163,
 "d": 0.503,
 "text": "Wheel kick."
 },
-"w:r02": {
-"s": 295.155,
-"d": 3.178,
-"text": "The low kick drops their eyes; the wheel kick comes around high."
+"t:step in": {
+"s": 42.016,
+"d": 0.484,
+"text": "Step in."
 },
 "t:flying knee": {
-"s": 298.683,
+"s": 42.85,
 "d": 0.642,
 "text": "Flying knee."
 },
-"w:r03": {
-"s": 299.675,
-"d": 2.987,
-"text": "The teep makes them rebound forward, straight into the knee."
+"t:spinning back fist": {
+"s": 43.842,
+"d": 0.963,
+"text": "Spinning back fist."
 },
-"w:r04": {
-"s": 303.012,
-"d": 2.805,
-"text": "They brace for the cross; the back kick goes into the belly."
+"t:circle left": {
+"s": 45.155,
+"d": 0.701,
+"text": "Circle left."
 },
-"w:r05": {
-"s": 306.167,
-"d": 3.433,
-"text": "The jab freezes their guard high; the flying knee comes from underneath."
+"t:circle right": {
+"s": 46.205,
+"d": 0.666,
+"text": "Circle right."
 },
-"w:r06": {
-"s": 309.951,
-"d": 3.862,
-"text": "If the head kick misses, keep spinning: the wheel kick uses the same turn."
+"in:jab": {
+"s": 47.221,
+"d": 0.902,
+"text": "Incoming jab!"
 },
-"w:t01": {
-"s": 314.163,
-"d": 3.633,
-"text": "Three body crosses teach them to drop the elbow; the fourth goes high."
-},
-"w:t02": {
-"s": 318.146,
-"d": 4.015,
-"text": "After repeated one twos they cover high and centre; the lead kick goes around."
-},
-"w:t03": {
-"s": 322.51,
-"d": 4.46,
-"text": "Three identical jabs set the rhythm; the feint breaks it and the cross lands on the flinch."
-},
-"w:t04": {
-"s": 327.321,
-"d": 4.016,
-"text": "Straight jabs make them cover high; the up jab comes underneath on the third."
-},
-"w:t05": {
-"s": 331.687,
-"d": 4.067,
-"text": "Two teeps make them reach for the leg; fake the third and cross over the lowered hand."
-},
-"w:t06": {
-"s": 336.104,
-"d": 4.073,
-"text": "Twice to the body drops their guard; the same entry goes to the head the third time."
-},
-"w:t07": {
-"s": 340.526,
-"d": 3.43,
-"text": "Low kicks pull their eyes and guard down; the same leg comes up high."
-},
-"w:t08": {
-"s": 344.307,
-"d": 4.628,
-"text": "Jab and step back teaches them to chase; the third time, pull and catch them chasing."
-},
-"w:t09": {
-"s": 349.285,
-"d": 4.283,
-"text": "Leaving after the one two invites them to follow; the third time you stay and counter."
-},
-"w:t10": {
-"s": 353.918,
-"d": 5.653,
-"text": "Body kicks make them drop the arm; the same kick goes upstairs. Jones did it to Cormier."
-},
-"w:t11": {
-"s": 359.921,
-"d": 3.976,
-"text": "Two one twos make them shell high; the third cross goes under, to the body."
-},
-"w:t12": {
-"s": 364.247,
-"d": 4.095,
-"text": "Up jabs make them squeeze the guard tight in the middle; the head kick goes around it."
-},
-"w:t13": {
-"s": 368.692,
-"d": 3.829,
-"text": "Teeps make them guard the middle; after the jab, the kick goes high instead."
-},
-"w:t14": {
-"s": 372.871,
-"d": 4.213,
-"text": "Twice they eat the pull counter and cover for the cross; the third answer is the kick."
-},
-"w:t15": {
-"s": 377.434,
-"d": 3.29,
-"text": "They learn to check after the one two; now the kick goes high."
-},
-"w:t16": {
-"s": 381.074,
-"d": 3.841,
-"text": "Feints with no follow-up teach them to ignore it; the next one is real."
-},
-"w:t17": {
-"s": 385.265,
-"d": 4.351,
-"text": "Calf kicks make them lift the leg early; fake it and cross while they stand on one foot."
-},
-"w:t18": {
-"s": 389.966,
-"d": 3.961,
-"text": "Each combo adds a strike; they defend the last pattern, not the new one."
-},
-"w:t19": {
-"s": 394.277,
-"d": 3.98,
-"text": "Two empty pulls make them commit to the counter; the third time it's waiting for them."
-},
-"w:t20": {
-"s": 398.607,
-"d": 3.749,
-"text": "Cross feints make them cover their face; the real cross goes to the body."
-},
-"a:jab": {
-"s": 402.705,
-"d": 0.485,
-"text": "Jab!"
-},
-"w:d01": {
-"s": 403.54,
-"d": 3.23,
-"text": "Catch the jab with the rear hand and fire the cross back down the line."
-},
-"w:d02": {
-"s": 407.121,
-"d": 3.546,
-"text": "Lean back just enough for the jab to fall short, then cross over it."
-},
-"w:d03": {
-"s": 411.017,
-"d": 3.083,
-"text": "Slip outside the jab; your cross is loaded on that side."
-},
-"w:d04": {
-"s": 414.45,
-"d": 2.664,
-"text": "Step out of range, then come back as they recover."
-},
-"w:d05": {
-"s": 417.464,
-"d": 2.595,
-"text": "After the pull your weight is back and the lead leg is free."
-},
-"a:cross": {
-"s": 420.409,
-"d": 0.454,
-"text": "Cross!"
-},
-"w:d06": {
-"s": 421.213,
-"d": 4.0,
-"text": "The cross falls short when you pull; your cross comes back while their chin is open."
-},
-"w:d07": {
-"s": 425.563,
-"d": 3.089,
-"text": "Slip outside the cross and the lead hook is loaded on that side."
+"in:cross": {
+"s": 48.473,
+"d": 0.991,
+"text": "Incoming cross!"
 },
 "t:shoulder roll": {
-"s": 429.002,
+"s": 49.813,
 "d": 0.704,
 "text": "Shoulder roll."
 },
-"w:d08": {
-"s": 430.056,
-"d": 2.564,
-"text": "Take it on the shoulder and fire the cross straight back."
-},
-"w:d09": {
-"s": 432.969,
-"d": 2.179,
-"text": "Pull, and hook them as their cross comes back."
-},
-"w:d10": {
-"s": 435.498,
-"d": 3.674,
-"text": "Parry the cross across with the lead hand, then answer straight down the middle."
-},
-"a:lead hook": {
-"s": 439.522,
-"d": 0.576,
-"text": "Lead hook!"
-},
-"w:d11": {
-"s": 440.448,
-"d": 2.749,
-"text": "Roll under the hook and come back with your own hook and cross."
-},
-"w:d12": {
-"s": 443.547,
-"d": 3.87,
-"text": "The hook passes in front of your face; the cross goes through the middle it opened."
+"in:lead hook": {
+"s": 50.867,
+"d": 1.014,
+"text": "Incoming lead hook!"
 },
 "t:block": {
-"s": 447.766,
+"s": 52.231,
 "d": 0.334,
 "text": "Block."
 },
-"w:d13": {
-"s": 448.451,
-"d": 3.425,
-"text": "Glove to the temple, answer straight, and leave before the next one."
+"in:rear hook": {
+"s": 52.916,
+"d": 1.06,
+"text": "Incoming rear hook!"
 },
-"a:rear hook": {
-"s": 452.226,
-"d": 0.608,
-"text": "Rear hook!"
+"in:overhand": {
+"s": 54.326,
+"d": 1.123,
+"text": "Incoming overhand!"
 },
-"w:d14": {
-"s": 453.185,
-"d": 2.795,
-"text": "Block the rear hook; your lead hook is the shortest answer."
+"in:jab cross": {
+"s": 55.799,
+"d": 1.285,
+"text": "Incoming jab cross!"
 },
-"a:overhand": {
-"s": 456.329,
-"d": 0.716,
-"text": "Overhand!"
+"in:double jab": {
+"s": 57.434,
+"d": 1.116,
+"text": "Incoming double jab!"
 },
-"w:d15": {
-"s": 457.396,
-"d": 4.378,
-"text": "The overhand is long and slow: step back, let it miss, punish the gap."
-},
-"a:jab cross": {
-"s": 462.123,
-"d": 0.832,
-"text": "Jab cross!"
-},
-"w:d16": {
-"s": 463.306,
-"d": 3.27,
-"text": "Parry the jab, pull from the cross, and cross back over it."
-},
-"w:d17": {
-"s": 466.926,
-"d": 2.528,
-"text": "Step back from both, then cross as they finish."
-},
-"a:double jab": {
-"s": 469.804,
-"d": 0.664,
-"text": "Double jab!"
-},
-"w:d18": {
-"s": 470.818,
-"d": 2.97,
-"text": "Parry both jabs and the cross is free on the third beat."
-},
-"a:rear low kick": {
-"s": 474.137,
-"d": 0.833,
-"text": "Rear low kick!"
+"in:rear low kick": {
+"s": 58.9,
+"d": 1.276,
+"text": "Incoming rear low kick!"
 },
 "t:check": {
-"s": 475.32,
+"s": 60.526,
 "d": 0.364,
 "text": "Check."
 },
-"w:d19": {
-"s": 476.035,
-"d": 2.644,
-"text": "Check with the lead shin and cross while they land square."
+"in:calf kick": {
+"s": 61.241,
+"d": 1.125,
+"text": "Incoming calf kick!"
 },
-"w:d20": {
-"s": 479.029,
-"d": 3.332,
-"text": "Pull the leg back so the kick misses, then cross as they swing through."
-},
-"w:d21": {
-"s": 482.711,
-"d": 1.768,
-"text": "Check, then answer kick for kick."
-},
-"a:calf kick": {
-"s": 484.829,
-"d": 0.692,
-"text": "Calf kick!"
-},
-"w:d22": {
-"s": 485.871,
-"d": 3.12,
-"text": "Turn the knee out to check the calf, then cross as they land."
-},
-"w:d23": {
-"s": 489.341,
-"d": 2.413,
-"text": "Check and teep straight away so they can't follow up."
-},
-"a:body kick": {
-"s": 492.104,
-"d": 0.593,
-"text": "Body kick!"
+"in:body kick": {
+"s": 62.716,
+"d": 1.117,
+"text": "Incoming body kick!"
 },
 "t:catch": {
-"s": 493.048,
+"s": 64.183,
 "d": 0.389,
 "text": "Catch."
 },
-"w:d24": {
-"s": 493.786,
-"d": 2.685,
-"text": "Catch the body kick and cross while they hop on one leg."
+"in:rear head kick": {
+"s": 64.921,
+"d": 1.352,
+"text": "Incoming rear head kick!"
 },
-"w:d25": {
-"s": 496.821,
-"d": 3.028,
-"text": "Block it, then kick back on the same side while they reset."
+"in:lead head kick": {
+"s": 66.623,
+"d": 1.292,
+"text": "Incoming lead head kick!"
 },
-"a:rear head kick": {
-"s": 500.199,
-"d": 0.842,
-"text": "Rear head kick!"
+"in:teep": {
+"s": 68.265,
+"d": 0.857,
+"text": "Incoming teep!"
 },
-"w:d26": {
-"s": 501.39,
-"d": 3.468,
-"text": "Block high, arm tight to the head, then cross while they land."
+"in:blitz": {
+"s": 69.472,
+"d": 0.945,
+"text": "Incoming blitz!"
 },
-"w:d27": {
-"s": 505.209,
-"d": 3.78,
-"text": "Lean back and let it pass in front of you, then punish as they turn open."
+"in:takedown": {
+"s": 70.768,
+"d": 1.112,
+"text": "Incoming takedown!"
 },
-"a:lead head kick": {
-"s": 509.338,
-"d": 0.775,
-"text": "Lead head kick!"
+"t:sprawl": {
+"s": 72.23,
+"d": 0.407,
+"text": "Sprawl."
 },
-"w:d28": {
-"s": 510.463,
-"d": 3.791,
-"text": "Block with the rear arm, then jab and cross before they reset their feet."
+"x:Sell it with the shoulder. Kick the second they react.": {
+"s": 72.987,
+"d": 3.253,
+"text": "Sell it with the shoulder. Kick the second they react."
 },
-"w:d29": {
-"s": 514.604,
-"d": 3.47,
-"text": "Step back out of the arc; their hip is open as the kick passes."
+"x:Fake the jab. Calf kick while they're frozen.": {
+"s": 76.589,
+"d": 3.249,
+"text": "Fake the jab. Calf kick while they're frozen."
 },
-"a:teep": {
-"s": 518.423,
-"d": 0.335,
-"text": "Teep!"
+"x:Jab, jab, and kick where they slip to.": {
+"s": 80.189,
+"d": 2.498,
+"text": "Jab, jab, and kick where they slip to."
 },
-"w:d30": {
-"s": 519.108,
-"d": 3.74,
-"text": "Parry the teep across your body; they turn sideways and the cross is open."
+"x:Front kick to back them up. The 2 follows them.": {
+"s": 83.037,
+"d": 3.17,
+"text": "Front kick to back them up. The 2 follows them."
 },
-"w:d31": {
-"s": 523.199,
-"d": 2.592,
-"text": "Catch the teep and cross while they balance on one leg."
+"x:Stomp above the knee, then the 2.": {
+"s": 86.557,
+"d": 1.919,
+"text": "Stomp above the knee, then the 2."
 },
-"w:d32": {
-"s": 526.141,
-"d": 2.748,
-"text": "Step off the line and low kick the leg they are standing on."
+"x:Spin to cut them off. The 2 is waiting where they run.": {
+"s": 88.826,
+"d": 3.777,
+"text": "Spin to cut them off. The 2 is waiting where they run."
 },
-"i:snipe-hard": {
-"s": 529.24,
-"d": 2.147,
-"text": "Snipe. Hard day."
+"x:Long step in, 2, 3, and gone.": {
+"s": 92.954,
+"d": 2.792,
+"text": "Long step in, 2, 3, and gone."
 },
-"i:kicks-tech": {
-"s": 531.737,
-"d": 2.223,
-"text": "Kicks. Technical day."
+"x:Fake the jab, and let that turn become the spin.": {
+"s": 96.096,
+"d": 2.469,
+"text": "Fake the jab, and let that turn become the spin."
 },
-"i:counter-hard": {
-"s": 534.31,
-"d": 3.047,
-"text": "Pull counters and defence. Hard day."
+"x:McGregor's straight. The jab and the feint open the door. The 2 walks through it.": {
+"s": 98.915,
+"d": 5.872,
+"text": "McGregor's straight. The jab and the feint open the door. The 2 walks through it."
 },
-"i:snipe-tech": {
-"s": 537.707,
-"d": 2.286,
-"text": "Snipe. Technical day."
+"x:The setup: feint the jab with your shoulder. When they flinch, two, straight down the middle. Drill it.": {
+"s": 105.136,
+"d": 7.328,
+"text": "The setup: feint the jab with your shoulder. When they flinch, two, straight down the middle. Drill it."
 },
-"i:kicks-hard": {
-"s": 540.343,
-"d": 2.084,
-"text": "Kicks. Hard day."
+"x:Next round: McGregor's straight. Sell the jab feint, then the 2 on the flinch.": {
+"s": 112.814,
+"d": 5.274,
+"text": "Next round: McGregor's straight. Sell the jab feint, then the 2 on the flinch."
 },
-"i:counter-tech": {
-"s": 542.777,
-"d": 3.186,
-"text": "Pull counters and defence. Technical day."
+"x:Sell the feint with the shoulder, not just the hand.": {
+"s": 118.438,
+"d": 2.416,
+"text": "Sell the feint with the shoulder, not just the hand."
 },
-"f:warm": {
-"s": 546.313,
-"d": 6.008,
-"text": "Warm-up round. Loose and light. Jab, cross, move your feet."
+"x:The 2 starts from the back foot. Turn the hip.": {
+"s": 121.205,
+"d": 3.278,
+"text": "The 2 starts from the back foot. Turn the hip."
 },
-"f:burnout": {
-"s": 552.671,
-"d": 6.645,
-"text": "Final round. Burnout. Straight punches, nonstop, as fast as you can."
+"x:Stay long. Make them reach for you.": {
+"s": 124.832,
+"d": 2.8,
+"text": "Stay long. Make them reach for you."
 },
-"f:techfinal": {
-"s": 559.666,
-"d": 6.219,
-"text": "Final round. Slow and technical. Perfect form, exhale on every strike."
+"x:Ruffy's in and out. Long entries, right hand, left hook, and gone.": {
+"s": 127.983,
+"d": 5.202,
+"text": "Ruffy's in and out. Long entries, right hand, left hook, and gone."
 },
-"f:snipe1": {
-"s": 566.235,
-"d": 5.323,
-"text": "Round one. The jab. Double it, up jab it, and leave."
+"x:The setup: one long step in, 2, 3, and step out before they answer. Hands can be low, feet never stop. Drill it.": {
+"s": 133.535,
+"d": 9.3,
+"text": "The setup: one long step in, 2, 3, and step out before they answer. Hands can be low, feet never stop. Drill it."
 },
-"f:snipe2": {
-"s": 571.908,
-"d": 4.766,
-"text": "Round two. Straights on two levels. Head and body."
+"x:Next round: Ruffy's in and out. Long step in, 2, 3, and gone.": {
+"s": 143.185,
+"d": 5.677,
+"text": "Next round: Ruffy's in and out. Long step in, 2, 3, and gone."
 },
-"f:snipe3": {
-"s": 577.024,
-"d": 5.076,
-"text": "Round three. Traps. Repeat the pattern, then break it."
+"x:In and out. Never stand in front of them.": {
+"s": 149.211,
+"d": 2.934,
+"text": "In and out. Never stand in front of them."
 },
-"f:snipe4": {
-"s": 582.45,
-"d": 5.692,
-"text": "Round four. Snipe and exit. Every combo ends with you out of range."
+"x:Exit on an angle, not straight back.": {
+"s": 152.496,
+"d": 2.227,
+"text": "Exit on an angle, not straight back."
 },
-"f:kicks1": {
-"s": 588.492,
-"d": 5.074,
-"text": "Round one. Punches into kicks. The hands hide the legs."
+"x:Light on the feet between combos.": {
+"s": 155.073,
+"d": 1.866,
+"text": "Light on the feet between combos."
 },
-"f:kicks2": {
-"s": 593.916,
+"x:McGregor's pull counter. Bait, pull, punish.": {
+"s": 157.289,
+"d": 3.914,
+"text": "McGregor's pull counter. Bait, pull, punish."
+},
+"x:The setup: jab, lean back just out of their answer, and fire the 2 over it. Drill it.": {
+"s": 161.553,
+"d": 6.061,
+"text": "The setup: jab, lean back just out of their answer, and fire the 2 over it. Drill it."
+},
+"x:Next round: McGregor's pull counter. Jab, pull, and the 2 over the top.": {
+"s": 167.964,
+"d": 5.466,
+"text": "Next round: McGregor's pull counter. Jab, pull, and the 2 over the top."
+},
+"x:Pull from the waist. Eyes stay on them.": {
+"s": 173.78,
+"d": 2.695,
+"text": "Pull from the waist. Eyes stay on them."
+},
+"x:Small pull, big 2.": {
+"s": 176.825,
+"d": 1.53,
+"text": "Small pull, big 2."
+},
+"x:Load the back leg on the pull, and fire off it.": {
+"s": 178.704,
+"d": 2.38,
+"text": "Load the back leg on the pull, and fire off it."
+},
+"x:Adesanya's feints. Feint first, kick second.": {
+"s": 181.434,
+"d": 3.963,
+"text": "Adesanya's feints. Feint first, kick second."
+},
+"x:The setup: fake the jab. While they're frozen, calf kick the front leg. Drill it.": {
+"s": 185.748,
+"d": 6.312,
+"text": "The setup: fake the jab. While they're frozen, calf kick the front leg. Drill it."
+},
+"x:Next round: Adesanya's feints. Fake the jab, and kick while they're frozen.": {
+"s": 192.41,
+"d": 2.061,
+"text": "Next round: Adesanya's feints. Fake the jab, and kick while they're frozen."
+},
+"x:Make the feint big and the kick fast.": {
+"s": 194.82,
+"d": 1.766,
+"text": "Make the feint big and the kick fast."
+},
+"x:Never kick naked. Feint or punch first.": {
+"s": 196.937,
+"d": 3.352,
+"text": "Never kick naked. Feint or punch first."
+},
+"x:Watch the reaction, then kick.": {
+"s": 200.639,
+"d": 1.706,
+"text": "Watch the reaction, then kick."
+},
+"x:Front kick and question mark kick. Body, body, then the head.": {
+"s": 202.695,
+"d": 4.394,
+"text": "Front kick and question mark kick. Body, body, then the head."
+},
+"x:The setup: front kick to the body, twice. They drop their hands to catch it. The third one chambers the same and turns over to the head. Drill it.": {
+"s": 207.438,
+"d": 10.277,
+"text": "The setup: front kick to the body, twice. They drop their hands to catch it. The third one chambers the same and turns over to the head. Drill it."
+},
+"x:Next round: the question mark kick. Front kick, front kick, then turn it over high.": {
+"s": 218.065,
+"d": 6.029,
+"text": "Next round: the question mark kick. Front kick, front kick, then turn it over high."
+},
+"x:Chamber the question mark exactly like the front kick.": {
+"s": 224.443,
+"d": 2.514,
+"text": "Chamber the question mark exactly like the front kick."
+},
+"x:Turn the hip over at the last moment.": {
+"s": 227.308,
+"d": 1.755,
+"text": "Turn the hip over at the last moment."
+},
+"x:Front kick the belly button, not the chest.": {
+"s": 229.413,
+"d": 2.254,
+"text": "Front kick the belly button, not the chest."
+},
+"x:McGregor's kicks and spins. Kick them to the fence, cut off the exit, and the 2 is waiting.": {
+"s": 232.017,
+"d": 6.079,
+"text": "McGregor's kicks and spins. Kick them to the fence, cut off the exit, and the 2 is waiting."
+},
+"x:The setup: front kick, 2. Twice. Then front kick and spin into the back kick while they brace for the 2. Drill it.": {
+"s": 238.446,
+"d": 8.362,
+"text": "The setup: front kick, 2. Twice. Then front kick and spin into the back kick while they brace for the 2. Drill it."
+},
+"x:Next round: McGregor's kicks. Front kick them back, spin to cut them off, 2 where they run.": {
+"s": 247.158,
+"d": 6.562,
+"text": "Next round: McGregor's kicks. Front kick them back, spin to cut them off, 2 where they run."
+},
+"x:Oblique kick above the knee. Stomp, don't swing.": {
+"s": 254.07,
+"d": 3.619,
+"text": "Oblique kick above the knee. Stomp, don't swing."
+},
+"x:Spin fast, and your eyes get back to the target first.": {
+"s": 258.04,
+"d": 3.034,
+"text": "Spin fast, and your eyes get back to the target first."
+},
+"x:After every kick, the hands come straight back.": {
+"s": 261.424,
+"d": 2.562,
+"text": "After every kick, the hands come straight back."
+},
+"x:Pull counter defence. They throw, you pull, you punish.": {
+"s": 264.336,
+"d": 4.122,
+"text": "Pull counter defence. They throw, you pull, you punish."
+},
+"x:The setup: when you hear incoming cross, lean back just out of range and fire your 2 straight back. Drill it.": {
+"s": 268.808,
+"d": 6.878,
+"text": "The setup: when you hear incoming cross, lean back just out of range and fire your 2 straight back. Drill it."
+},
+"x:Next round: pull counters off their punches. Pull, and the 2 straight back.": {
+"s": 276.036,
 "d": 5.286,
-"text": "Round two. Head kicks. Set them up, never throw them naked."
+"text": "Next round: pull counters off their punches. Pull, and the 2 straight back."
 },
-"f:kicks3": {
-"s": 599.552,
-"d": 5.502,
-"text": "Round three. Kick traps. Condition low and middle, then go high."
+"x:Pull just enough. Make it miss by an inch.": {
+"s": 281.672,
+"d": 3.233,
+"text": "Pull just enough. Make it miss by an inch."
 },
-"f:kicks4": {
-"s": 605.404,
-"d": 4.931,
-"text": "Round four. Teep and range. Keep them on the end of your leg."
+"x:The counter comes the instant their hand is out.": {
+"s": 285.255,
+"d": 2.155,
+"text": "The counter comes the instant their hand is out."
 },
-"f:counter1": {
-"s": 610.685,
-"d": 5.076,
-"text": "Round one. Pull counters. Bait, pull, punish."
+"x:Don't admire it. Reset your stance.": {
+"s": 287.761,
+"d": 3.036,
+"text": "Don't admire it. Reset your stance."
 },
-"f:counter2": {
-"s": 616.111,
-"d": 5.659,
-"text": "Round two. Defence against punches. Defend first, then answer."
+"x:Adesanya's counters. Make them overextend, then the lead hook meets them.": {
+"s": 291.147,
+"d": 4.826,
+"text": "Adesanya's counters. Make them overextend, then the lead hook meets them."
 },
-"f:counter3": {
-"s": 622.12,
-"d": 6.701,
-"text": "Round three. Defence against kicks. Check, block, catch, then answer."
+"x:The setup: when they rush in, don't back up straight. Pivot as you throw the lead hook, and you're off the line. That's how Adesanya finished Whittaker. Drill it.": {
+"s": 296.323,
+"d": 10.596,
+"text": "The setup: when they rush in, don't back up straight. Pivot as you throw the lead hook, and you're off the line. That's how Adesanya finished Whittaker. Drill it."
 },
-"f:counter4": {
-"s": 629.172,
-"d": 5.891,
-"text": "Round four. Everything. Bait, defend, counter, exit."
+"x:Next round: Adesanya's counters. When they rush, check hook and pivot.": {
+"s": 307.269,
+"d": 5.08,
+"text": "Next round: Adesanya's counters. When they rush, check hook and pivot."
 },
-"p:rest": {
-"s": 635.413,
-"d": 0.458,
-"text": "Rest."
+"x:Pivot on the lead foot as the hook lands.": {
+"s": 312.698,
+"d": 1.861,
+"text": "Pivot on the lead foot as the hook lands."
 },
-"p:ten": {
-"s": 636.221,
-"d": 0.881,
+"x:Short hook. Elbow behind it.": {
+"s": 314.909,
+"d": 2.657,
+"text": "Short hook. Elbow behind it."
+},
+"x:Let them come to you.": {
+"s": 317.916,
+"d": 0.971,
+"text": "Let them come to you."
+},
+"x:Ruffy's chaos. Defend, answer fast, and sometimes spin.": {
+"s": 319.236,
+"d": 4.863,
+"text": "Ruffy's chaos. Defend, answer fast, and sometimes spin."
+},
+"x:The setup: fake the jab, and let the turn of the feint become the spinning wheel kick. The King Green knockout. Drill it slow first.": {
+"s": 324.449,
+"d": 8.525,
+"text": "The setup: fake the jab, and let the turn of the feint become the spinning wheel kick. The King Green knockout. Drill it slow first."
+},
+"x:Next round: Ruffy's spins. Fake the jab, and spin into the wheel kick.": {
+"s": 333.324,
+"d": 5.034,
+"text": "Next round: Ruffy's spins. Fake the jab, and spin into the wheel kick."
+},
+"x:Spin on the ball of the lead foot.": {
+"s": 338.708,
+"d": 1.488,
+"text": "Spin on the ball of the lead foot."
+},
+"x:Spinning stuff is rare. The 2 is still your main weapon.": {
+"s": 340.546,
+"d": 3.899,
+"text": "Spinning stuff is rare. The 2 is still your main weapon."
+},
+"x:After the spin, the hands come home first.": {
+"s": 344.795,
+"d": 2.384,
+"text": "After the spin, the hands come home first."
+},
+"x:Snipe. Hard day. Short breaks, fast calls, and flurries. Let's work.": {
+"s": 347.529,
+"d": 7.559,
+"text": "Snipe. Hard day. Short breaks, fast calls, and flurries. Let's work."
+},
+"x:Kicks. Technical day. Clean setups, perfect reps.": {
+"s": 355.438,
+"d": 5.783,
+"text": "Kicks. Technical day. Clean setups, perfect reps."
+},
+"x:Pull counters and defence. Hard day. Short breaks, fast calls, and flurries. Let's work.": {
+"s": 361.571,
+"d": 8.46,
+"text": "Pull counters and defence. Hard day. Short breaks, fast calls, and flurries. Let's work."
+},
+"x:Snipe. Technical day. Clean setups, perfect reps.": {
+"s": 370.381,
+"d": 5.845,
+"text": "Snipe. Technical day. Clean setups, perfect reps."
+},
+"x:Kicks. Hard day. Short breaks, fast calls, and flurries. Let's work.": {
+"s": 376.576,
+"d": 7.497,
+"text": "Kicks. Hard day. Short breaks, fast calls, and flurries. Let's work."
+},
+"x:Pull counters and defence. Technical day. Clean setups, perfect reps.": {
+"s": 384.423,
+"d": 6.745,
+"text": "Pull counters and defence. Technical day. Clean setups, perfect reps."
+},
+"x:Warm-up. Bounce on your feet, in and out. Hands start in a moment.": {
+"s": 391.518,
+"d": 5.596,
+"text": "Warm-up. Bounce on your feet, in and out. Hands start in a moment."
+},
+"x:Hands now. Light jabs and crosses. Loose shoulders.": {
+"s": 397.464,
+"d": 4.816,
+"text": "Hands now. Light jabs and crosses. Loose shoulders."
+},
+"x:Add the legs. Light kicks, nothing hard yet.": {
+"s": 402.63,
+"d": 3.744,
+"text": "Add the legs. Light kicks, nothing hard yet."
+},
+"x:Pick up the pace. Incoming calls are on.": {
+"s": 406.723,
+"d": 3.329,
+"text": "Pick up the pace. Incoming calls are on."
+},
+"x:Straights. One two, nonstop, all out.": {
+"s": 410.402,
+"d": 4.099,
+"text": "Straights. One two, nonstop, all out."
+},
+"x:Two to the body, two to the head. Nonstop.": {
+"s": 414.851,
+"d": 3.508,
+"text": "Two to the body, two to the head. Nonstop."
+},
+"x:Jabs only. As fast as you can.": {
+"s": 418.71,
+"d": 2.833,
+"text": "Jabs only. As fast as you can."
+},
+"x:Up jab, two. Nonstop.": {
+"s": 421.893,
+"d": 2.839,
+"text": "Up jab, two. Nonstop."
+},
+"x:Pull and two. Pull and two. Nonstop.": {
+"s": 425.082,
+"d": 3.996,
+"text": "Pull and two. Pull and two. Nonstop."
+},
+"x:Three, two. Hook and cross. Nonstop.": {
+"s": 429.428,
+"d": 4.473,
+"text": "Three, two. Hook and cross. Nonstop."
+},
+"x:Body kicks. Switch legs every kick.": {
+"s": 434.251,
+"d": 2.925,
+"text": "Body kicks. Switch legs every kick."
+},
+"x:Teep, one two, teep. Nonstop.": {
+"s": 437.527,
+"d": 3.615,
+"text": "Teep, one two, teep. Nonstop."
+},
+"x:Round one.": {
+"s": 441.492,
+"d": 0.602,
+"text": "Round one."
+},
+"x:Round two.": {
+"s": 442.444,
+"d": 0.635,
+"text": "Round two."
+},
+"x:Round three.": {
+"s": 443.43,
+"d": 0.696,
+"text": "Round three."
+},
+"x:Round four.": {
+"s": 444.476,
+"d": 0.702,
+"text": "Round four."
+},
+"x:Round five.": {
+"s": 445.528,
+"d": 0.856,
+"text": "Round five."
+},
+"x:Callback. The trap from round one.": {
+"s": 446.734,
+"d": 2.615,
+"text": "Callback. The trap from round one."
+},
+"x:Callback. The trap from round two.": {
+"s": 449.699,
+"d": 2.685,
+"text": "Callback. The trap from round two."
+},
+"x:Callback. The trap from round three.": {
+"s": 452.734,
+"d": 2.73,
+"text": "Callback. The trap from round three."
+},
+"x:Callback. The trap from round four.": {
+"s": 455.815,
+"d": 2.711,
+"text": "Callback. The trap from round four."
+},
+"x:Callback. The trap from round five.": {
+"s": 458.875,
+"d": 2.88,
+"text": "Callback. The trap from round five."
+},
+"x:Callback. The trap from earlier.": {
+"s": 462.105,
+"d": 2.454,
+"text": "Callback. The trap from earlier."
+},
+"x:Now it's mixed in. Same setup, more calls around it.": {
+"s": 464.909,
+"d": 3.941,
+"text": "Now it's mixed in. Same setup, more calls around it."
+},
+"x:Now it's hidden. When you hear it, explode.": {
+"s": 469.2,
+"d": 3.179,
+"text": "Now it's hidden. When you hear it, explode."
+},
+"x:Last minute. Perfect reps of the setup.": {
+"s": 472.729,
+"d": 3.362,
+"text": "Last minute. Perfect reps of the setup."
+},
+"x:Rapid fire.": {
+"s": 476.441,
+"d": 0.783,
+"text": "Rapid fire."
+},
+"x:Flurry! Fifteen seconds!": {
+"s": 477.574,
+"d": 2.523,
+"text": "Flurry! Fifteen seconds!"
+},
+"x:Flurry! Twenty seconds!": {
+"s": 480.447,
+"d": 2.308,
+"text": "Flurry! Twenty seconds!"
+},
+"x:Last twenty! Empty the tank!": {
+"s": 483.105,
+"d": 2.417,
+"text": "Last twenty! Empty the tank!"
+},
+"x:Time. Keep moving, breathe.": {
+"s": 485.872,
+"d": 2.599,
+"text": "Time. Keep moving, breathe."
+},
+"x:Rest. Breathe through the nose. Walk it off.": {
+"s": 488.821,
+"d": 4.088,
+"text": "Rest. Breathe through the nose. Walk it off."
+},
+"x:Ten seconds.": {
+"s": 493.259,
+"d": 0.848,
 "text": "Ten seconds."
 },
-"p:done": {
-"s": 637.452,
-"d": 4.328,
+"x:Next: the burnout. Three minutes. Twenty on, ten off.": {
+"s": 494.457,
+"d": 5.273,
+"text": "Next: the burnout. Three minutes. Twenty on, ten off."
+},
+"x:Next: the finisher. Slow and perfect. Today's setups, one more time.": {
+"s": 500.08,
+"d": 6.242,
+"text": "Next: the finisher. Slow and perfect. Today's setups, one more time."
+},
+"x:Go! Twenty seconds!": {
+"s": 506.672,
+"d": 2.158,
+"text": "Go! Twenty seconds!"
+},
+"x:Ease off. Jab and move.": {
+"s": 509.18,
+"d": 2.363,
+"text": "Ease off. Jab and move."
+},
+"x:Last one! Everything you have!": {
+"s": 511.893,
+"d": 2.528,
+"text": "Last one! Everything you have!"
+},
+"x:Final round. Slow and perfect. Exhale on every strike.": {
+"s": 514.771,
+"d": 5.103,
+"text": "Final round. Slow and perfect. Exhale on every strike."
+},
+"x:Session done. Good work. Rate it and log it.": {
+"s": 520.224,
+"d": 4.125,
 "text": "Session done. Good work. Rate it and log it."
 },
-"p:tip": {
-"s": 642.13,
-"d": 1.136,
-"text": "Tip for next round."
+"x:Faster!": {
+"s": 524.699,
+"d": 0.551,
+"text": "Faster!"
+},
+"x:Don't stop!": {
+"s": 525.601,
+"d": 0.632,
+"text": "Don't stop!"
+},
+"x:Hands back to the face!": {
+"s": 526.583,
+"d": 1.179,
+"text": "Hands back to the face!"
+},
+"x:Keep going!": {
+"s": 528.112,
+"d": 0.608,
+"text": "Keep going!"
+},
+"x:Breathe out!": {
+"s": 529.07,
+"d": 0.69,
+"text": "Breathe out!"
+},
+"x:Hands home after every shot.": {
+"s": 530.11,
+"d": 1.533,
+"text": "Hands home after every shot."
+},
+"x:Move your head after every combo.": {
+"s": 531.993,
+"d": 1.595,
+"text": "Move your head after every combo."
+},
+"x:Breathe out on every strike.": {
+"s": 533.938,
+"d": 1.33,
+"text": "Breathe out on every strike."
+},
+"x:Pick it up!": {
+"s": 535.618,
+"d": 0.552,
+"text": "Pick it up!"
+},
+"x:Sharper. Snap it back.": {
+"s": 536.519,
+"d": 2.176,
+"text": "Sharper. Snap it back."
+},
+"x:Slow is smooth. Smooth is fast.": {
+"s": 539.045,
+"d": 2.914,
+"text": "Slow is smooth. Smooth is fast."
+},
+"x:Check your stance after every combo.": {
+"s": 542.309,
+"d": 1.754,
+"text": "Check your stance after every combo."
+},
+"x:Chin down, eyes up.": {
+"s": 544.414,
+"d": 1.325,
+"text": "Chin down, eyes up."
+},
+"x:Exhale on every strike.": {
+"s": 546.089,
+"d": 1.303,
+"text": "Exhale on every strike."
+},
+"x:Camera check. Stand the phone diagonal in front of you, two to three metres away, so it sees you from head to feet. Get in your stance.": {
+"s": 547.742,
+"d": 8.554,
+"text": "Camera check. Stand the phone diagonal in front of you, two to three metres away, so it sees you from head to feet. Get in your stance."
+},
+"x:I can see you.": {
+"s": 556.646,
+"d": 0.825,
+"text": "I can see you."
+},
+"x:I can't see you. Check the phone is pointing at you and there's light on you.": {
+"s": 557.821,
+"d": 4.064,
+"text": "I can't see you. Check the phone is pointing at you and there's light on you."
+},
+"x:I can't see your hands. Turn the phone a bit more in front of you.": {
+"s": 562.235,
+"d": 3.892,
+"text": "I can't see your hands. Turn the phone a bit more in front of you."
+},
+"x:I can't see your feet. Move the phone further back.": {
+"s": 566.477,
+"d": 3.383,
+"text": "I can't see your feet. Move the phone further back."
+},
+"x:The camera isn't giving me a picture.": {
+"s": 570.211,
+"d": 1.618,
+"text": "The camera isn't giving me a picture."
+},
+"x:Hold your normal guard. Five seconds. Don't move.": {
+"s": 572.178,
+"d": 4.63,
+"text": "Hold your normal guard. Five seconds. Don't move."
+},
+"x:Now three sharp jabs.": {
+"s": 577.158,
+"d": 1.303,
+"text": "Now three sharp jabs."
+},
+"x:Now three of your best twos. Really turn the hip.": {
+"s": 578.811,
+"d": 3.493,
+"text": "Now three of your best twos. Really turn the hip."
+},
+"x:I couldn't measure your hip turn from here, so I'll skip that check.": {
+"s": 582.654,
+"d": 2.852,
+"text": "I couldn't measure your hip turn from here, so I'll skip that check."
+},
+"x:Got it. Camera coach is on for the themed rounds.": {
+"s": 585.857,
+"d": 3.276,
+"text": "Got it. Camera coach is on for the themed rounds."
+},
+"x:Camera coach can't see you well enough. Training without it.": {
+"s": 589.483,
+"d": 3.725,
+"text": "Camera coach can't see you well enough. Training without it."
+},
+"x:Camera report.": {
+"s": 593.557,
+"d": 0.931,
+"text": "Camera report."
+},
+"x:Rear hand home. Back to the chin.": {
+"s": 594.838,
+"d": 2.616,
+"text": "Rear hand home. Back to the chin."
+},
+"x:Lead hand back to your guard.": {
+"s": 597.805,
+"d": 1.293,
+"text": "Lead hand back to your guard."
+},
+"x:Chin down. Sit in your stance.": {
+"s": 599.448,
+"d": 2.63,
+"text": "Chin down. Sit in your stance."
+},
+"x:Stay bladed.": {
+"s": 602.427,
+"d": 0.743,
+"text": "Stay bladed."
+},
+"x:Move your feet between combos.": {
+"s": 603.52,
+"d": 1.781,
+"text": "Move your feet between combos."
+},
+"x:Turn the hip on the two.": {
+"s": 605.651,
+"d": 1.102,
+"text": "Turn the hip on the two."
+},
+"x:Your own mix. Hard day. Short breaks, fast calls, and flurries. Let's work.": {
+"s": 607.103,
+"d": 7.469,
+"text": "Your own mix. Hard day. Short breaks, fast calls, and flurries. Let's work."
+},
+"x:Your own mix. Technical day. Clean setups, perfect reps.": {
+"s": 614.921,
+"d": 5.846,
+"text": "Your own mix. Technical day. Clean setups, perfect reps."
 }
 }
 }
