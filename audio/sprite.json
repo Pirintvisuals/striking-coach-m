@@ -68,8 +68,8 @@
 "text": "Body jab."
 },
 "s:up jab, 2": {
-"s": 19.23,
-"d": 1.044,
+"s": 19.229,
+"d": 1.045,
 "text": "Up jab, two."
 },
 "t:up jab": {
@@ -84,7 +84,7 @@
 },
 "s:up jab, step out": {
 "s": 24.297,
-"d": 1.202,
+"d": 1.201,
 "text": "Up jab, step out."
 },
 "t:step out": {
@@ -98,7 +98,7 @@
 "text": "One, two, step out."
 },
 "s:feint 1, 2": {
-"s": 29.629,
+"s": 29.628,
 "d": 1.074,
 "text": "Feint one, two."
 },
@@ -124,312 +124,312 @@
 },
 "s:1, body 2, 2": {
 "s": 37.897,
-"d": 1.799,
+"d": 1.793,
 "text": "One, body two, two."
 },
 "s:1, 2, teep": {
-"s": 40.296,
-"d": 1.487,
+"s": 40.29,
+"d": 1.49,
 "text": "One, two, teep."
 },
 "t:teep": {
-"s": 42.383,
+"s": 42.38,
 "d": 0.326,
 "text": "Teep."
 },
 "s:teep, 1, 2": {
-"s": 43.309,
+"s": 43.306,
 "d": 1.508,
 "text": "Teep, one, two."
 },
 "s:1, teep": {
-"s": 45.417,
-"d": 0.865,
+"s": 45.414,
+"d": 0.864,
 "text": "One, teep."
 },
 "s:feint 1, body 2": {
-"s": 46.882,
-"d": 1.311,
+"s": 46.878,
+"d": 1.312,
 "text": "Feint one, body two."
 },
 "s:1, pivot out": {
-"s": 48.793,
+"s": 48.79,
 "d": 1.136,
 "text": "One, pivot out."
 },
 "t:pivot out": {
-"s": 50.529,
+"s": 50.526,
 "d": 0.532,
 "text": "Pivot out."
 },
 "s:1, 1, 1, 2": {
-"s": 51.661,
+"s": 51.658,
 "d": 1.85,
 "text": "One, one, one, two."
 },
 "s:2, step out": {
-"s": 54.111,
+"s": 54.108,
 "d": 1.099,
 "text": "Two, step out."
 },
 "s:body 2, up jab": {
-"s": 55.811,
+"s": 55.807,
 "d": 1.413,
 "text": "Body two, up jab."
 },
 "s:1, 2, 1, 2": {
-"s": 57.823,
+"s": 57.82,
 "d": 2.079,
 "text": "One, two, one, two."
 },
 "s:1, 1": {
-"s": 60.502,
+"s": 60.499,
 "d": 0.78,
 "text": "One, one."
 },
 "s:body 2, 2": {
-"s": 61.883,
+"s": 61.879,
 "d": 1.173,
 "text": "Body two, two."
 },
 "s:feint level change, 2": {
-"s": 63.656,
+"s": 63.652,
 "d": 1.409,
 "text": "Feint level change, two."
 },
 "t:feint level change": {
-"s": 65.665,
+"s": 65.661,
 "d": 0.941,
 "text": "Feint level change."
 },
 "s:1, 2, 3, step out": {
-"s": 67.207,
+"s": 67.203,
 "d": 2.354,
 "text": "One, two, three, step out."
 },
 "t:3": {
-"s": 70.16,
+"s": 70.156,
 "d": 0.351,
 "text": "Three."
 },
 "s:3, 2, step out": {
-"s": 71.112,
+"s": 71.108,
 "d": 1.756,
 "text": "Three, two, step out."
 },
 "s:2, 3, 2, pivot out": {
-"s": 73.468,
+"s": 73.464,
 "d": 2.248,
 "text": "Two, three, two, pivot out."
 },
 "s:body 3, 3, step out": {
-"s": 76.316,
+"s": 76.312,
 "d": 1.945,
 "text": "Body three, three, step out."
 },
 "t:body 3": {
-"s": 78.861,
+"s": 78.857,
 "d": 0.62,
 "text": "Body three."
 },
 "s:2, 3, angle out": {
-"s": 80.081,
+"s": 80.077,
 "d": 1.792,
 "text": "Two, three, angle out."
 },
 "t:angle out": {
-"s": 82.473,
+"s": 82.469,
 "d": 0.578,
 "text": "Angle out."
 },
 "s:1, pull, 2": {
-"s": 83.651,
+"s": 83.647,
 "d": 1.46,
 "text": "One, pull, two."
 },
 "t:pull": {
-"s": 85.712,
+"s": 85.708,
 "d": 0.243,
 "text": "Pull."
 },
 "s:pull, 2": {
-"s": 86.555,
-"d": 0.847,
+"s": 86.551,
+"d": 0.846,
 "text": "Pull, two."
 },
 "s:pull, 2, 3, step out": {
-"s": 88.002,
+"s": 87.997,
 "d": 2.241,
 "text": "Pull, two, three, step out."
 },
 "s:pull, 1, 2": {
-"s": 90.843,
+"s": 90.838,
 "d": 1.393,
 "text": "Pull, one, two."
 },
 "s:pull, body 2": {
-"s": 92.835,
+"s": 92.831,
 "d": 1.172,
 "text": "Pull, body two."
 },
 "s:pull, up jab, 2": {
-"s": 94.608,
+"s": 94.603,
 "d": 1.56,
 "text": "Pull, up jab, two."
 },
 "s:pull, 2, lead head kick": {
-"s": 96.768,
+"s": 96.763,
 "d": 1.725,
 "text": "Pull, two, lead head kick."
 },
 "t:lead head kick": {
-"s": 99.093,
+"s": 99.088,
 "d": 0.733,
 "text": "Lead head kick."
 },
 "s:feint 1, pull, 2": {
-"s": 100.426,
+"s": 100.421,
 "d": 1.597,
 "text": "Feint one, pull, two."
 },
 "s:1, 2, pull, 2": {
-"s": 102.623,
+"s": 102.618,
 "d": 1.98,
 "text": "One, two, pull, two."
 },
 "s:pull, 2, pivot out": {
-"s": 105.203,
+"s": 105.198,
 "d": 1.677,
 "text": "Pull, two, pivot out."
 },
 "s:slip, 2": {
-"s": 107.48,
+"s": 107.475,
 "d": 0.939,
 "text": "Slip, two."
 },
 "t:slip": {
-"s": 109.019,
+"s": 109.013,
 "d": 0.384,
 "text": "Slip."
 },
 "s:slip, 2, 3": {
-"s": 110.003,
+"s": 109.998,
 "d": 1.559,
 "text": "Slip, two, three."
 },
 "s:roll, 3, 2": {
-"s": 112.162,
+"s": 112.156,
 "d": 1.497,
 "text": "Roll, three, two."
 },
 "t:roll": {
-"s": 114.259,
+"s": 114.253,
 "d": 0.366,
 "text": "Roll."
 },
 "s:parry, 1, 2": {
-"s": 115.225,
+"s": 115.219,
 "d": 1.499,
 "text": "Parry, one, two."
 },
 "t:parry": {
-"s": 117.324,
+"s": 117.319,
 "d": 0.348,
 "text": "Parry."
 },
 "s:pull, teep": {
-"s": 118.272,
+"s": 118.267,
 "d": 0.848,
 "text": "Pull, teep."
 },
 "s:pull, lead head kick": {
-"s": 119.72,
+"s": 119.715,
 "d": 1.158,
 "text": "Pull, lead head kick."
 },
 "s:pull, 3": {
-"s": 121.478,
+"s": 121.473,
 "d": 0.832,
 "text": "Pull, three."
 },
 "s:step back, 2": {
-"s": 122.91,
+"s": 122.905,
 "d": 1.221,
 "text": "Step back, two."
 },
 "t:step back": {
-"s": 124.731,
+"s": 124.726,
 "d": 0.612,
 "text": "Step back."
 },
 "s:pull, pull, 2": {
-"s": 125.943,
+"s": 125.938,
 "d": 1.39,
 "text": "Pull, pull, two."
 },
 "s:1, pull, 2, step out": {
-"s": 127.933,
+"s": 127.928,
 "d": 2.272,
 "text": "One, pull, two, step out."
 },
 "s:body 2, rear head kick": {
-"s": 130.805,
-"d": 1.562,
+"s": 130.8,
+"d": 1.561,
 "text": "Body two, rear head kick."
 },
 "t:rear head kick": {
-"s": 132.967,
-"d": 0.768,
+"s": 132.961,
+"d": 0.769,
 "text": "Rear head kick."
 },
 "s:2, lead head kick": {
-"s": 134.336,
+"s": 134.33,
 "d": 1.248,
 "text": "Two, lead head kick."
 },
 "s:1, low kick": {
-"s": 136.183,
-"d": 1.122,
+"s": 136.178,
+"d": 1.121,
 "text": "One, low kick."
 },
 "t:low kick": {
-"s": 137.905,
+"s": 137.899,
 "d": 0.527,
 "text": "Low kick."
 },
 "s:1, rear head kick": {
-"s": 139.033,
+"s": 139.026,
 "d": 1.343,
 "text": "One, rear head kick."
 },
 "s:teep, rear head kick": {
-"s": 140.975,
+"s": 140.969,
 "d": 1.3,
 "text": "Teep, rear head kick."
 },
 "s:1, 2, 3, rear body kick": {
-"s": 142.875,
+"s": 142.869,
 "d": 2.565,
 "text": "One, two, three, rear body kick."
 },
 "t:rear body kick": {
-"s": 146.04,
-"d": 0.814,
+"s": 146.033,
+"d": 0.818,
 "text": "Rear body kick."
 },
 "s:feint kick, 2": {
-"s": 147.453,
+"s": 147.451,
 "d": 1.148,
 "text": "Feint kick, two."
 },
 "t:feint kick": {
-"s": 149.201,
+"s": 149.199,
 "d": 0.556,
 "text": "Feint kick."
 },
 "s:up jab, rear head kick": {
-"s": 150.357,
-"d": 1.41,
+"s": 150.354,
+"d": 1.412,
 "text": "Up jab, rear head kick."
 },
 "s:lead body kick, 2": {
@@ -448,7 +448,7 @@
 "text": "One, two, three, low kick."
 },
 "s:calf kick, 2": {
-"s": 158.553,
+"s": 158.552,
 "d": 1.175,
 "text": "Calf kick, two."
 },
@@ -458,18 +458,18 @@
 "text": "Calf kick."
 },
 "s:1, 2, 3, rear head kick": {
-"s": 161.527,
+"s": 161.526,
 "d": 2.491,
 "text": "One, two, three, rear head kick."
 },
 "s:feint 2, lead head kick": {
-"s": 164.618,
+"s": 164.617,
 "d": 1.511,
 "text": "Feint two, lead head kick."
 },
 "s:2, lead body kick": {
 "s": 166.728,
-"d": 1.311,
+"d": 1.312,
 "text": "Two, lead body kick."
 },
 "s:low kick, 2": {
@@ -483,18 +483,18 @@
 "text": "Body jab, lead head kick."
 },
 "s:teep, 2, lead head kick": {
-"s": 172.409,
+"s": 172.408,
 "d": 1.839,
 "text": "Teep, two, lead head kick."
 },
 "s:feint low kick, rear head kick": {
-"s": 174.848,
+"s": 174.847,
 "d": 1.727,
 "text": "Feint low kick, rear head kick."
 },
 "t:feint low kick": {
-"s": 177.175,
-"d": 0.685,
+"s": 177.174,
+"d": 0.684,
 "text": "Feint low kick."
 },
 "s:shoulder feint, 1, 2": {
@@ -504,242 +504,242 @@
 },
 "t:shoulder feint": {
 "s": 180.825,
-"d": 0.72,
+"d": 0.719,
 "text": "Shoulder feint."
 },
 "s:1, 2, 3, 2": {
-"s": 182.145,
+"s": 182.144,
 "d": 2.117,
 "text": "One, two, three, two."
 },
 "s:2, 3, 2": {
-"s": 184.862,
+"s": 184.861,
 "d": 1.429,
 "text": "Two, three, two."
 },
 "s:3, rear elbow, step out": {
-"s": 186.891,
+"s": 186.89,
 "d": 2.057,
 "text": "Three, rear elbow, step out."
 },
 "t:rear elbow": {
-"s": 189.548,
+"s": 189.547,
 "d": 0.674,
 "text": "Rear elbow."
 },
 "s:2, lead elbow, pivot out": {
-"s": 190.823,
+"s": 190.821,
 "d": 1.968,
 "text": "Two, lead elbow, pivot out."
 },
 "t:lead elbow": {
-"s": 193.39,
+"s": 193.389,
 "d": 0.59,
 "text": "Lead elbow."
 },
 "s:2, 3, knee, step out": {
-"s": 194.58,
+"s": 194.579,
 "d": 2.286,
 "text": "Two, three, knee, step out."
 },
 "t:knee": {
-"s": 197.466,
+"s": 197.465,
 "d": 0.375,
 "text": "Knee."
 },
 "s:hop back, 2": {
-"s": 198.441,
-"d": 1.068,
+"s": 198.44,
+"d": 1.067,
 "text": "Hop back, two."
 },
 "t:hop back": {
-"s": 200.108,
+"s": 200.107,
 "d": 0.496,
 "text": "Hop back."
 },
 "s:1, pull, 3": {
-"s": 201.204,
+"s": 201.203,
 "d": 1.433,
 "text": "One, pull, three."
 },
 "s:pull, check hook, pivot out": {
-"s": 203.237,
+"s": 203.235,
 "d": 1.922,
 "text": "Pull, check hook, pivot out."
 },
 "t:check hook": {
-"s": 205.76,
+"s": 205.757,
 "d": 0.542,
 "text": "Check hook."
 },
 "s:1, hop back, 2": {
-"s": 206.901,
+"s": 206.899,
 "d": 1.629,
 "text": "One, hop back, two."
 },
 "s:shoulder feint, lead body kick": {
-"s": 209.13,
+"s": 209.128,
 "d": 1.647,
 "text": "Shoulder feint, lead body kick."
 },
 "s:hip feint, rear head kick": {
-"s": 211.377,
+"s": 211.375,
 "d": 1.485,
 "text": "Hip feint, rear head kick."
 },
 "t:hip feint": {
-"s": 213.462,
+"s": 213.46,
 "d": 0.525,
 "text": "Hip feint."
 },
 "s:feint 1, calf kick": {
-"s": 214.586,
+"s": 214.584,
 "d": 1.319,
 "text": "Feint one, calf kick."
 },
 "s:1, 1, lead head kick": {
-"s": 216.506,
+"s": 216.503,
 "d": 1.679,
 "text": "One, one, lead head kick."
 },
 "s:front kick, 1, 2": {
-"s": 218.784,
+"s": 218.783,
 "d": 1.669,
 "text": "Front kick, one, two."
 },
 "t:front kick": {
-"s": 221.053,
+"s": 221.051,
 "d": 0.602,
 "text": "Front kick."
 },
 "s:hip feint, front kick": {
-"s": 222.255,
-"d": 1.359,
+"s": 222.253,
+"d": 1.358,
 "text": "Hip feint, front kick."
 },
 "s:feint low kick, question mark kick": {
-"s": 224.214,
+"s": 224.212,
 "d": 1.937,
 "text": "Feint low kick, question mark kick."
 },
 "t:question mark kick": {
-"s": 226.75,
+"s": 226.748,
 "d": 0.966,
 "text": "Question mark kick."
 },
 "s:front kick, question mark kick": {
-"s": 228.316,
+"s": 228.314,
 "d": 1.794,
 "text": "Front kick, question mark kick."
 },
 "s:front kick, 2": {
-"s": 230.71,
+"s": 230.708,
 "d": 1.193,
 "text": "Front kick, two."
 },
 "s:1, front kick, 2": {
-"s": 232.503,
+"s": 232.501,
 "d": 1.71,
 "text": "One, front kick, two."
 },
 "s:oblique kick, 2": {
-"s": 234.812,
+"s": 234.81,
 "d": 1.208,
 "text": "Oblique kick, two."
 },
 "t:oblique kick": {
-"s": 236.62,
+"s": 236.619,
 "d": 0.62,
 "text": "Oblique kick."
 },
 "s:oblique kick, 1, 2": {
-"s": 237.84,
+"s": 237.838,
 "d": 1.849,
 "text": "Oblique kick, one, two."
 },
 "s:back kick, 2": {
-"s": 240.289,
+"s": 240.287,
 "d": 1.139,
 "text": "Back kick, two."
 },
 "t:back kick": {
-"s": 242.028,
+"s": 242.027,
 "d": 0.526,
 "text": "Back kick."
 },
 "s:wheel kick, 2": {
-"s": 243.155,
+"s": 243.153,
 "d": 1.146,
 "text": "Wheel kick, two."
 },
 "t:wheel kick": {
-"s": 244.901,
+"s": 244.899,
 "d": 0.503,
 "text": "Wheel kick."
 },
 "s:1, 2, back kick": {
-"s": 246.003,
-"d": 1.685,
+"s": 246.002,
+"d": 1.684,
 "text": "One, two, back kick."
 },
 "s:feint kick, knee": {
-"s": 248.288,
+"s": 248.286,
 "d": 1.129,
 "text": "Feint kick, knee."
 },
 "s:step in, 2, 3, step out": {
-"s": 250.017,
+"s": 250.015,
 "d": 2.46,
 "text": "Step in, two, three, step out."
 },
 "t:step in": {
-"s": 253.077,
+"s": 253.075,
 "d": 0.484,
 "text": "Step in."
 },
 "s:step in, 2, step out": {
-"s": 254.162,
+"s": 254.159,
 "d": 1.903,
 "text": "Step in, two, step out."
 },
 "s:feint 1, wheel kick": {
-"s": 256.664,
-"d": 1.226,
+"s": 256.662,
+"d": 1.224,
 "text": "Feint one, wheel kick."
 },
 "s:back kick, wheel kick": {
-"s": 258.49,
-"d": 1.221,
+"s": 258.486,
+"d": 1.222,
 "text": "Back kick, wheel kick."
 },
 "s:2, 3, back kick": {
-"s": 260.311,
-"d": 1.653,
+"s": 260.307,
+"d": 1.654,
 "text": "Two, three, back kick."
 },
 "s:1, 2, 3, wheel kick": {
-"s": 262.564,
+"s": 262.561,
 "d": 2.229,
 "text": "One, two, three, wheel kick."
 },
 "s:2, flying knee": {
-"s": 265.394,
+"s": 265.39,
 "d": 1.275,
 "text": "Two, flying knee."
 },
 "t:flying knee": {
-"s": 267.268,
+"s": 267.265,
 "d": 0.642,
 "text": "Flying knee."
 },
 "s:2, 3, 2, step out": {
-"s": 268.51,
+"s": 268.507,
 "d": 2.302,
 "text": "Two, three, two, step out."
 },
 "s:2, up jab": {
-"s": 271.413,
-"d": 1.128,
+"s": 271.409,
+"d": 1.132,
 "text": "Two, up jab."
 },
 "s:up jab, 2, up jab": {
@@ -753,32 +753,32 @@
 "text": "One, two, up jab, two."
 },
 "s:up jab, 2, 3, 2": {
-"s": 278.543,
+"s": 278.544,
 "d": 2.338,
 "text": "Up jab, two, three, two."
 },
 "s:1, rear body kick": {
 "s": 281.482,
-"d": 1.387,
+"d": 1.386,
 "text": "One, rear body kick."
 },
 "s:3, rear body kick": {
-"s": 283.469,
+"s": 283.468,
 "d": 1.429,
 "text": "Three, rear body kick."
 },
 "s:2, 3, rear body kick": {
-"s": 285.498,
+"s": 285.497,
 "d": 1.935,
 "text": "Two, three, rear body kick."
 },
 "s:lead body kick, 2, 3, rear body kick": {
-"s": 288.033,
+"s": 288.032,
 "d": 2.971,
 "text": "Lead body kick, two, three, rear body kick."
 },
 "s:rear body kick, 1, 2": {
-"s": 291.604,
+"s": 291.603,
 "d": 1.899,
 "text": "Rear body kick, one, two."
 },
@@ -813,12 +813,12 @@
 "text": "Low kick, wheel kick."
 },
 "s:teep, flying knee": {
-"s": 306.157,
+"s": 306.156,
 "d": 1.183,
 "text": "Teep, flying knee."
 },
 "s:1, flying knee": {
-"s": 307.94,
+"s": 307.939,
 "d": 1.225,
 "text": "One, flying knee."
 },
@@ -828,28 +828,28 @@
 "text": "Feint two, back kick."
 },
 "s:3, spinning back fist": {
-"s": 311.698,
-"d": 1.558,
+"s": 311.699,
+"d": 1.557,
 "text": "Three, spinning back fist."
 },
 "t:spinning back fist": {
 "s": 313.856,
-"d": 0.963,
+"d": 0.962,
 "text": "Spinning back fist."
 },
 "s:step in, step out": {
-"s": 315.419,
-"d": 1.192,
+"s": 315.418,
+"d": 1.191,
 "text": "Step in, step out."
 },
 "s:circle left": {
-"s": 317.211,
-"d": 0.716,
+"s": 317.21,
+"d": 0.717,
 "text": "Circle left."
 },
 "t:circle left": {
-"s": 318.527,
-"d": 0.7,
+"s": 318.526,
+"d": 0.701,
 "text": "Circle left."
 },
 "s:circle right": {
@@ -858,7 +858,7 @@
 "text": "Circle right."
 },
 "t:circle right": {
-"s": 321.116,
+"s": 321.115,
 "d": 0.665,
 "text": "Circle right."
 },
@@ -868,38 +868,38 @@
 "text": "Step in, pivot out."
 },
 "s:step in, step out, circle left": {
-"s": 324.272,
+"s": 324.27,
 "d": 2.034,
 "text": "Step in, step out, circle left."
 },
 "s:1": {
-"s": 326.906,
+"s": 326.905,
 "d": 0.291,
 "text": "One."
 },
 "s:teep": {
-"s": 327.797,
+"s": 327.796,
 "d": 0.333,
 "text": "Teep."
 },
 "s:body jab, body 2": {
-"s": 328.729,
+"s": 328.728,
 "d": 1.338,
 "text": "Body jab, body two."
 },
 "s:low kick": {
-"s": 330.668,
+"s": 330.666,
 "d": 0.544,
 "text": "Low kick."
 },
 "s:1, step back": {
-"s": 331.811,
-"d": 1.128,
+"s": 331.81,
+"d": 1.129,
 "text": "One, step back."
 },
 "s:lead body kick": {
 "s": 333.539,
-"d": 0.768,
+"d": 0.769,
 "text": "Lead body kick."
 },
 "s:lead head kick": {
@@ -908,12 +908,12 @@
 "text": "Lead head kick."
 },
 "s:up jab": {
-"s": 336.256,
+"s": 336.257,
 "d": 0.594,
 "text": "Up jab."
 },
 "s:feint 1": {
-"s": 337.45,
+"s": 337.451,
 "d": 0.535,
 "text": "Feint one."
 },
@@ -923,23 +923,23 @@
 "text": "Calf kick."
 },
 "s:1, pull": {
-"s": 339.8,
+"s": 339.801,
 "d": 0.851,
 "text": "One, pull."
 },
 "s:feint 2": {
-"s": 341.251,
+"s": 341.252,
 "d": 0.568,
 "text": "Feint two."
 },
 "s:front kick": {
-"s": 342.419,
+"s": 342.42,
 "d": 0.615,
 "text": "Front kick."
 },
 "s:question mark kick": {
 "s": 343.634,
-"d": 0.995,
+"d": 0.994,
 "text": "Question mark kick."
 },
 "s:1, lead head kick": {
@@ -948,7 +948,7 @@
 "text": "One, lead head kick."
 },
 "s:shoulder feint": {
-"s": 347.049,
+"s": 347.048,
 "d": 0.738,
 "text": "Shoulder feint."
 },
@@ -958,13 +958,13 @@
 "text": "Hip feint."
 },
 "s:shoulder feint, rear head kick": {
-"s": 349.527,
-"d": 1.621,
+"s": 349.526,
+"d": 1.622,
 "text": "Shoulder feint, rear head kick."
 },
 "s:front kick, back kick": {
 "s": 351.748,
-"d": 1.41,
+"d": 1.411,
 "text": "Front kick, back kick."
 },
 "s:rear body kick": {
@@ -978,7 +978,7 @@
 "text": "One, step out."
 },
 "s:step in, 2, 3, back kick": {
-"s": 356.853,
+"s": 356.854,
 "d": 2.336,
 "text": "Step in, two, three, back kick."
 },
@@ -995,22 +995,22 @@
 },
 "in:cross": {
 "s": 364.109,
-"d": 1.441,
+"d": 1.44,
 "text": "Incoming cross!",
 "alert": true
 },
 "s:slip, 3": {
-"s": 366.15,
+"s": 366.149,
 "d": 0.956,
 "text": "Slip, three."
 },
 "s:shoulder roll, 2": {
-"s": 367.706,
+"s": 367.705,
 "d": 1.218,
 "text": "Shoulder roll, two."
 },
 "t:shoulder roll": {
-"s": 369.524,
+"s": 369.523,
 "d": 0.704,
 "text": "Shoulder roll."
 },
@@ -1020,955 +1020,950 @@
 "text": "Parry, two."
 },
 "in:lead hook": {
-"s": 372.421,
+"s": 372.42,
 "d": 1.464,
 "text": "Incoming lead hook!",
 "alert": true
 },
 "s:block, 2, step out": {
-"s": 374.485,
+"s": 374.484,
 "d": 1.672,
 "text": "Block, two, step out."
 },
 "t:block": {
-"s": 376.758,
+"s": 376.756,
 "d": 0.334,
 "text": "Block."
 },
 "in:rear hook": {
-"s": 377.692,
+"s": 377.691,
 "d": 1.511,
 "text": "Incoming rear hook!",
 "alert": true
 },
 "s:block, 3": {
-"s": 379.802,
+"s": 379.801,
 "d": 0.832,
 "text": "Block, three."
 },
 "in:overhand": {
-"s": 381.234,
-"d": 1.575,
+"s": 381.233,
+"d": 1.573,
 "text": "Incoming overhand!",
 "alert": true
 },
 "in:jab cross": {
-"s": 383.409,
+"s": 383.406,
 "d": 1.735,
 "text": "Incoming jab cross!",
 "alert": true
 },
 "s:parry, pull, 2": {
-"s": 385.744,
+"s": 385.741,
 "d": 1.48,
 "text": "Parry, pull, two."
 },
 "in:double jab": {
-"s": 387.824,
+"s": 387.82,
 "d": 1.566,
 "text": "Incoming double jab!",
 "alert": true
 },
 "s:parry, parry, 1, 2": {
-"s": 389.99,
+"s": 389.987,
 "d": 2.132,
 "text": "Parry, parry, one, two."
 },
 "in:rear low kick": {
-"s": 392.722,
+"s": 392.719,
 "d": 1.726,
 "text": "Incoming rear low kick!",
 "alert": true
 },
 "s:check, 2": {
-"s": 395.048,
+"s": 395.045,
 "d": 0.92,
 "text": "Check, two."
 },
 "t:check": {
-"s": 396.569,
+"s": 396.566,
 "d": 0.364,
 "text": "Check."
 },
 "s:check, low kick": {
-"s": 397.533,
-"d": 1.192,
+"s": 397.53,
+"d": 1.193,
 "text": "Check, low kick."
 },
 "in:calf kick": {
-"s": 399.325,
+"s": 399.323,
 "d": 1.575,
 "text": "Incoming calf kick!",
 "alert": true
 },
 "s:check, teep": {
-"s": 401.501,
+"s": 401.498,
 "d": 0.92,
 "text": "Check, teep."
 },
 "in:body kick": {
-"s": 403.02,
-"d": 1.566,
+"s": 403.018,
+"d": 1.567,
 "text": "Incoming body kick!",
 "alert": true
 },
 "s:catch, 2": {
-"s": 405.187,
+"s": 405.184,
 "d": 0.956,
 "text": "Catch, two."
 },
 "t:catch": {
-"s": 406.743,
+"s": 406.74,
 "d": 0.389,
 "text": "Catch."
 },
 "s:block, rear body kick": {
-"s": 407.731,
-"d": 1.372,
+"s": 407.729,
+"d": 1.374,
 "text": "Block, rear body kick."
 },
 "in:rear head kick": {
-"s": 409.703,
+"s": 409.702,
 "d": 1.802,
 "text": "Incoming rear head kick!",
 "alert": true
 },
 "s:block, 2": {
-"s": 412.106,
+"s": 412.105,
 "d": 0.878,
 "text": "Block, two."
 },
 "in:lead head kick": {
-"s": 413.583,
+"s": 413.582,
 "d": 1.742,
 "text": "Incoming lead head kick!",
 "alert": true
 },
 "s:block, 1, 2": {
-"s": 415.925,
+"s": 415.924,
 "d": 1.494,
 "text": "Block, one, two."
 },
 "in:teep": {
-"s": 418.02,
+"s": 418.019,
 "d": 1.307,
 "text": "Incoming teep!",
 "alert": true
 },
 "s:angle out, low kick": {
-"s": 419.927,
-"d": 1.289,
+"s": 419.926,
+"d": 1.288,
 "text": "Angle out, low kick."
 },
 "in:blitz": {
-"s": 421.816,
-"d": 1.395,
+"s": 421.814,
+"d": 1.392,
 "text": "Incoming blitz!",
 "alert": true
 },
 "s:check hook, pivot out": {
-"s": 423.81,
-"d": 1.32,
+"s": 423.806,
+"d": 1.321,
 "text": "Check hook, pivot out."
 },
 "in:takedown": {
-"s": 425.731,
+"s": 425.727,
 "d": 1.562,
 "text": "Incoming takedown!",
 "alert": true
 },
 "s:pull, 2, step out": {
-"s": 427.893,
-"d": 1.649,
+"s": 427.889,
+"d": 1.648,
 "text": "Pull, two, step out."
 },
 "x:Sell it with the shoulder. Kick the second they react.": {
-"s": 430.142,
+"s": 430.137,
 "d": 3.253,
 "text": "Sell it with the shoulder. Kick the second they react."
 },
 "x:Fake the jab. Calf kick while they're frozen.": {
-"s": 433.995,
+"s": 433.99,
 "d": 3.249,
 "text": "Fake the jab. Calf kick while they're frozen."
 },
 "x:Jab, jab, and kick where they slip to.": {
-"s": 437.845,
+"s": 437.839,
 "d": 2.498,
 "text": "Jab, jab, and kick where they slip to."
 },
 "x:Front kick to back them up. The 2 follows them.": {
-"s": 440.943,
+"s": 440.938,
 "d": 3.17,
 "text": "Front kick to back them up. The 2 follows them."
 },
 "x:Stomp above the knee, then the 2.": {
-"s": 444.713,
+"s": 444.708,
 "d": 1.919,
 "text": "Stomp above the knee, then the 2."
 },
 "x:Spin to cut them off. The 2 is waiting where they run.": {
-"s": 447.232,
+"s": 447.227,
 "d": 3.777,
 "text": "Spin to cut them off. The 2 is waiting where they run."
 },
 "x:Long step in, 2, 3, and gone.": {
-"s": 451.609,
+"s": 451.604,
 "d": 2.792,
 "text": "Long step in, 2, 3, and gone."
 },
 "x:Fake the jab, and let that turn become the spin.": {
-"s": 455.002,
+"s": 454.996,
 "d": 2.469,
 "text": "Fake the jab, and let that turn become the spin."
 },
 "x:McGregor's straight. The jab and the feint open the door. The 2 walks through it.": {
-"s": 458.07,
+"s": 458.065,
 "d": 5.872,
 "text": "McGregor's straight. The jab and the feint open the door. The 2 walks through it."
 },
 "x:The setup: feint the jab with your shoulder. When they flinch, two, straight down the middle. Drill it.": {
-"s": 464.542,
+"s": 464.537,
 "d": 7.328,
 "text": "The setup: feint the jab with your shoulder. When they flinch, two, straight down the middle. Drill it."
 },
 "x:Next round: McGregor's straight. Sell the jab feint, then the 2 on the flinch.": {
-"s": 472.47,
+"s": 472.465,
 "d": 5.274,
 "text": "Next round: McGregor's straight. Sell the jab feint, then the 2 on the flinch."
 },
 "x:Sell the feint with the shoulder, not just the hand.": {
-"s": 478.344,
+"s": 478.339,
 "d": 2.416,
 "text": "Sell the feint with the shoulder, not just the hand."
 },
 "x:The 2 starts from the back foot. Turn the hip.": {
-"s": 481.361,
+"s": 481.355,
 "d": 3.278,
 "text": "The 2 starts from the back foot. Turn the hip."
 },
 "x:Stay long. Make them reach for you.": {
-"s": 485.238,
+"s": 485.233,
 "d": 2.8,
 "text": "Stay long. Make them reach for you."
 },
 "x:Ruffy's in and out. Long entries, right hand, left hook, and gone.": {
-"s": 488.639,
+"s": 488.633,
 "d": 5.202,
 "text": "Ruffy's in and out. Long entries, right hand, left hook, and gone."
 },
 "x:The setup: one long step in, 2, 3, and step out before they answer. Hands can be low, feet never stop. Drill it.": {
-"s": 494.441,
+"s": 494.436,
 "d": 9.3,
 "text": "The setup: one long step in, 2, 3, and step out before they answer. Hands can be low, feet never stop. Drill it."
 },
 "x:Next round: Ruffy's in and out. Long step in, 2, 3, and gone.": {
-"s": 504.341,
+"s": 504.336,
 "d": 5.677,
 "text": "Next round: Ruffy's in and out. Long step in, 2, 3, and gone."
 },
 "x:In and out. Never stand in front of them.": {
-"s": 510.618,
+"s": 510.612,
 "d": 2.934,
 "text": "In and out. Never stand in front of them."
 },
 "x:Exit on an angle, not straight back.": {
-"s": 514.152,
+"s": 514.147,
 "d": 2.227,
 "text": "Exit on an angle, not straight back."
 },
 "x:Light on the feet between combos.": {
-"s": 516.979,
+"s": 516.974,
 "d": 1.866,
 "text": "Light on the feet between combos."
 },
 "x:McGregor's pull counter. Bait, pull, punish.": {
-"s": 519.446,
+"s": 519.44,
 "d": 3.914,
 "text": "McGregor's pull counter. Bait, pull, punish."
 },
 "x:The setup: jab, lean back just out of their answer, and fire the 2 over it. Drill it.": {
-"s": 523.96,
-"d": 6.06,
+"s": 523.954,
+"d": 6.061,
 "text": "The setup: jab, lean back just out of their answer, and fire the 2 over it. Drill it."
 },
 "x:Next round: McGregor's pull counter. Jab, pull, and the 2 over the top.": {
-"s": 530.62,
+"s": 530.615,
 "d": 5.466,
 "text": "Next round: McGregor's pull counter. Jab, pull, and the 2 over the top."
 },
 "x:Pull from the waist. Eyes stay on them.": {
-"s": 536.686,
+"s": 536.681,
 "d": 2.695,
 "text": "Pull from the waist. Eyes stay on them."
 },
 "x:Small pull, big 2.": {
-"s": 539.98,
+"s": 539.976,
 "d": 1.53,
 "text": "Small pull, big 2."
 },
 "x:Load the back leg on the pull, and fire off it.": {
-"s": 542.11,
+"s": 542.105,
 "d": 2.38,
 "text": "Load the back leg on the pull, and fire off it."
 },
 "x:Adesanya's feints. Feint first, kick second.": {
-"s": 545.09,
+"s": 545.085,
 "d": 3.963,
 "text": "Adesanya's feints. Feint first, kick second."
 },
 "x:The setup: fake the jab. While they're frozen, calf kick the front leg. Drill it.": {
-"s": 549.654,
+"s": 549.649,
 "d": 6.312,
 "text": "The setup: fake the jab. While they're frozen, calf kick the front leg. Drill it."
 },
 "x:Next round: Adesanya's feints. Fake the jab, and kick while they're frozen.": {
-"s": 556.566,
+"s": 556.561,
 "d": 5.26,
 "text": "Next round: Adesanya's feints. Fake the jab, and kick while they're frozen."
 },
 "x:Make the feint big and the kick fast.": {
-"s": 562.426,
+"s": 562.421,
 "d": 1.766,
 "text": "Make the feint big and the kick fast."
 },
 "x:Never kick naked. Feint or punch first.": {
-"s": 564.792,
+"s": 564.787,
 "d": 3.352,
 "text": "Never kick naked. Feint or punch first."
 },
 "x:Watch the reaction, then kick.": {
-"s": 568.744,
+"s": 568.739,
 "d": 1.706,
 "text": "Watch the reaction, then kick."
 },
 "x:Front kick and question mark kick. Body, body, then the head.": {
-"s": 571.05,
+"s": 571.045,
 "d": 4.394,
 "text": "Front kick and question mark kick. Body, body, then the head."
 },
 "x:The setup: front kick to the body, twice. They drop their hands to catch it. The third one chambers the same and turns over to the head. Drill it.": {
-"s": 576.043,
-"d": 10.276,
+"s": 576.039,
+"d": 10.277,
 "text": "The setup: front kick to the body, twice. They drop their hands to catch it. The third one chambers the same and turns over to the head. Drill it."
 },
 "x:Next round: the question mark kick. Front kick, front kick, then turn it over high.": {
-"s": 586.92,
+"s": 586.915,
 "d": 6.029,
 "text": "Next round: the question mark kick. Front kick, front kick, then turn it over high."
 },
 "x:Chamber the question mark exactly like the front kick.": {
-"s": 593.548,
+"s": 593.544,
 "d": 2.514,
 "text": "Chamber the question mark exactly like the front kick."
 },
 "x:Turn the hip over at the last moment.": {
-"s": 596.663,
+"s": 596.658,
 "d": 1.755,
 "text": "Turn the hip over at the last moment."
 },
 "x:Front kick the belly button, not the chest.": {
-"s": 599.017,
+"s": 599.013,
 "d": 2.254,
 "text": "Front kick the belly button, not the chest."
 },
 "x:McGregor's kicks and spins. Kick them to the fence, cut off the exit, and the 2 is waiting.": {
-"s": 601.872,
+"s": 601.867,
 "d": 6.079,
 "text": "McGregor's kicks and spins. Kick them to the fence, cut off the exit, and the 2 is waiting."
 },
 "x:The setup: front kick, 2. Twice. Then front kick and spin into the back kick while they brace for the 2. Drill it.": {
-"s": 608.55,
+"s": 608.546,
 "d": 8.362,
 "text": "The setup: front kick, 2. Twice. Then front kick and spin into the back kick while they brace for the 2. Drill it."
 },
 "x:Next round: McGregor's kicks. Front kick them back, spin to cut them off, 2 where they run.": {
-"s": 617.513,
+"s": 617.508,
 "d": 6.562,
 "text": "Next round: McGregor's kicks. Front kick them back, spin to cut them off, 2 where they run."
 },
 "x:Oblique kick above the knee. Stomp, don't swing.": {
-"s": 624.675,
+"s": 624.67,
 "d": 3.619,
 "text": "Oblique kick above the knee. Stomp, don't swing."
 },
 "x:Spin fast, and your eyes get back to the target first.": {
-"s": 628.894,
+"s": 628.89,
 "d": 3.034,
 "text": "Spin fast, and your eyes get back to the target first."
 },
 "x:After every kick, the hands come straight back.": {
-"s": 632.528,
+"s": 632.524,
 "d": 2.562,
 "text": "After every kick, the hands come straight back."
 },
 "x:Pull counter defence. They throw, you pull, you punish.": {
-"s": 635.69,
+"s": 635.686,
 "d": 4.122,
 "text": "Pull counter defence. They throw, you pull, you punish."
 },
 "x:The setup: when you hear incoming cross, lean back just out of range and fire your 2 straight back. Drill it.": {
-"s": 640.412,
+"s": 640.408,
 "d": 6.878,
 "text": "The setup: when you hear incoming cross, lean back just out of range and fire your 2 straight back. Drill it."
 },
 "x:Next round: pull counters off their punches. Pull, and the 2 straight back.": {
-"s": 647.89,
-"d": 5.287,
+"s": 647.886,
+"d": 5.286,
 "text": "Next round: pull counters off their punches. Pull, and the 2 straight back."
 },
 "x:Pull just enough. Make it miss by an inch.": {
-"s": 653.777,
+"s": 653.772,
 "d": 3.233,
 "text": "Pull just enough. Make it miss by an inch."
 },
 "x:The counter comes the instant their hand is out.": {
-"s": 657.611,
+"s": 657.606,
 "d": 2.155,
 "text": "The counter comes the instant their hand is out."
 },
 "x:Don't admire it. Reset your stance.": {
-"s": 660.366,
+"s": 660.361,
 "d": 3.036,
 "text": "Don't admire it. Reset your stance."
 },
 "x:Adesanya's counters. Make them overextend, then the lead hook meets them.": {
-"s": 664.002,
+"s": 663.997,
 "d": 4.826,
 "text": "Adesanya's counters. Make them overextend, then the lead hook meets them."
 },
 "x:The setup: when they rush in, don't back up straight. Pivot as you throw the lead hook, and you're off the line. That's how Adesanya finished Whittaker. Drill it.": {
-"s": 669.428,
+"s": 669.423,
 "d": 10.596,
 "text": "The setup: when they rush in, don't back up straight. Pivot as you throw the lead hook, and you're off the line. That's how Adesanya finished Whittaker. Drill it."
 },
 "x:Next round: Adesanya's counters. When they rush, check hook and pivot.": {
-"s": 680.624,
+"s": 680.618,
 "d": 5.08,
 "text": "Next round: Adesanya's counters. When they rush, check hook and pivot."
 },
 "x:Pivot on the lead foot as the hook lands.": {
-"s": 686.303,
+"s": 686.298,
 "d": 1.861,
 "text": "Pivot on the lead foot as the hook lands."
 },
 "x:Short hook. Elbow behind it.": {
-"s": 688.764,
+"s": 688.759,
 "d": 2.657,
 "text": "Short hook. Elbow behind it."
 },
 "x:Let them come to you.": {
-"s": 692.021,
-"d": 0.972,
+"s": 692.016,
+"d": 0.971,
 "text": "Let them come to you."
 },
 "x:Ruffy's chaos. Defend, answer fast, and sometimes spin.": {
-"s": 693.593,
+"s": 693.587,
 "d": 4.863,
 "text": "Ruffy's chaos. Defend, answer fast, and sometimes spin."
 },
 "x:The setup: fake the jab, and let the turn of the feint become the spinning wheel kick. The King Green knockout. Drill it slow first.": {
-"s": 699.055,
+"s": 699.05,
 "d": 8.525,
 "text": "The setup: fake the jab, and let the turn of the feint become the spinning wheel kick. The King Green knockout. Drill it slow first."
 },
 "x:Next round: Ruffy's spins. Fake the jab, and spin into the wheel kick.": {
-"s": 708.181,
+"s": 708.175,
 "d": 5.034,
 "text": "Next round: Ruffy's spins. Fake the jab, and spin into the wheel kick."
 },
 "x:Spin on the ball of the lead foot.": {
-"s": 713.815,
+"s": 713.808,
 "d": 1.489,
 "text": "Spin on the ball of the lead foot."
 },
 "x:Spinning stuff is rare. The 2 is still your main weapon.": {
-"s": 715.904,
+"s": 715.897,
 "d": 3.899,
 "text": "Spinning stuff is rare. The 2 is still your main weapon."
 },
 "x:After the spin, the hands come home first.": {
-"s": 720.402,
+"s": 720.396,
 "d": 2.384,
 "text": "After the spin, the hands come home first."
 },
 "x:Snipe. Hard day. Short breaks, fast calls, and flurries. Let's work.": {
-"s": 723.387,
+"s": 723.38,
 "d": 7.559,
 "text": "Snipe. Hard day. Short breaks, fast calls, and flurries. Let's work."
 },
 "x:Kicks. Technical day. Clean setups, perfect reps.": {
-"s": 731.546,
+"s": 731.539,
 "d": 5.783,
 "text": "Kicks. Technical day. Clean setups, perfect reps."
 },
 "x:Pull counters and defence. Hard day. Short breaks, fast calls, and flurries. Let's work.": {
-"s": 737.929,
+"s": 737.922,
 "d": 8.46,
 "text": "Pull counters and defence. Hard day. Short breaks, fast calls, and flurries. Let's work."
 },
 "x:Snipe. Technical day. Clean setups, perfect reps.": {
-"s": 746.989,
+"s": 746.982,
 "d": 5.847,
 "text": "Snipe. Technical day. Clean setups, perfect reps."
 },
 "x:Kicks. Hard day. Short breaks, fast calls, and flurries. Let's work.": {
-"s": 753.436,
+"s": 753.429,
 "d": 7.497,
 "text": "Kicks. Hard day. Short breaks, fast calls, and flurries. Let's work."
 },
 "x:Pull counters and defence. Technical day. Clean setups, perfect reps.": {
-"s": 761.532,
+"s": 761.526,
 "d": 6.745,
 "text": "Pull counters and defence. Technical day. Clean setups, perfect reps."
 },
-"x:Warm-up. Bounce on your feet, in and out. Hands start in a moment.": {
-"s": 768.877,
-"d": 5.596,
-"text": "Warm-up. Bounce on your feet, in and out. Hands start in a moment."
+"x:Warm-up. Light and loose, real combos from the start.": {
+"s": 768.871,
+"d": 4.11,
+"text": "Warm-up. Light and loose, real combos from the start."
 },
-"x:Hands now. Light jabs and crosses. Loose shoulders.": {
-"s": 775.073,
-"d": 4.817,
-"text": "Hands now. Light jabs and crosses. Loose shoulders."
+"x:Add the kicks. Still light.": {
+"s": 773.581,
+"d": 2.42,
+"text": "Add the kicks. Still light."
 },
-"x:Add the legs. Light kicks, nothing hard yet.": {
-"s": 780.49,
-"d": 3.744,
-"text": "Add the legs. Light kicks, nothing hard yet."
-},
-"x:Pick up the pace. Incoming calls are on.": {
-"s": 784.834,
-"d": 3.329,
-"text": "Pick up the pace. Incoming calls are on."
+"x:Pick it up. Incoming calls are on.": {
+"s": 776.6,
+"d": 2.936,
+"text": "Pick it up. Incoming calls are on."
 },
 "x:Straights. One two, nonstop, all out.": {
-"s": 788.763,
+"s": 780.137,
 "d": 4.099,
 "text": "Straights. One two, nonstop, all out."
 },
 "x:Two to the body, two to the head. Nonstop.": {
-"s": 793.462,
+"s": 784.836,
 "d": 3.508,
 "text": "Two to the body, two to the head. Nonstop."
 },
 "x:Jabs only. As fast as you can.": {
-"s": 797.571,
+"s": 788.944,
 "d": 2.833,
 "text": "Jabs only. As fast as you can."
 },
 "x:Up jab, two, up jab, two. Nonstop.": {
-"s": 801.003,
+"s": 792.377,
 "d": 4.393,
 "text": "Up jab, two, up jab, two. Nonstop."
 },
 "x:Pull and two. Pull and two. Nonstop.": {
-"s": 805.997,
+"s": 797.371,
 "d": 3.996,
 "text": "Pull and two. Pull and two. Nonstop."
 },
 "x:Three, two. Hook and cross. Nonstop.": {
-"s": 810.593,
+"s": 801.967,
 "d": 4.473,
 "text": "Three, two. Hook and cross. Nonstop."
 },
 "x:Body kicks. Switch legs every kick.": {
-"s": 815.666,
+"s": 807.04,
 "d": 2.925,
 "text": "Body kicks. Switch legs every kick."
 },
 "x:Teep, one two, teep. Nonstop.": {
-"s": 819.192,
+"s": 810.566,
 "d": 3.615,
 "text": "Teep, one two, teep. Nonstop."
 },
 "x:Sprawl, back up, one two. Nonstop.": {
-"s": 823.407,
+"s": 814.78,
 "d": 3.942,
 "text": "Sprawl, back up, one two. Nonstop."
 },
 "x:Round one.": {
-"s": 827.949,
+"s": 819.323,
 "d": 0.602,
 "text": "Round one."
 },
 "x:Round two.": {
-"s": 829.151,
+"s": 820.525,
 "d": 0.635,
 "text": "Round two."
 },
 "x:Round three.": {
-"s": 830.387,
+"s": 821.761,
 "d": 0.696,
 "text": "Round three."
 },
 "x:Round four.": {
-"s": 831.683,
+"s": 823.057,
 "d": 0.703,
 "text": "Round four."
 },
 "x:Round five.": {
-"s": 832.985,
-"d": 0.855,
+"s": 824.359,
+"d": 0.856,
 "text": "Round five."
 },
 "x:Callback. The trap from round one.": {
-"s": 834.441,
+"s": 825.815,
 "d": 2.615,
 "text": "Callback. The trap from round one."
 },
 "x:Callback. The trap from round two.": {
-"s": 837.656,
+"s": 829.03,
 "d": 2.685,
 "text": "Callback. The trap from round two."
 },
 "x:Callback. The trap from round three.": {
-"s": 840.941,
+"s": 832.316,
 "d": 2.73,
 "text": "Callback. The trap from round three."
 },
 "x:Callback. The trap from round four.": {
-"s": 844.272,
+"s": 835.646,
 "d": 2.711,
 "text": "Callback. The trap from round four."
 },
 "x:Callback. The trap from round five.": {
-"s": 847.582,
+"s": 838.957,
 "d": 2.88,
 "text": "Callback. The trap from round five."
 },
 "x:Callback. The trap from earlier.": {
-"s": 851.062,
+"s": 842.437,
 "d": 2.454,
 "text": "Callback. The trap from earlier."
 },
 "x:Now it's mixed in. Same setup, more calls around it.": {
-"s": 854.116,
+"s": 845.491,
 "d": 3.941,
 "text": "Now it's mixed in. Same setup, more calls around it."
 },
 "x:Now it's hidden. When you hear it, explode.": {
-"s": 858.657,
+"s": 850.031,
 "d": 3.179,
 "text": "Now it's hidden. When you hear it, explode."
 },
 "x:Last minute. Perfect reps of the setup.": {
-"s": 862.436,
+"s": 853.811,
 "d": 3.362,
 "text": "Last minute. Perfect reps of the setup."
 },
 "x:Rapid fire.": {
-"s": 866.398,
+"s": 857.773,
 "d": 0.783,
 "text": "Rapid fire."
 },
 "x:Flurry! Fifteen seconds!": {
-"s": 867.781,
+"s": 859.156,
 "d": 2.523,
 "text": "Flurry! Fifteen seconds!"
 },
 "x:Flurry! Twenty seconds!": {
-"s": 870.904,
+"s": 862.279,
 "d": 2.308,
 "text": "Flurry! Twenty seconds!"
 },
 "x:Last twenty! Empty the tank!": {
-"s": 873.812,
+"s": 865.186,
 "d": 2.417,
 "text": "Last twenty! Empty the tank!"
 },
 "x:Time. Keep moving, breathe.": {
-"s": 876.829,
+"s": 868.203,
 "d": 2.599,
 "text": "Time. Keep moving, breathe."
 },
 "x:Rest. Breathe through the nose. Walk it off.": {
-"s": 880.028,
+"s": 871.403,
 "d": 4.088,
 "text": "Rest. Breathe through the nose. Walk it off."
 },
 "x:Ten seconds.": {
-"s": 884.716,
+"s": 876.091,
 "d": 0.849,
 "text": "Ten seconds."
 },
 "x:Next: the burnout. Three minutes. Twenty on, ten off.": {
-"s": 886.165,
+"s": 877.539,
 "d": 5.273,
 "text": "Next: the burnout. Three minutes. Twenty on, ten off."
 },
 "x:Next: the finisher. Slow and perfect. Today's setups, one more time.": {
-"s": 892.038,
+"s": 883.412,
 "d": 6.242,
 "text": "Next: the finisher. Slow and perfect. Today's setups, one more time."
 },
 "x:Go! Twenty seconds!": {
-"s": 898.88,
+"s": 890.254,
 "d": 2.158,
 "text": "Go! Twenty seconds!"
 },
 "x:Ease off. Jab and move.": {
-"s": 901.638,
+"s": 893.012,
 "d": 2.363,
 "text": "Ease off. Jab and move."
 },
 "x:Last one! Everything you have!": {
-"s": 904.602,
+"s": 895.975,
 "d": 2.528,
 "text": "Last one! Everything you have!"
 },
 "x:Final round. Slow and perfect. Exhale on every strike.": {
-"s": 907.729,
+"s": 899.103,
 "d": 5.102,
 "text": "Final round. Slow and perfect. Exhale on every strike."
 },
 "x:Session done. Good work. Rate it and log it.": {
-"s": 913.431,
+"s": 904.804,
 "d": 4.125,
 "text": "Session done. Good work. Rate it and log it."
 },
 "x:Faster!": {
-"s": 918.156,
+"s": 909.53,
 "d": 0.551,
 "text": "Faster!"
 },
 "x:Don't stop!": {
-"s": 919.308,
+"s": 910.681,
 "d": 0.632,
 "text": "Don't stop!"
 },
 "x:Hands back to the face!": {
-"s": 920.54,
+"s": 911.913,
 "d": 1.179,
 "text": "Hands back to the face!"
 },
 "x:Keep going!": {
-"s": 922.319,
+"s": 913.693,
 "d": 0.608,
 "text": "Keep going!"
 },
 "x:Breathe out!": {
-"s": 923.527,
+"s": 914.901,
 "d": 0.69,
 "text": "Breathe out!"
 },
 "x:Hands home after every shot.": {
-"s": 924.817,
-"d": 1.532,
+"s": 916.191,
+"d": 1.534,
 "text": "Hands home after every shot."
 },
 "x:Move your head after every combo.": {
-"s": 926.949,
+"s": 918.325,
 "d": 1.595,
 "text": "Move your head after every combo."
 },
 "x:Breathe out on every strike.": {
-"s": 929.144,
+"s": 920.52,
 "d": 1.329,
 "text": "Breathe out on every strike."
 },
 "x:Pick it up!": {
-"s": 931.073,
+"s": 922.449,
 "d": 0.552,
 "text": "Pick it up!"
 },
 "x:Sharper. Snap it back.": {
-"s": 932.225,
+"s": 923.601,
 "d": 2.176,
 "text": "Sharper. Snap it back."
 },
 "x:Slow is smooth. Smooth is fast.": {
-"s": 935.001,
+"s": 926.376,
 "d": 2.914,
 "text": "Slow is smooth. Smooth is fast."
 },
 "x:Check your stance after every combo.": {
-"s": 938.515,
+"s": 929.891,
 "d": 1.754,
 "text": "Check your stance after every combo."
 },
 "x:Chin down, eyes up.": {
-"s": 940.869,
-"d": 1.326,
+"s": 932.245,
+"d": 1.325,
 "text": "Chin down, eyes up."
 },
 "x:Exhale on every strike.": {
-"s": 942.795,
-"d": 1.302,
+"s": 934.171,
+"d": 1.303,
 "text": "Exhale on every strike."
 },
 "x:Camera check. Stand the phone diagonal in front of you, two to three metres away, so it sees you from head to feet. Get in your stance.": {
-"s": 944.698,
+"s": 936.073,
 "d": 8.554,
 "text": "Camera check. Stand the phone diagonal in front of you, two to three metres away, so it sees you from head to feet. Get in your stance."
 },
 "x:I can see you.": {
-"s": 953.852,
+"s": 945.227,
 "d": 0.825,
 "text": "I can see you."
 },
 "x:I can't see you. Check the phone is pointing at you and there's light on you.": {
-"s": 955.276,
+"s": 946.652,
 "d": 4.064,
 "text": "I can't see you. Check the phone is pointing at you and there's light on you."
 },
 "x:I can't see your hands. Turn the phone a bit more in front of you.": {
-"s": 959.941,
+"s": 951.316,
 "d": 3.892,
 "text": "I can't see your hands. Turn the phone a bit more in front of you."
 },
 "x:I can't see your feet. Move the phone further back.": {
-"s": 964.433,
+"s": 955.808,
 "d": 3.383,
 "text": "I can't see your feet. Move the phone further back."
 },
 "x:The camera isn't giving me a picture.": {
-"s": 968.416,
+"s": 959.792,
 "d": 1.618,
 "text": "The camera isn't giving me a picture."
 },
 "x:Hold your normal guard. Five seconds. Don't move.": {
-"s": 970.634,
+"s": 962.01,
 "d": 4.63,
 "text": "Hold your normal guard. Five seconds. Don't move."
 },
 "x:Now three sharp jabs.": {
-"s": 975.864,
-"d": 1.3,
+"s": 967.239,
+"d": 1.302,
 "text": "Now three sharp jabs."
 },
 "x:Now three of your best twos. Really turn the hip.": {
-"s": 977.764,
+"s": 969.141,
 "d": 3.493,
 "text": "Now three of your best twos. Really turn the hip."
 },
 "x:I couldn't measure your hip turn from here, so I'll skip that check.": {
-"s": 981.857,
+"s": 973.234,
 "d": 2.852,
 "text": "I couldn't measure your hip turn from here, so I'll skip that check."
 },
 "x:Got it. Camera coach is on for the themed rounds.": {
-"s": 985.309,
+"s": 976.686,
 "d": 3.276,
 "text": "Got it. Camera coach is on for the themed rounds."
 },
 "x:Camera coach can't see you well enough. Training without it.": {
-"s": 989.185,
+"s": 980.562,
 "d": 3.725,
 "text": "Camera coach can't see you well enough. Training without it."
 },
 "x:Camera report.": {
-"s": 993.51,
-"d": 0.931,
+"s": 984.887,
+"d": 0.93,
 "text": "Camera report."
 },
 "x:Rear hand home. Back to the chin.": {
-"s": 995.041,
+"s": 986.417,
 "d": 2.616,
 "text": "Rear hand home. Back to the chin."
 },
 "x:Lead hand back to your guard.": {
-"s": 998.257,
+"s": 989.633,
 "d": 1.293,
 "text": "Lead hand back to your guard."
 },
 "x:Chin down. Sit in your stance.": {
-"s": 1000.15,
+"s": 991.526,
 "d": 2.63,
 "text": "Chin down. Sit in your stance."
 },
 "x:Stay bladed.": {
-"s": 1003.38,
+"s": 994.756,
 "d": 0.743,
 "text": "Stay bladed."
 },
 "x:Move your feet between combos.": {
-"s": 1004.723,
+"s": 996.099,
 "d": 1.781,
 "text": "Move your feet between combos."
 },
 "x:Turn the hip on the two.": {
-"s": 1007.104,
+"s": 998.48,
 "d": 1.102,
 "text": "Turn the hip on the two."
 },
 "x:Keep the other hand up when you kick.": {
-"s": 1008.806,
+"s": 1000.182,
 "d": 1.488,
 "text": "Keep the other hand up when you kick."
 },
 "x:Your own mix. Hard day. Short breaks, fast calls, and flurries. Let's work.": {
-"s": 1010.894,
+"s": 1002.27,
 "d": 7.469,
 "text": "Your own mix. Hard day. Short breaks, fast calls, and flurries. Let's work."
 },
 "x:Your own mix. Technical day. Clean setups, perfect reps.": {
-"s": 1018.963,
+"s": 1010.338,
 "d": 5.846,
 "text": "Your own mix. Technical day. Clean setups, perfect reps."
 },
 "x:Again!": {
-"s": 1025.408,
+"s": 1016.784,
 "d": 0.445,
 "text": "Again!"
 },
 "x:Again, faster!": {
-"s": 1026.454,
-"d": 1.19,
+"s": 1017.829,
+"d": 1.191,
 "text": "Again, faster!"
 },
 "x:One more time!": {
-"s": 1028.243,
+"s": 1019.62,
 "d": 0.888,
 "text": "One more time!"
 },
 "x:Challenge! Ten seconds. Up jab, two, as many as you can. Go!": {
-"s": 1029.731,
+"s": 1021.108,
 "d": 6.711,
 "text": "Challenge! Ten seconds. Up jab, two, as many as you can. Go!"
 },
 "x:Challenge! Five sprawls, back up to one two each time. Go!": {
-"s": 1037.042,
+"s": 1028.419,
 "d": 5.545,
 "text": "Challenge! Five sprawls, back up to one two each time. Go!"
 },
 "x:Challenge! Ten seconds. Jab, jab, cross, nonstop. Go!": {
-"s": 1043.187,
+"s": 1034.564,
 "d": 7.032,
 "text": "Challenge! Ten seconds. Jab, jab, cross, nonstop. Go!"
 },
 "x:Challenge! Ten body kicks, switch legs every kick. Go!": {
-"s": 1050.819,
+"s": 1042.196,
 "d": 4.913,
 "text": "Challenge! Ten body kicks, switch legs every kick. Go!"
 },
 "x:Challenge! Fifteen seconds. Pull and two, as fast as you can. Go!": {
-"s": 1056.332,
+"s": 1047.709,
 "d": 6.675,
 "text": "Challenge! Fifteen seconds. Pull and two, as fast as you can. Go!"
 },
 "x:Challenge! Ten seconds. Slip, two, slip, two. Go!": {
-"s": 1063.607,
+"s": 1054.984,
 "d": 6.699,
 "text": "Challenge! Ten seconds. Slip, two, slip, two. Go!"
 },
 "x:Done! Back to it.": {
-"s": 1070.907,
+"s": 1062.284,
 "d": 1.87,
 "text": "Done! Back to it."
 },
 "x:Camera check: hands are coming home. Keep it up.": {
-"s": 1073.377,
+"s": 1064.754,
 "d": 3.565,
 "text": "Camera check: hands are coming home. Keep it up."
 },
 "x:Camera check: I can't see your punches well. Point the phone at your whole body.": {
-"s": 1077.542,
+"s": 1068.919,
 "d": 4.894,
 "text": "Camera check: I can't see your punches well. Point the phone at your whole body."
 },
 "x:Okay. Straight into the mix.": {
-"s": 1083.036,
+"s": 1074.413,
 "d": 2.624,
 "text": "Okay. Straight into the mix."
 }
