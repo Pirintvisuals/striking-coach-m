@@ -5,23 +5,51 @@ web app (PWA) for one person: no accounts, no backend, and it works offline once
 The spec is in [PLAN.md](PLAN.md), and every combo, trap and defence call with its
 "why" and sources is in [LIBRARY.md](LIBRARY.md).
 
-## What a session is
+## What a session is (v2)
 
-10 s countdown → 2-min warm-up → 4 focus rounds × 4 min (1 min rest) → 2-min
-final round (burnout on hard days, slow technical on technical days). Each
-round opens with a spoken focus. Each rest gives one tip, the "why" of the combo
-that opens the next round. A wood-block clack sounds 10 s before the bell, and a
-"ten seconds" call plus 3-2-1 beeps end each rest.
+About 46 minutes with the defaults: 10 s countdown → **5-min warm-up** (footwork, then light
+hands, light kicks, first incoming calls) → **3 × 10-min themed rounds** → **3-min finisher**,
+with **2 min rest** before every round. Round length, rest and number of rounds are in
+**Settings**.
+
+Every themed round teaches one real setup from McGregor, Adesanya or Ruffy:
+
+1. **Teach** (first ~15%): the coach says the theme and explains the setup in one sentence, then
+   you drill it alone. After a few reps comes a short form cue.
+2. **Mix** (to ~50%): the setup is mixed with related calls and its trap sequences.
+3. **Hide** (to the end): the setup is hidden among everything else: straights, traps,
+   incoming attacks, and **callbacks** to traps from earlier rounds ("Callback. The trap
+   from round one." Then the pattern once, then the break).
+4. Short coaching cues come about once a minute. Recovery between calls shrinks through the round,
+   so intensity rises.
+
+**Hard days** use short gaps, "Rapid fire" strings (3–4 short punch combos back to back), two
+15–20 s all-out **flurries** in the middle of each round, and a flurry for the last 20 s. The
+finisher is a **burnout**: 6 × (20 s all out, 10 s easy). **Technical days** have no flurries.
+They use longer recovery and end each round with "Last minute. Perfect reps of the setup." The
+finisher drills the day's setups slowly.
 
 Rotation (the app always opens on the next one): Snipe hard → Kicks technical →
 Pull counters & defence hard → Snipe technical → Kicks hard → Pull counters &
 defence technical. You can pick another session on the home screen. Saving the log
 moves the rotation on to the one after the session you did.
 
-**Defence calls** have a blue screen, an alert chirp, and the incoming attack named
-in words ("cross!"). After a short reaction window the coach says the defence and
-counter ("pull, two"). The share of these calls is set in **Settings**, 15% by
-default. Counter days multiply it by 2 to 3.5 depending on the round.
+| | round 1 | round 2 | round 3 |
+|---|---|---|---|
+| Snipe | McGregor's straight (feint 1, 2) | Ruffy's in and out (step in, 2, 3, step out) | McGregor's pull counter (1, pull, 2) |
+| Kicks | Adesanya's feints (feint 1, calf kick) | Front kick → question mark kick trap | McGregor's kicks and spins (front kick, 2 ×2 → back kick) |
+| Counters | Pull counter defence (incoming cross → pull, 2) | Adesanya's check hook (incoming blitz → check hook, pivot out) | Ruffy's chaos (feint 1, wheel kick) |
+
+**Incoming attacks** never come straight after a combo. First there's a clear silence, then an alert
+chirp, then a **different voice** (female, US) says "Incoming cross!". The screen turns blue.
+After a short reaction window the coach says the defence and counter ("Pull, two"). Offence
+calls are always numbers in the coach's voice, so "one, two, cross" can't happen any more.
+The share of incoming calls is set in **Settings** (15% by default). Each round theme multiplies
+it, up to about 40% on defence rounds.
+
+Spinning techniques, knees and elbows are capped: one spinning technique per round, or about 4 in
+the McGregor/Ruffy spin rounds. In a simulated hard snipe session there were 842 jab/straight calls and
+2 spinning ones.
 
 ## Deploy for free (pick one)
 
@@ -50,14 +78,20 @@ Brightness → Auto-Lock to Never while you train.
 
 ## Voice clips
 
-The `audio/sprite.m4a` file was generated with **edge-tts** (Microsoft neural
-voice `en-GB-RyanNeural`, free and with no account). It's a single sprite with
-every word, tip and sound in it. The app plays everything through one HTML `<audio>`
-element that your Start tap unlocks, which is what lets audio play with the
-iPhone silent switch on. Web Audio alone would be muted. If the sprite is missing,
-the app falls back to the phone's built-in `speechSynthesis` voice.
+`audio/sprite.m4a` is generated with **edge-tts** (free Microsoft neural voices, no account):
+`en-GB-RyanNeural` for the coach, and `en-US-AriaNeural` for incoming attacks only. Everything
+is in a single sprite. The app plays everything through one HTML `<audio>` element that your Start
+tap unlocks, which is what lets audio play with the iPhone silent switch on. Web Audio alone
+would be muted.
 
-After editing `library.json`, for example to add combos, regenerate the clips and the doc:
+The app uses a clip only if the sprite has that exact text. Any line that's missing or was edited
+falls back to the phone's built-in voice (`speechSynthesis`), and incoming attacks fall back to a
+US/female voice at a higher pitch. **Settings** shows how many lines are not in the clips yet.
+
+> **v2 note:** the sprite in the repo is still the v1 one. The v2 rebuild ran in a cloud
+> container that couldn't reach the edge-tts service, so the number calls and the old strike
+> names play from the sprite, and the new lines (theme coaching, incoming voice, new strikes)
+> use the phone's voice until you regenerate:
 
 ```bash
 pip install edge-tts
@@ -65,8 +99,16 @@ python tools/build_audio.py
 python tools/build_library_md.py
 ```
 
-You need ffmpeg on PATH for this. Then bump `VERSION` in `sw.js` so the phone
+You need ffmpeg on PATH for this. `build_library_md.py` also **audits every combo**: numbers only in offence, no
+doubled or dead-end calls, no rear hand straight into a rear kick, known tokens, and real
+sources. It exits with an error if something fails. Then bump `VERSION` in `sw.js` so the phone
 picks up the new files, and push.
+
+## Checking a session without training it
+
+Open `index.html?sim&session=1&seed=7` (session 1–6 in rotation order). The whole session runs
+instantly in virtual time and prints every call with its timestamp. `>>>` marks the incoming voice and `~`
+marks sounds. Add `&quick` for quick-mode timings.
 
 ## Log
 
@@ -78,6 +120,6 @@ or clearing Safari data wipes it, so export now and then.
 ## Files
 
 `index.html`, `style.css` and `app.js` are the app. `library.json` holds all combos,
-traps, defence calls, sessions and round focuses. `audio/` has the voice sprite and
+traps, incoming attacks, round themes, flurries and spoken phrases. `audio/` has the voice sprite and
 its index, plus the wake-lock fallback video. `sw.js` is the offline cache, and
 `tools/` has the clip and doc generators.

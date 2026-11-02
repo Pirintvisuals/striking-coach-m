@@ -1,6 +1,6 @@
 """Build audio/sprite.m4a + audio/sprite.json from library.json.
 
-Every call token, why-line, focus line and phrase becomes one clip. Clips are
+Every call token, incoming attack (second voice) and spoken line becomes one clip. Clips are
 generated with edge-tts (free, no account), trimmed, and concatenated into a
 single sprite with silence between them, so the app can play everything from
 ONE <audio> element (needed for iOS: one element unlocked by the start tap).
@@ -14,15 +14,18 @@ import asyncio, hashlib, json, os, subprocess, sys, wave
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, "tools", ".cache")
 OUT = os.path.join(ROOT, "audio")
-VOICE = "en-GB-RyanNeural"
+VOICE = "en-GB-RyanNeural"      # the coach: every offence call, cue and spoken line
+VOICE_IN = "en-US-AriaNeural"   # incoming attacks only: a clearly different voice
 RATE = 24000
 GAP = 0.35  # seconds of silence between clips (guards against seek bleed)
 
 NUM = {"1": "one", "2": "two", "3": "three", "4": "four"}
+# Keys whose string values are spoken lines (app.js says them by text: clip id "x:" + text).
+SPOKEN = {"say", "cue", "teach", "focus", "tip", "intro", "cues"}
 
 
 def say_token(tok):
-    """Text for a call token: numbers spoken as words."""
+    """Text for a call token: numbers spoken as words. Must match sayToken() in app.js."""
     words = [NUM.get(w, w) for w in tok.split()]
     return " ".join(words).capitalize() + "."
 
@@ -35,36 +38,40 @@ def tokens_of(calls):
                 yield t
 
 
+def lines(o, key=None, all_strings=False):
+    if isinstance(o, dict):
+        for k, v in o.items():
+            yield from lines(v, k, all_strings)
+    elif isinstance(o, list):
+        for v in o:
+            yield from lines(v, key, all_strings)
+    elif isinstance(o, str) and (all_strings or key in SPOKEN):
+        yield o
+
+
 def collect(lib):
-    """id -> (text, rate). Ids must match app.js."""
+    """id -> (text, rate, voice). Ids must match app.js: t:<token>, in:<attack>, x:<spoken text>."""
     clips = {}
-    for group in ("combos", "rare", "traps"):
-        for e in lib[group]:
-            for t in tokens_of(e["calls"]):
-                clips["t:" + t] = (say_token(t), "+15%")
-            clips["w:" + e["id"]] = (e["why"], "+0%")
+    for e in lib["combos"] + lib["traps"]:
+        for t in tokens_of(e["calls"]):
+            clips["t:" + t] = (say_token(t), "+15%", VOICE)
     for d in lib["defence"]:
-        clips["a:" + d["attack"]] = (d["attack"].capitalize() + "!", "+10%")
+        clips["in:" + d["attack"]] = (f"Incoming {d['attack']}!", "+10%", VOICE_IN)
         for t in tokens_of(d["answer"]):
-            clips["t:" + t] = (say_token(t), "+15%")
-        clips["w:" + d["id"]] = (d["why"], "+0%")
-    for s in lib["sessions"]:
-        clips["i:" + s["id"]] = (s["intro"], "+0%")
-    rounds = [lib["warmup"], *lib["finals"].values()]
-    for plan in lib["plans"].values():
-        rounds += plan
-    for r in rounds:
-        clips["f:" + r["id"]] = (r["focus"], "+0%")
-    for k, v in lib["phrases"].items():
-        clips["p:" + k] = (v, "+0%")
+            clips["t:" + t] = (say_token(t), "+15%", VOICE)
+    for group in ("combos", "traps", "themes", "sessions", "warmup", "flurries"):
+        for text in lines(lib[group]):
+            clips["x:" + text] = (text, "+0%", VOICE)
+    for text in lines(lib["phrases"], all_strings=True):
+        clips["x:" + text] = (text, "+5%", VOICE)
     return clips
 
 
-async def tts(text, rate, path):
+async def tts(text, rate, voice, path):
     import edge_tts
     for attempt in range(4):
         try:
-            await edge_tts.Communicate(text, VOICE, rate=rate).save(path)
+            await edge_tts.Communicate(text, voice, rate=rate).save(path)
             return
         except Exception as e:  # network hiccups
             if attempt == 3:
@@ -109,12 +116,12 @@ async def main():
     os.makedirs(OUT, exist_ok=True)
 
     todo = []
-    for cid, (text, rate) in clips.items():
-        h = hashlib.sha1(f"{VOICE}|{rate}|{text}".encode()).hexdigest()[:16]
+    for cid, (text, rate, voice) in clips.items():
+        h = hashlib.sha1(f"{voice}|{rate}|{text}".encode()).hexdigest()[:16]
         mp3 = os.path.join(CACHE, h + ".mp3")
         clips[cid] = (text, rate, mp3)
         if not os.path.exists(mp3):
-            todo.append((text, rate, mp3))
+            todo.append((text, rate, voice, mp3))
     print(f"{len(clips)} spoken clips, {len(todo)} to generate")
     sem = asyncio.Semaphore(6)
 
@@ -146,7 +153,7 @@ async def main():
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(RATE); w.writeframes(bytes(pcm))
     # AAC in .m4a: Safari seeks it accurately (mp4 has a sample index)
     ff("-i", big, "-c:a", "aac", "-b:a", "48k", "-movflags", "+faststart", os.path.join(OUT, "sprite.m4a"))
-    json.dump({"voice": VOICE, "clips": index}, open(os.path.join(OUT, "sprite.json"), "w"), indent=0)
+    json.dump({"voice": VOICE, "voiceIncoming": VOICE_IN, "clips": index}, open(os.path.join(OUT, "sprite.json"), "w"), indent=0)
     print(f"sprite: {pos:.0f}s, {len(index)} clips -> audio/sprite.m4a")
 
 

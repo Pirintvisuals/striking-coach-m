@@ -21,6 +21,7 @@
   <h1 id="nextName">…</h1>
   <p id="nextMode" class="mode"></p>
   <p id="nextRounds" class="small"></p>
+  <p id="nextThemes" class="small"></p>
   <button id="startBtn" class="big">Start</button>
   <p class="label">Or pick another</p>
   <div id="pickList" class="chips"></div>
@@ -70,10 +71,22 @@
   <label>Defence calls: <b id="defVal"></b>
     <input id="defPct" type="range" min="0" max="40" step="5">
   </label>
-  <p class="small">Share of calls that are incoming attacks on snipe/kick days. Counter days multiply it (×2 to ×3.5 depending on the round).</p>
+  <p class="small">Base share of calls that are incoming attacks. Each round theme multiplies it (×1 on snipe/kick rounds, ×1.5 to ×2.5 on pull-counter and defence rounds).</p>
   <label class="check"><input id="sayAnswer" type="checkbox"> Say the defence + counter after an incoming attack</label>
   <label class="check"><input id="headKicks" type="checkbox"> Head kicks (untick if the bag doesn't reach head height)</label>
-  <label class="check"><input id="quick" type="checkbox"> Quick test mode (30-second rounds, 15-second rest)</label>
+  <div class="row">
+    <label>Round length
+      <select id="roundMin"><option value="3">3 min</option><option value="4">4 min</option><option value="5">5 min</option><option value="6">6 min</option><option value="8">8 min</option><option value="10">10 min</option><option value="12">12 min</option></select>
+    </label>
+    <label>Rest
+      <select id="restMin"><option value="0.5">30 s</option><option value="1">1 min</option><option value="1.5">1:30</option><option value="2">2 min</option><option value="3">3 min</option></select>
+    </label>
+    <label>Rounds
+      <select id="roundsN"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    </label>
+  </div>
+  <p id="totalInfo" class="small"></p>
+  <label class="check"><input id="quick" type="checkbox"> Quick test mode (90-second rounds, 15-second rest)</label>
   <label>Rotation position
     <select id="rotSel"></select>
   </label>

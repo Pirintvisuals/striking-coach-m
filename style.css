@@ -30,3 +30,5 @@ label.check { flex-direction:row; align-items:center; gap:10px; }
 input[type=checkbox] { width:22px; height:22px; }
 .hist { background:var(--card); border-radius:12px; padding:12px; }
 .hist b { color:var(--acc); }
+#simOut { font:13px/1.35 ui-monospace, Menlo, monospace; white-space:pre-wrap; }
+.row label { min-width:0; }

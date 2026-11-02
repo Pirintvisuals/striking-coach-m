@@ -1,28 +1,45 @@
 'use strict';
-// Striking Coach: one-user, offline, hands-free audio coach. See PLAN.md.
+// Striking Coach v2: one-user, offline, hands-free audio coach. See PLAN.md.
 
 const $ = id => document.getElementById(id);
+const Q = new URLSearchParams(location.search);
+const SIM = Q.has('sim'); // ?sim: run a whole session instantly with no audio and print the call trace
 const LS = {
   get(k, d) { try { const v = localStorage.getItem('sc.' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem('sc.' + k, JSON.stringify(v)); } catch {} },
 };
-const settings = Object.assign({ defPct: 15, sayAnswer: true, headKicks: true, quick: false }, LS.get('settings', {}));
-const saveSettings = () => LS.set('settings', settings);
+const DEFAULTS = { defPct: 15, sayAnswer: true, headKicks: true, quick: false, roundMin: 10, restMin: 2, rounds: 3 };
+const settings = Object.assign({}, DEFAULTS, LS.get('settings', {}));
+if (Q.has('quick')) settings.quick = true;
+const saveSettings = () => { if (!SIM) LS.set('settings', settings); };
 
 let LIB = null, SPRITE = null;
 
-// ---------- pausable clock ----------
+// ---------- seeded random (so a ?sim&seed= trace is reproducible) ----------
+let seed = (+Q.get('seed') || Date.now()) % 2147483647;
+function rand() {
+  seed = (seed + 0x6D2B79F5) | 0;
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+const pick = a => a[Math.floor(rand() * a.length)];
+const lerp = (a, b, p) => a + (b - a) * Math.min(1, Math.max(0, p));
+
+// ---------- pausable clock (virtual in ?sim mode) ----------
+let vnow = 0;
 const clock = {
   t0: 0, offset: 0, pausedAt: null,
-  now() { return (this.pausedAt ?? performance.now()) - this.t0 - this.offset; },
-  reset() { this.t0 = performance.now(); this.offset = 0; this.pausedAt = null; },
+  now() { return SIM ? vnow : (this.pausedAt ?? performance.now()) - this.t0 - this.offset; },
+  reset() { vnow = 0; this.t0 = performance.now(); this.offset = 0; this.pausedAt = null; },
   pause() { if (this.pausedAt == null) this.pausedAt = performance.now(); },
   resume() { if (this.pausedAt != null) { this.offset += performance.now() - this.pausedAt; this.pausedAt = null; } },
 };
 let run = null; // current session state
 class Abort extends Error {}
-const tick = ms => new Promise(r => setTimeout(r, ms));
+const tick = ms => SIM ? Promise.resolve() : new Promise(r => setTimeout(r, ms));
 async function waitUntil(t) {
+  if (SIM) { if (run.aborted) throw new Abort(); if (vnow < t) vnow = t; return; }
   while (clock.now() < t) {
     if (run.aborted) throw new Abort();
     await tick(Math.max(5, Math.min(50, t - clock.now())));
@@ -33,15 +50,27 @@ const wait = ms => waitUntil(clock.now() + ms);
 
 // ---------- audio: ONE <audio> element playing a sprite (iOS-safe) ----------
 const audio = { el: null, ok: false, ctx: null };
+const VOICES = { coach: null, incoming: null };
 
 function initAudio() {
   audio.el = new Audio('audio/sprite.m4a');
   audio.el.preload = 'auto';
   audio.el.setAttribute('playsinline', '');
+  if ('speechSynthesis' in window) { pickVoices(); speechSynthesis.onvoiceschanged = pickVoices; }
+}
+
+// Fallback voices for lines missing from the sprite. Incoming attacks get a different (female, US) voice.
+function pickVoices() {
+  const vs = speechSynthesis.getVoices();
+  const fem = /female|samantha|aria|jenny|zira|allison|ava|susan|karen|victoria|moira|tessa|serena|google us english/i;
+  VOICES.incoming = vs.find(v => /en.US/i.test(v.lang) && fem.test(v.name)) || vs.find(v => /en.US/i.test(v.lang)) || null;
+  VOICES.coach = vs.find(v => /en.GB/i.test(v.lang) && /daniel|arthur|ryan|george|oliver|male/i.test(v.name) && !/female/i.test(v.name))
+    || vs.find(v => /en.GB/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null;
 }
 
 // Must be called synchronously inside the Start tap.
 function unlockAudio() {
+  if (SIM) return Promise.resolve();
   try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch {}
   try { speechSynthesis.speak(new SpeechSynthesisUtterance(' ')); } catch {}
   const el = audio.el;
@@ -51,18 +80,23 @@ function unlockAudio() {
     .catch(e => { audio.ok = false; console.warn('audio unlock failed', e); });
 }
 
-function speak(text) {
-  if (!text || !('speechSynthesis' in window)) return Promise.resolve();
+function speak(text, who) {
+  if (!text || !('speechSynthesis' in window)) return tick(estimate(text) * 1000);
   return new Promise(res => {
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-GB'; u.rate = 1.1;
+    const inc = who === 'incoming';
+    const v = inc ? VOICES.incoming : VOICES.coach;
+    if (v) u.voice = v;
+    u.lang = inc ? 'en-US' : 'en-GB';
+    u.rate = inc ? 1.15 : 1.1;
+    u.pitch = inc ? 1.35 : 0.9; // keep the two voices apart even if the phone only has one
     const t = setTimeout(res, 1000 + text.length * 120);
     u.onend = u.onerror = () => { clearTimeout(t); res(); };
     speechSynthesis.speak(u);
   });
 }
 
-function beep(freq, ms) { // only used if the sprite is missing
+function beep(freq, ms) { // only used if the sprite is missing (Web Audio is muted by the iOS silent switch)
   try {
     audio.ctx = audio.ctx || new (window.AudioContext || window.webkitAudioContext)();
     const o = audio.ctx.createOscillator(), g = audio.ctx.createGain();
@@ -72,17 +106,26 @@ function beep(freq, ms) { // only used if the sprite is missing
   return tick(ms);
 }
 const FX_FALLBACK = { 'fx:bell': [830, 900], 'fx:bell3': [830, 1200], 'fx:beep': [880, 150], 'fx:clack': [1800, 300], 'fx:alert': [1500, 250] };
+const estimate = text => 0.25 + (text || '').split(/\s+/).length * 0.3; // seconds, for lines not in the sprite
 
-async function clip(id, text) {
+function trace(who, text) {
+  if (run && run.trace) run.trace.push({ t: +(clock.now() / 1000).toFixed(1), who, text });
+}
+
+// Plays one clip. A clip is used only if the sprite has it with exactly this text; otherwise speechSynthesis.
+async function clip(id, text, who = 'coach') {
   if (run && run.aborted) throw new Abort();
   const c = SPRITE && SPRITE.clips[id];
-  if (!c || !audio.ok) {
+  const fresh = c && (!text || !c.text || c.text === text);
+  trace(id.startsWith('fx:') ? 'fx' : who, text || id);
+  if (SIM) { vnow += (fresh ? c.d : id.startsWith('fx:') ? 0.4 : estimate(text)) * 1000; return; }
+  if (!fresh || !audio.ok) {
     if (id.startsWith('fx:')) return FX_FALLBACK[id] ? beep(...FX_FALLBACK[id]) : undefined;
-    return speak(text || (c && c.text));
+    return speak(text, who);
   }
   const el = audio.el, end = c.s + c.d, started = clock.now();
   el.currentTime = c.s;
-  try { await el.play(); } catch { return speak(text || c.text); }
+  try { await el.play(); } catch { return speak(text, who); }
   for (;;) {
     await tick(15);
     if (run && run.aborted) { el.pause(); throw new Abort(); }
@@ -95,76 +138,68 @@ async function clip(id, text) {
 }
 
 const NUM = { 1: 'one', 2: 'two', 3: 'three', 4: 'four' };
-const spoken = t => t.split(' ').map(w => NUM[w] || w).join(' ');
-async function sayTokens(tokens) { for (const t of tokens) await clip('t:' + t, spoken(t)); }
+const sayToken = t => { const s = t.split(' ').map(w => NUM[w] || w).join(' '); return s[0].toUpperCase() + s.slice(1) + '.'; };
+async function sayTokens(tokens) { for (const t of tokens) await clip('t:' + t, sayToken(t)); }
+const say = text => clip('x:' + text, text);
+const sayIncoming = attack => clip('in:' + attack, `Incoming ${attack}!`, 'incoming');
 
 // ---------- library ----------
+const SPIN = /back kick|wheel kick|spinning|flying knee/;
+const HEAD = /head kick|question mark kick|wheel kick/;
+const MOVE = /^(pull|slip|roll|parry|check|catch|block|step back|step out|step in|pivot out|angle out|shoulder roll|hop back|sprawl|circle left|circle right)$|feint/;
 const parse = s => s.split('|').map(st => st.split(',').map(t => t.trim()).filter(Boolean));
 function prepLibrary() {
-  for (const k of ['combos', 'traps', 'rare']) for (const e of LIB[k]) {
-    e.kind = k === 'traps' ? 'trap' : k === 'rare' ? 'rare' : 'combo';
+  for (const k of ['combos', 'traps']) for (const e of LIB[k]) {
+    e.kind = k === 'traps' ? 'trap' : 'combo';
     e.steps = parse(e.calls);
     e.tags = e.tags || [];
-    if (/head kick/.test(e.calls)) e.tags.push('head');
+    e.spins = (e.calls.match(new RegExp(SPIN, 'g')) || []).length;
+    e.short = e.kind === 'combo' && e.steps[0].length <= 3 && e.steps[0].every(t => /^(1|2|3|4|body 2|body jab|up jab)$/.test(t));
   }
   for (const d of LIB.defence) {
     d.kind = 'def';
     d.answerSteps = parse(d.answer)[0];
-    d.tags = [/kick|teep/.test(d.attack) ? 'kick' : 'punch'];
+    d.group = /kick|teep/.test(d.attack) ? 'kick' : 'punch';
+    d.spins = 0;
   }
   LIB.byId = {};
-  for (const e of [...LIB.combos, ...LIB.traps, ...LIB.rare, ...LIB.defence]) LIB.byId[e.id] = e;
+  for (const e of [...LIB.combos, ...LIB.traps, ...LIB.defence]) LIB.byId[e.id] = e;
 }
 
-const allowed = e => settings.headKicks || !/head kick/.test(e.calls || e.answer);
-const weightOf = (e, r) => e.tags.reduce((w, t) => w + (r.weights[t] || 0), 0);
+const allowed = e => settings.headKicks || !HEAD.test(e.calls || e.answer);
+const weightOf = (e, w) => e.tags.reduce((s, t) => s + (w[t] || 0), 0);
 function pickWeighted(list, wfn) {
   const ws = list.map(wfn), sum = ws.reduce((a, b) => a + b, 0);
   if (!sum) return null;
-  let x = Math.random() * sum;
+  let x = rand() * sum;
   for (let i = 0; i < list.length; i++) { x -= ws[i]; if (x <= 0) return list[i]; }
   return list[list.length - 1];
 }
 
-function pickOffence(r, st) {
-  const fresh = e => allowed(e) && !st.recent.includes(e.id);
-  if (r.trap && Math.random() < r.trap) {
-    const t = pickWeighted(LIB.traps.filter(fresh), e => weightOf(e, r));
-    if (t) return t;
-  }
-  return pickWeighted(LIB.combos.filter(fresh), e => weightOf(e, r) * (e.id === st.featured ? 4 : 1))
-    || pickWeighted(LIB.combos.filter(allowed), e => weightOf(e, r)) || LIB.combos[0];
-}
-
-function pickNext(r, st) {
-  const defP = Math.min(0.6, (settings.defPct / 100) * r.def);
-  if (r.defTags.length && Math.random() < defP) {
-    const d = pickWeighted(LIB.defence.filter(d => allowed(d) && !st.recent.includes(d.id) && r.defTags.includes(d.tags[0])), () => 1);
-    if (d) return d;
-  }
-  return pickOffence(r, st);
-}
-
 // ---------- pacing ----------
+// exec: seconds per strike to throw it; rec: recovery after a combo, [start of round, end of round] (intensity rises);
+// react: time to defend after "Incoming ..."; preDef: forced silence before an incoming call.
 const PACE = {
-  warm:      { per: 0.7,  rec: 2.6, react: 1.2 },
-  hard:      { per: 0.45, rec: 1.6, react: 0.6 },
-  technical: { per: 0.8,  rec: 3.2, react: 1.2 },
-  burnout:   { per: 0.3,  rec: 0.35, react: 0 },
-  slow:      { per: 1.1,  rec: 4.0, react: 1.5 },
+  warm:      { exec: 0.6,  rec: [2.4, 1.5],  react: 1.3, preDef: 1.6 },
+  hard:      { exec: 0.3,  rec: [1.3, 0.45], react: 0.7, preDef: 1.2 },
+  technical: { exec: 0.55, rec: [2.8, 1.9],  react: 1.2, preDef: 1.8 },
+  slow:      { exec: 0.9,  rec: [3.6, 3.0],  react: 1.5, preDef: 2.0 },
 };
-const MOVE = /^(pull|slip|roll|parry|check|catch|block|step|pivot|angle|shoulder|feint)/;
 const strikes = ts => ts.reduce((n, t) => n + (MOVE.test(t) ? 0.6 : 1), 0);
-const stepGap = (ts, p) => (strikes(ts) * p.per + p.rec) * 1000;
-function estimate(e, p) { // ms, rough: ~0.5 s of speech per token
-  if (e.kind === 'def') return 1500 + p.react * 1000 + e.answerSteps.length * 500 + stepGap(e.answerSteps, p);
-  return e.steps.reduce((ms, s) => ms + s.length * 500 + stepGap(s, p), 0);
+const recNow = p => lerp(p.rec[0], p.rec[1], run.st ? run.st.prog() : 0);
+const stepGap = (ts, p) => (strikes(ts) * p.exec + recNow(p)) * 1000;
+function estimateItem(e, p) { // ms, rough: ~0.45 s of speech per token
+  if (e.kind === 'def') return (p.preDef + 1.6 + p.react + e.answerSteps.length * 0.45) * 1000 + stepGap(e.answerSteps, p);
+  if (e.kind === 'string') return e.list.reduce((ms, c) => ms + c.steps[0].length * 450 + strikes(c.steps[0]) * p.exec * 1000 + 250, 800);
+  const steps = e.kind === 'callback' ? [e.trap.steps[0], e.trap.steps.at(-1)] : e.steps;
+  return steps.reduce((ms, s) => ms + s.length * 450 + stepGap(s, p), e.kind === 'callback' ? 2000 : 0);
 }
 
 // ---------- UI during a run ----------
-function showCall(text, def) { $('call').textContent = text; $('call').classList.toggle('def', !!def); $('answer').textContent = ''; }
+function showCall(text, def) { if (SIM) return; $('call').textContent = text; $('call').classList.toggle('def', !!def); $('answer').textContent = ''; }
 function setPhase(label, durMs, focus) {
   run.phase = { label, end: clock.now() + durMs };
+  if (SIM) return;
   $('phase').textContent = label;
   $('focus').textContent = focus || '';
   showCall('');
@@ -185,44 +220,196 @@ async function gapWait(ms) {
 }
 
 async function doItem(e, p) {
+  const st = run.st;
+  st.spins += e.spins || 0;
   if (e.kind === 'def') {
-    showCall(e.attack + ' incoming', true);
+    await gapWait(p.preDef * 1000); // never straight after a combo: a clear silence first
+    showCall('INCOMING · ' + e.attack, true);
     await clip('fx:alert');
-    await clip('a:' + e.attack, e.attack);
+    await sayIncoming(e.attack);
     await gapWait(p.react * 1000);
-    if (settings.sayAnswer) { $('answer').textContent = '→ ' + e.answer; await sayTokens(e.answerSteps); }
+    if (settings.sayAnswer) { if (!SIM) $('answer').textContent = '→ ' + e.answer; await sayTokens(e.answerSteps); }
     await gapWait(stepGap(e.answerSteps, p));
     return;
   }
-  for (let i = 0; i < e.steps.length; i++) {
-    const s = e.steps[i];
-    showCall(s.join(', ') + (e.steps.length > 1 ? `  (${i + 1}/${e.steps.length})` : ''), false);
+  if (e.kind === 'string') { // rapid fire: short punch combos back to back, almost no recovery
+    await say(LIB.phrases.rapid);
+    for (const c of e.list) {
+      showCall(c.calls);
+      await sayTokens(c.steps[0]);
+      await gapWait(strikes(c.steps[0]) * p.exec * 1000 + 250);
+    }
+    await gapWait(recNow(p) * 1000);
+    return;
+  }
+  let steps = e.steps, trap = e;
+  if (e.kind === 'callback') { // the pattern once, then the break: they were conditioned earlier
+    trap = e.trap;
+    steps = [trap.steps[0], trap.steps.at(-1)];
+    st.spins += trap.spins;
+    await say(e.from === run.roundNo ? LIB.phrases.callbackSame : LIB.phrases.callback[e.from - 1]);
+  }
+  for (let i = 0; i < steps.length; i++) {
+    const s = steps[i];
+    showCall(s.join(', ') + (steps.length > 1 ? `  (${i + 1}/${steps.length})` : ''), false);
     await sayTokens(s);
     await gapWait(stepGap(s, p));
   }
+  if (trap.kind === 'trap' && !run.trapsDone.some(x => x.id === trap.id)) run.trapsDone.push({ id: trap.id, round: run.roundNo });
 }
 
-async function runRound(spec) {
-  const { r, dur, pace, label, rare, featured } = spec;
-  const st = run.st = { recent: [], featured, warned: false, rareDone: false };
-  setPhase(label, dur, r.focus);
+// ---------- choosing calls ----------
+function pickCore(w, st, opts = {}) {
+  const ok = e => allowed(e) && !st.recent.includes(e.id) && (!e.spins || st.spins + e.spins <= st.spinMax)
+    && (!opts.short || e.short);
+  return pickWeighted(LIB.combos.filter(ok), e => weightOf(e, w)) || pickWeighted(LIB.combos.filter(e => e.short), () => 1);
+}
+function pickTrap(th, st) {
+  const tags = Object.keys(th.weights);
+  return pickWeighted(LIB.traps.filter(t => allowed(t) && !st.recent.includes(t.id) && t.spins + st.spins <= st.spinMax),
+    t => (th.family.includes(t.id) ? 3 : 0) + t.tags.filter(x => tags.includes(x)).length * 0.3);
+}
+function pickDef(groups, st, prefer = []) {
+  return pickWeighted(LIB.defence.filter(d => allowed(d) && groups.includes(d.group) && !st.recent.includes(d.id)),
+    d => prefer.includes(d.id) ? 4 : 1);
+}
+function pickFamily(th, st) {
+  const fam = th.family.map(id => LIB.byId[id]).filter(e => allowed(e) && !st.recent.includes(e.id) && st.spins + e.spins <= st.spinMax);
+  return fam.length ? pick(fam) : null;
+}
+function makeString(th, st) {
+  const list = [];
+  for (let i = 0, n = 3 + Math.floor(rand() * 2); i < n; i++) list.push(pickCore({ snipe: 3, jab: 2, pull: 0.5 }, st, { short: true }));
+  return { kind: 'string', id: 'string', list, spins: 0 };
+}
+function makeCallback(st) {
+  // At most 3 per round, 60 s apart, and prefer traps from earlier rounds.
+  if (st.callbacks >= 3 || clock.now() - st.lastCallback < 60000) return null;
+  const old = run.trapsDone.filter(x => !st.recent.includes(x.id) && (x.round < run.roundNo || !st.recent.includes('cb:' + x.id)));
+  const earlier = old.filter(x => x.round < run.roundNo);
+  const x = earlier.length ? pick(earlier) : old.length ? pick(old) : null;
+  const trap = x && LIB.byId[x.id];
+  if (!trap || st.spins + trap.spins > st.spinMax || !allowed(trap)) return null;
+  st.callbacks++; st.lastCallback = clock.now();
+  return { kind: 'callback', id: 'cb:' + x.id, trap, from: x.round, spins: 0 };
+}
+
+function pickThemed(th, st, phase, mode) {
+  const setup = LIB.byId[th.setup];
+  const defP = Math.min(0.55, (settings.defPct / 100) * th.def);
+  if (rand() < defP) { const d = pickDef(th.defTags, st, th.family); if (d) return d; }
+  const r = rand(), hard = mode === 'hard';
+  const or = (...fns) => { for (const f of fns) { const e = f(); if (e) return e; } return pickCore(th.weights, st); };
+  const core = () => pickCore(th.weights, st);
+  const fam = () => pickFamily(th, st);
+  const su = () => allowed(setup) && !st.recent.slice(-2).includes(setup.id) && setup.spins + st.spins <= st.spinMax ? setup : null;
+  if (phase === 'mix') {
+    if (r < 0.22) return or(su, fam);
+    if (r < 0.55) return or(fam);
+    if (r < 0.62) return or(() => pickTrap(th, st));
+    if (hard && r < 0.7) return makeString(th, st);
+    return core();
+  }
+  if (phase === 'hide') {
+    if (r < 0.1) return or(su, fam);
+    if (r < 0.25) return or(fam);
+    if (r < 0.35) return or(() => makeCallback(st), () => pickTrap(th, st));
+    if (r < 0.42) return or(() => pickTrap(th, st));
+    if (hard && r < 0.54) return makeString(th, st);
+    return core();
+  }
+  // push: last stretch of a technical round
+  if (r < 0.5) return or(su, fam);
+  if (r < 0.7) return or(fam);
+  return core();
+}
+
+// ---------- rounds ----------
+function newRoundState(dur, spinMax) {
+  const start = clock.now();
+  return { recent: [], warned: false, spins: 0, spinMax, start, dur, callbacks: 0, lastCallback: -1e9, prog: () => (clock.now() - start) / dur };
+}
+const remember = (st, e) => { st.recent.push(e.id); if (st.recent.length > 6) st.recent.shift(); };
+
+async function flurry(ms, kind, opener) {
+  showCall('FLURRY · ' + kind.toUpperCase());
+  const end = clock.now() + ms;
+  await say(opener || (ms > 17500 ? LIB.phrases.flurry20 : LIB.phrases.flurry15));
+  await say(LIB.flurries[kind].say);
+  let i = 0;
+  while (end - clock.now() > 3500) {
+    await gapWait(Math.min(4500, end - clock.now() - 3000));
+    if (end - clock.now() > 2500) await say(LIB.phrases.pushes[i++ % LIB.phrases.pushes.length]);
+  }
+  await gapWait(Math.max(0, end - clock.now()));
+  run.flurries++;
+}
+
+async function themedRound(spec) {
+  const { theme: th, n, dur, mode } = spec;
+  const p = PACE[mode];
+  const hard = mode === 'hard';
+  run.roundNo = n;
+  setPhase(`Round ${n} of ${run.nRounds}`, dur, th.name);
+  const st = run.st = newRoundState(dur, th.spinMax && hard ? th.spinMax : th.spinMax ? th.spinMax - 1 : 1);
   const end = run.phase.end;
   await clip('fx:bell');
-  await clip('f:' + r.id, r.focus);
-  const rareAt = rare && Math.random() < 0.6 ? clock.now() + dur * (0.3 + Math.random() * 0.45) : Infinity;
-  let first = true;
+  await say(LIB.phrases.round[n - 1] || LIB.phrases.round.at(-1));
+  await say(th.focus);
+  await say(th.teach);
+
+  // 1. Teach: drill the setup alone (technical pace even on hard days, so the shape is right first).
+  const setup = LIB.byId[th.setup];
+  const teachEnd = st.start + dur * 0.15;
+  const teachPace = hard ? { ...PACE.technical, rec: [2.2, 1.6] } : PACE.technical;
+  for (let rep = 0; clock.now() < teachEnd; rep++) {
+    if (rep === 2 && setup.cue) await say(setup.cue);
+    else if (rep === 4) await say(th.cues[0]);
+    // Straight reps first; after 6, every third rep is a related call so it stays a drill, not a loop.
+    // Spinning setups are drilled every other rep, with straights in between.
+    const e = !allowed(setup) ? pickFamily(th, st) || pickCore(th.weights, st)
+      : setup.spins && rep % 2 ? pickCore({ snipe: 3, jab: 2 }, st, { short: true })
+      : rep >= 6 && rep % 3 === 2 ? pickFamily(th, st) || setup : setup;
+    if (estimateItem(e, teachPace) > end - clock.now() - 5000) break;
+    remember(st, e);
+    await doItem(e, teachPace);
+  }
+  st.spins = 0; // drilling the setup doesn't count against the round's spin limit
+
+  // 2-4. Mix it in, hide it, push. Flurries on hard days; coaching cues throughout.
+  const finalMs = hard ? Math.min(20000, dur * 0.12) : 0;
+  const flurryAt = hard ? [0.36, 0.66].map(f => st.start + dur * f) : [];
+  const kinds = [th.flurry, ...LIB.burnout[run.sess.plan]];
+  let phase = 'mix', nextCue = clock.now() + (hard ? 50000 : 40000), cueI = 0;
+  await say(LIB.phrases.mix);
   for (;;) {
-    const remain = end - clock.now();
-    if (remain < 5000) break;
-    let e;
-    if (first && featured) e = LIB.byId[featured];
-    else if (clock.now() >= rareAt && !st.rareDone) { st.rareDone = true; e = pickWeighted(LIB.rare, () => 1); }
-    else e = pickNext(r, st);
-    first = false;
-    for (let tries = 0; estimate(e, pace) > remain - 800 && tries < 12; tries++) e = pickNext(r, st);
-    if (estimate(e, pace) > remain - 800) break;
-    st.recent.push(e.id); if (st.recent.length > 6) st.recent.shift();
-    await doItem(e, pace);
+    const now = clock.now(), prog = st.prog();
+    const stopAt = end - finalMs - 2500;
+    if (now >= stopAt) break;
+    if (phase === 'mix' && prog >= 0.5) { phase = 'hide'; await say(LIB.phrases.hide); }
+    if (phase === 'hide' && !hard && prog >= 0.88) { phase = 'push'; await say(LIB.phrases.lastMin); }
+    if (flurryAt.length && now >= flurryAt[0]) {
+      flurryAt.shift();
+      const ms = Math.min(15000 + Math.floor(rand() * 2) * 5000, stopAt - now - 6000);
+      if (ms >= 8000) { await flurry(ms, kinds[run.flurries % kinds.length]); await say(LIB.phrases.time); await gapWait(3000); }
+      continue;
+    }
+    if (now >= nextCue) {
+      const pool = cueI % 3 === 1 ? (hard ? LIB.phrases.cuesHard : LIB.phrases.cuesTech) : th.cues;
+      await say(pool[Math.floor(cueI / 3) % pool.length] || pick(pool));
+      cueI++;
+      nextCue = clock.now() + (hard ? 55000 : 45000) * (0.8 + rand() * 0.4);
+    }
+    let e = pickThemed(th, st, phase, mode);
+    for (let tries = 0; estimateItem(e, p) > stopAt - clock.now() && tries < 12; tries++) e = pickCore(th.weights, st, { short: true });
+    if (estimateItem(e, p) > stopAt - clock.now()) break;
+    remember(st, e);
+    run.counts[e.kind] = (run.counts[e.kind] || 0) + 1;
+    await doItem(e, p);
+  }
+  if (finalMs) {
+    await gapWait(Math.max(0, end - finalMs - clock.now()));
+    await flurry(Math.max(0, end - clock.now()), kinds[run.flurries % kinds.length], LIB.phrases.last20);
   }
   showCall('');
   await gapWait(Math.max(0, end - clock.now()));
@@ -230,51 +417,116 @@ async function runRound(spec) {
   run.roundsDone++;
 }
 
-async function runRest(dur, next) {
-  setPhase('Rest', dur, next ? 'Next: ' + next.r.focus : '');
+async function warmupRound(dur) {
+  run.roundNo = 0;
+  setPhase('Warm-up', dur, 'Footwork, then light hands and kicks');
+  const st = run.st = newRoundState(dur, 0);
   const end = run.phase.end;
-  await clip('p:rest', 'Rest.');
-  await wait(2000);
-  const f = next.featured && LIB.byId[next.featured];
-  if (f) {
-    showCall('');
-    $('answer').textContent = f.why;
-    await clip('p:tip', 'Tip for next round.');
-    await clip('w:' + f.id, f.why);
+  await clip('fx:bell');
+  const segs = LIB.warmup.segments;
+  let si = -1;
+  for (;;) {
+    if (end - clock.now() < 4000) break;
+    const next = segs[si + 1];
+    if (next && st.prog() >= next.at) { si++; await say(next.say); continue; }
+    const seg = segs[Math.max(0, si)];
+    let e = seg.def && rand() < seg.def ? pickDef(['punch'], st) : pickCore(seg.weights, st);
+    if (estimateItem(e, PACE.warm) > end - clock.now() - 1500) e = pickCore({ foot: 1, warm: 1 }, st, {});
+    if (estimateItem(e, PACE.warm) > end - clock.now() - 1500) break;
+    remember(st, e);
+    await doItem(e, PACE.warm);
   }
-  if (end - clock.now() > 10500) { await waitUntil(end - 10000); await clip('p:ten', 'Ten seconds.'); }
+  await gapWait(Math.max(0, end - clock.now()));
+  await clip('fx:bell3');
+  run.roundsDone++;
+}
+
+async function burnout(dur) {
+  run.roundNo = run.nRounds + 1;
+  setPhase('Finisher', dur, 'Burnout: 20 on, 10 off');
+  run.st = newRoundState(dur, 0);
+  const end = run.phase.end;
+  await clip('fx:bell');
+  const kinds = LIB.burnout[run.sess.plan];
+  const n = Math.max(1, Math.floor(dur / 30000));
+  for (let i = 0; i < n; i++) {
+    const on = Math.min(20000, (end - clock.now()) * 2 / 3);
+    await flurry(on, kinds[i % kinds.length], i === n - 1 ? LIB.phrases.burnLast : LIB.phrases.burnGo);
+    if (i < n - 1) { showCall('ease off'); await say(LIB.phrases.burnOff); await gapWait(Math.max(0, end - clock.now() - (n - i - 1) * 30000)); }
+  }
+  await gapWait(Math.max(0, end - clock.now()));
+  await clip('fx:bell3');
+  run.roundsDone++;
+}
+
+async function techFinisher(dur, themes) {
+  run.roundNo = run.nRounds + 1;
+  setPhase('Finisher', dur, "Slow and perfect: today's setups");
+  const st = run.st = newRoundState(dur, 2);
+  const end = run.phase.end;
+  await clip('fx:bell');
+  await say(LIB.phrases.techFinal);
+  const queue = [];
+  for (const th of themes) {
+    const su = LIB.byId[th.setup];
+    queue.push(...(su.spins ? [su] : [su, su])); // spinning setups once: straights stay the bulk
+    const done = run.trapsDone.find(x => th.family.includes(x.id));
+    if (done) queue.push({ kind: 'callback', id: 'cb:' + done.id, trap: LIB.byId[done.id], from: done.round, spins: 0 });
+  }
+  for (;;) {
+    const e = queue.length ? queue.shift() : pickCore({ snipe: 3, pull: 1, jab: 1 }, st);
+    if (!allowed(e.trap || e)) continue;
+    if (estimateItem(e, PACE.slow) > end - clock.now() - 3000) break;
+    remember(st, e);
+    await doItem(e, PACE.slow);
+  }
+  await gapWait(Math.max(0, end - clock.now()));
+  await clip('fx:bell3');
+  run.roundsDone++;
+}
+
+async function runRest(dur, tip) {
+  setPhase('Rest', dur, tip || '');
+  run.st = newRoundState(dur, 0);
+  run.st.warned = true;
+  const end = run.phase.end;
+  await say(LIB.phrases.rest);
+  if (tip) { await wait(Math.min(4000, dur / 6)); await say(tip); }
+  if (end - clock.now() > 10500) { await waitUntil(end - 10000); await say(LIB.phrases.ten); }
   await countIn(end);
 }
 
 async function countIn(end) {
-  for (const s of [3, 2, 1]) { await waitUntil(end - s * 1000); await clip('fx:beep'); }
+  for (const s of [3, 2, 1]) { if (end - s * 1000 > clock.now()) await waitUntil(end - s * 1000); await clip('fx:beep'); }
   await waitUntil(end);
 }
 
-function buildRounds(sess) {
-  const q = settings.quick;
-  const T = q ? { warm: 30e3, round: 30e3, final: 30e3, rest: 15e3 } : { warm: 120e3, round: 240e3, final: 120e3, rest: 60e3 };
-  const mode = sess.mode;
-  const rounds = [{ r: LIB.warmup, dur: T.warm, pace: PACE.warm, label: 'Warm-up', rare: false }];
-  LIB.plans[sess.plan].forEach((r, i) => rounds.push({ r, dur: T.round, pace: PACE[mode], label: `Round ${i + 1} of 4`, rare: true }));
-  rounds.push({ r: LIB.finals[mode], dur: T.final, pace: mode === 'hard' ? PACE.burnout : PACE.slow, label: 'Final round', rare: false });
-  // Featured combo per round: its why-line is the rest tip, and it opens that round.
-  for (const sp of rounds.slice(1)) sp.featured = pickOffence(sp.r, { recent: [], featured: null }).id;
-  return { rounds, rest: T.rest };
+function timings() {
+  return settings.quick
+    ? { warm: 40e3, round: 90e3, rest: 15e3, fin: 45e3 }
+    : { warm: 5 * 60e3, round: settings.roundMin * 60e3, rest: settings.restMin * 60e3, fin: 3 * 60e3 };
 }
+const totalMin = () => { const T = timings(); return Math.round((T.warm + settings.rounds * T.round + T.fin + (settings.rounds + 1) * T.rest) / 60e3); };
 
 async function runSession(sess) {
-  const { rounds, rest } = buildRounds(sess);
-  run.totalRounds = rounds.length;
+  const T = timings();
+  const themes = LIB.plans[sess.plan].map(id => LIB.themes[id]);
+  const rounds = Array.from({ length: settings.rounds }, (_, i) => ({ theme: themes[i % themes.length], n: i + 1, dur: T.round, mode: sess.mode }));
+  run.nRounds = rounds.length;
+  run.totalRounds = rounds.length + 2;
   setPhase('Get ready', 10000, sess.name + ' · ' + sess.mode);
-  await clip('i:' + sess.id, sess.intro);
+  run.st = newRoundState(10000, 0); run.st.warned = true;
+  await say(sess.intro);
   await countIn(run.phase.end);
-  for (let i = 0; i < rounds.length; i++) {
-    if (i > 0) await runRest(rest, rounds[i]);
-    await runRound(rounds[i]);
+  await warmupRound(T.warm);
+  for (const r of rounds) {
+    await runRest(T.rest, r.theme.tip);
+    await themedRound(r);
   }
+  await runRest(T.rest, sess.mode === 'hard' ? LIB.phrases.nextBurn : LIB.phrases.nextTech);
+  if (sess.mode === 'hard') await burnout(T.fin); else await techFinisher(T.fin, themes.slice(0, rounds.length));
   setPhase('Done', 0, '');
-  await clip('p:done', 'Session done. Good work. Rate it and log it.');
+  await say(LIB.phrases.done);
 }
 
 // ---------- screen wake ----------
@@ -296,7 +548,7 @@ function releaseAwake() {
   $('keepAwake').pause();
 }
 document.addEventListener('visibilitychange', () => {
-  if (run && !run.finished && document.visibilityState === 'visible') keepAwake();
+  if (run && !run.finished && !run.test && document.visibilityState === 'visible') keepAwake();
 });
 
 // ---------- screens ----------
@@ -306,14 +558,17 @@ function show(id) {
 }
 let chosen = 0;
 const fmtSession = s => `${s.name} — ${s.mode}`;
+const fmtCfg = () => settings.quick ? 'quick test' : `${settings.rounds}×${settings.roundMin} min, ${settings.restMin} min rest`;
 
 function renderHome() {
   const next = LS.get('next', 0) % LIB.sessions.length;
   const s = LIB.sessions[chosen];
   $('nextName').textContent = s.name;
   $('nextMode').textContent = s.mode === 'hard' ? 'Hard day' : 'Technical day';
+  const th = LIB.plans[s.plan].map(id => LIB.themes[id].name);
   $('nextRounds').textContent = (chosen === next ? 'Next in rotation. ' : 'Picked manually. ') +
-    (settings.quick ? 'QUICK TEST MODE is on.' : 'Warm-up 2 min · 4 × 4 min · final 2 min · 1 min rest.');
+    (settings.quick ? 'QUICK TEST MODE is on.' : `Warm-up 5 · ${settings.rounds} × ${settings.roundMin} min · finisher 3 · ${settings.restMin} min rest · about ${totalMin()} min.`);
+  $('nextThemes').textContent = 'Rounds: ' + Array.from({ length: settings.rounds }, (_, i) => th[i % th.length]).join(' → ');
   $('pickList').innerHTML = '';
   LIB.sessions.forEach((x, i) => {
     const b = document.createElement('button');
@@ -325,11 +580,17 @@ function renderHome() {
   show('home');
 }
 
+function newRun(sess, idx) {
+  return { sess, idx, aborted: false, finished: false, roundsDone: 0, totalRounds: 5, started: new Date(),
+    trace: [], trapsDone: [], flurries: 0, counts: {}, roundNo: 0 };
+}
+
 $('startBtn').onclick = () => {
   const sess = LIB.sessions[chosen];
   const unlocked = unlockAudio(); // synchronous part runs inside the tap
   keepAwake();
-  run = { sess, idx: chosen, aborted: false, finished: false, roundsDone: 0, totalRounds: 6, started: new Date() };
+  run = newRun(sess, chosen);
+  window.__run = run;
   clock.reset();
   $('pauseBtn').textContent = 'Pause';
   show('run');
@@ -354,7 +615,7 @@ function finish(completed) {
   try { speechSynthesis.cancel(); } catch {}
   releaseAwake();
   run.completed = completed;
-  $('logSummary').textContent = `${fmtSession(run.sess)} · ${run.roundsDone}/${run.totalRounds} rounds` + (completed ? '' : ' (stopped early)');
+  $('logSummary').textContent = `${fmtSession(run.sess)} · ${run.roundsDone}/${run.totalRounds} rounds · ${fmtCfg()}` + (completed ? '' : ' (stopped early)');
   rating = 0; renderStars(); $('note').value = '';
   show('logScreen');
 }
@@ -374,7 +635,7 @@ $('saveLog').onclick = () => {
   const log = LS.get('log', []);
   log.push({
     date: run.started.toISOString(), session: run.sess.id, name: fmtSession(run.sess),
-    rounds: `${run.roundsDone}/${run.totalRounds}`, completed: run.completed,
+    rounds: `${run.roundsDone}/${run.totalRounds}`, completed: run.completed, cfg: fmtCfg(),
     rating, note: $('note').value.trim(), defPct: settings.defPct, quick: settings.quick,
   });
   LS.set('log', log);
@@ -389,12 +650,12 @@ function exportText() {
   const day = d => d.toLocaleDateString('en-GB', { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' });
   const lines = [
     `STRIKING COACH LOG — exported ${new Date().toISOString().slice(0, 10)} — ${log.length} sessions`,
-    `Settings: defence calls ${settings.defPct}%, say answer ${settings.sayAnswer ? 'on' : 'off'}, head kicks ${settings.headKicks ? 'on' : 'off'}`,
+    `Settings: ${fmtCfg()}, defence calls ${settings.defPct}%, say answer ${settings.sayAnswer ? 'on' : 'off'}, head kicks ${settings.headKicks ? 'on' : 'off'}`,
     `Next in rotation: ${fmtSession(LIB.sessions[LS.get('next', 0)])}`, '',
   ];
   for (const x of log) {
     const d = new Date(x.date);
-    lines.push(`${day(d)} ${d.toTimeString().slice(0, 5)} | ${x.name} | ${x.rounds} rounds${x.completed ? '' : ' (stopped)'}${x.quick ? ' (quick test)' : ''} | rating ${x.rating || '-'}/5 | def ${x.defPct}%`);
+    lines.push(`${day(d)} ${d.toTimeString().slice(0, 5)} | ${x.name} | ${x.rounds} rounds${x.completed ? '' : ' (stopped)'}${x.quick ? ' (quick test)' : ''}${x.cfg ? ' | ' + x.cfg : ''} | rating ${x.rating || '-'}/5 | def ${x.defPct}%`);
     if (x.note) lines.push('  Note: ' + x.note.replace(/\n+/g, ' / '));
   }
   return lines.join('\n');
@@ -405,7 +666,7 @@ function renderHistory() {
   for (const x of [...log].reverse()) {
     const div = document.createElement('div');
     div.className = 'hist';
-    div.innerHTML = `<div><b>${x.rating || '–'}/5</b> ${x.name}</div><div class="small">${new Date(x.date).toLocaleString('en-GB')} · ${x.rounds} rounds</div>`;
+    div.innerHTML = `<div><b>${x.rating || '–'}/5</b> ${x.name}</div><div class="small">${new Date(x.date).toLocaleString('en-GB')} · ${x.rounds} rounds${x.cfg ? ' · ' + x.cfg : ''}</div>`;
     if (x.note) { const p = document.createElement('div'); p.textContent = x.note; div.appendChild(p); }
     $('histList').appendChild(div);
   }
@@ -423,12 +684,29 @@ $('exportBtn').onclick = async () => {
 };
 
 // ---------- settings ----------
+function spriteInfo() {
+  if (!SPRITE) return 'No voice clips found: using the phone\'s built-in voices.';
+  const missing = neededClips().filter(([id, text]) => !SPRITE.clips[id] || SPRITE.clips[id].text !== text).length;
+  return `Voice clips loaded (${Object.keys(SPRITE.clips).length}).` +
+    (missing ? ` ${missing} lines are not in the clips yet and use the phone's voice: run tools/build_audio.py.` : ' All lines covered.');
+}
+function neededClips() { // [id, text] the app can say; mirrors collect() in tools/build_audio.py
+  const out = [];
+  const tok = s => parse(s).flat().forEach(t => out.push(['t:' + t, sayToken(t)]));
+  LIB.combos.forEach(e => tok(e.calls)); LIB.traps.forEach(e => tok(e.calls));
+  LIB.defence.forEach(d => { out.push(['in:' + d.attack, `Incoming ${d.attack}!`]); tok(d.answer); });
+  for (const th of Object.values(LIB.themes)) [th.focus, th.teach, th.tip, ...th.cues].forEach(t => out.push(['x:' + t, t]));
+  for (const v of Object.values(LIB.phrases)) [v].flat().forEach(t => out.push(['x:' + t, t]));
+  return out;
+}
 function renderSettings() {
   $('defPct').value = settings.defPct; $('defVal').textContent = settings.defPct + '%';
   $('sayAnswer').checked = settings.sayAnswer; $('headKicks').checked = settings.headKicks; $('quick').checked = settings.quick;
+  $('roundMin').value = settings.roundMin; $('restMin').value = settings.restMin; $('roundsN').value = settings.rounds;
+  $('totalInfo').textContent = `Session length: about ${totalMin()} min (5 min warm-up and 3 min finisher included).`;
   $('rotSel').innerHTML = LIB.sessions.map((s, i) => `<option value="${i}">${i + 1}. ${fmtSession(s)}</option>`).join('');
   $('rotSel').value = LS.get('next', 0);
-  $('audioInfo').textContent = SPRITE ? `Voice clips loaded (${Object.keys(SPRITE.clips).length}). ${audio.ok ? 'Audio unlocked.' : ''}` : 'No voice clips found: using the phone\'s built-in voice.';
+  $('audioInfo').textContent = spriteInfo();
   show('settings');
 }
 $('setBtn').onclick = renderSettings;
@@ -436,18 +714,41 @@ $('defPct').oninput = e => { settings.defPct = +e.target.value; $('defVal').text
 $('sayAnswer').onchange = e => { settings.sayAnswer = e.target.checked; saveSettings(); };
 $('headKicks').onchange = e => { settings.headKicks = e.target.checked; saveSettings(); };
 $('quick').onchange = e => { settings.quick = e.target.checked; saveSettings(); };
+for (const [id, key] of [['roundMin', 'roundMin'], ['restMin', 'restMin'], ['roundsN', 'rounds']]) {
+  $(id).onchange = e => { settings[key] = +e.target.value; saveSettings(); renderSettings(); };
+}
 $('rotSel').onchange = e => { LS.set('next', +e.target.value); chosen = +e.target.value; };
 $('testSound').onclick = () => {
   const done = unlockAudio();
-  run = { aborted: false, test: true };
+  run = { aborted: false, test: true, st: { prog: () => 0 } };
   done.then(async () => {
     await clip('fx:bell'); await sayTokens(['1', '2', 'lead head kick']);
-    await clip('fx:alert'); await clip('a:cross', 'cross'); await sayTokens(['pull', '2']);
-    $('audioInfo').textContent = audio.ok ? 'Played from voice clips.' : 'Played with the built-in voice (no clips).';
+    await tick(1200);
+    await clip('fx:alert'); await sayIncoming('cross'); await sayTokens(['pull', '2']);
+    $('audioInfo').textContent = (audio.ok ? 'Played from voice clips. ' : 'Played with the built-in voices (no clips). ') + spriteInfo();
     run = null;
   });
 };
 for (const b of document.querySelectorAll('.back')) b.onclick = renderHome;
+
+// ---------- ?sim: whole session in virtual time, trace on screen and in window.__trace ----------
+async function simulate() {
+  const idx = (+Q.get('session') || 1) - 1;
+  const sess = LIB.sessions[idx];
+  run = newRun(sess, idx);
+  clock.reset();
+  await runSession(sess);
+  const tr = run.trace;
+  const mmss = t => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+  window.__trace = tr;
+  window.__run = run;
+  const pre = document.createElement('pre');
+  pre.id = 'simOut';
+  pre.textContent = `SIM ${fmtSession(sess)} seed=${Q.get('seed') || '(time)'} ${fmtCfg()} total ${mmss(clock.now() / 1000)}\n` +
+    tr.map(x => `${mmss(x.t).padStart(5)} ${x.who === 'incoming' ? '>>>' : x.who === 'fx' ? ' ~ ' : '   '} ${x.text}`).join('\n');
+  document.body.innerHTML = '';
+  document.body.appendChild(pre);
+}
 
 // ---------- boot ----------
 (async function boot() {
@@ -455,6 +756,7 @@ for (const b of document.querySelectorAll('.back')) b.onclick = renderHome;
   prepLibrary();
   try { SPRITE = await fetch('audio/sprite.json').then(r => r.ok ? r.json() : null); } catch { SPRITE = null; }
   initAudio();
+  if (SIM) { simulate().catch(e => { console.error(e); document.body.textContent = 'SIM ERROR ' + e.stack; }); return; }
   chosen = LS.get('next', 0) % LIB.sessions.length;
   renderHome();
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});

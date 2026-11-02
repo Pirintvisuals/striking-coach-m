@@ -87,3 +87,26 @@ After each session: 1–5 rating + free-text note. History in localStorage.
 - Head kicks are on by default; Settings has a toggle in case the bag doesn't reach head height.
 - Not verified on a real iPhone: silent-switch playback, Wake Lock in the
   home-screen app, sprite seek latency.
+
+## v2 (2026-11-02): after the first sessions
+
+Feedback, and what changed:
+1. **"One, two, cross" sounded stupid.** v1 named incoming attacks in the coach voice right
+   after numbered combos, so they blended. Now incoming attacks get a forced silence, then an
+   alert chirp, then a **second voice** (en-US female) saying "Incoming cross!". Offence is
+   numbers only, and `tools/build_library_md.py` audits every combo (words for punches in offence,
+   doubled tokens, dead-end calls, rear hand straight into a rear kick, unknown tokens and sources).
+2. **Real combos.** McGregor, Adesanya and Ruffy material with sources in LIBRARY.md (`fighter`
+   column). Leads that no breakdown confirmed are marked `user_lead`.
+3. **More variety.** Front kick, question mark kick, oblique kick, check hook, hop back, shoulder
+   and hip feints, knees, elbows, spinning back kick, wheel kick and back fist. Spinning
+   techniques are capped per round, so jabs and straights stay far more common.
+4. **Tempo.** Hard days have short gaps that shrink through the round, "rapid fire" strings, two
+   15–20 s flurries per round plus the last 20 s, and a 6 × 20/10 burnout finisher.
+5. **Session ≈ 45 min.** 5 min warm-up, 3 × 10 min themed rounds, 2 min rests, 3 min finisher.
+   Round length, rest and round count are settings. The 6-day rotation, log and export are kept.
+6. **Coaching, not a random caller.** Each round teaches one setup (a spoken teach line, then a
+   drill), mixes it in, then hides it. There are coaching cues about once a minute, intensity
+   rises through the round, and later rounds call back to traps from earlier ones.
+
+The session structure section above describes v1 (4 × 4 min). It is superseded by this one.
