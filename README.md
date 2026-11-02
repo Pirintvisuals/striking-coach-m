@@ -58,7 +58,7 @@ the McGregor/Ruffy spin rounds. In a simulated hard snipe session there were 842
 - **Stop**: tap twice. It works at any moment, including the countdown, and the voice stops at once.
 - **7. Build your own** on the home screen: pick hard or technical and 1–5 round themes from any day,
   for example McGregor's straight and then Adesanya's feints. It doesn't move the rotation.
-- **Settings → Warm-up**: none, 2, 3 (default) or 5 min. Settings also has round length, rest and number of rounds.
+- **Settings → Warm-up**: none, 2 (default), 3 or 5 min. It's real combos from the first call, with no footwork-only part. Settings also has round length, rest and number of rounds.
 - **Settings → Voice**: "Recorded clips" or "Phone voice only". In both modes, a combo that isn't fully
   in the recorded clips is said as one sentence by the phone voice. The app never switches voices mid-combo,
   because that's what made numbers disappear on iPhone in v2.

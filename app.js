@@ -9,7 +9,7 @@ const LS = {
   set(k, v) { try { localStorage.setItem('sc.' + k, JSON.stringify(v)); } catch {} },
 };
 const DEFAULTS = { defPct: 15, sayAnswer: true, headKicks: true, quick: false, roundMin: 10, restMin: 2, rounds: 3, camera: false,
-  warmMin: 3, voice: 'clips', custom: { mode: 'hard', themes: ['mc_straight', 'ad_feints'] } };
+  warmMin: 2, voice: 'clips', custom: { mode: 'hard', themes: ['mc_straight', 'ad_feints'] } };
 const settings = Object.assign({}, DEFAULTS, LS.get('settings', {}));
 if (Q.has('quick')) settings.quick = true;
 const saveSettings = () => { if (!SIM) LS.set('settings', settings); };
@@ -552,7 +552,7 @@ async function themedRound(spec) {
 
 async function warmupRound(dur) {
   run.roundNo = 0;
-  setPhase('Warm-up', dur, 'Footwork, then light hands and kicks');
+  setPhase('Warm-up', dur, 'Light combos, then kicks, then incoming');
   const st = run.st = newRoundState(dur, 0);
   const end = run.phase.end;
   await clip('fx:bell');

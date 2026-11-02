@@ -166,11 +166,11 @@
     {"id": "x03", "calls": "1, flying knee", "tags": ["knee"], "why": "The jab freezes their guard high; the flying knee comes from underneath.", "src": ["coach"]},
     {"id": "x04", "calls": "feint 2, back kick", "tags": ["kick"], "why": "They brace for the cross; the back kick goes into the belly.", "src": ["coach"]},
     {"id": "x05", "calls": "3, spinning back fist", "tags": [], "why": "The hook turns you; keep turning and the back fist lands on the same side.", "src": ["coach"]},
-    {"id": "f01", "calls": "step in, step out", "tags": ["foot"], "why": "In and out: range is the first thing you control.", "src": ["coach"]},
-    {"id": "f02", "calls": "circle left", "tags": ["foot"], "why": "Circle away from their power hand.", "src": ["coach"]},
-    {"id": "f03", "calls": "circle right", "tags": ["foot"], "why": "Change direction so they can't time you.", "src": ["coach"]},
-    {"id": "f04", "calls": "step in, pivot out", "tags": ["foot"], "why": "Step in, then turn off the line.", "src": ["coach"]},
-    {"id": "f05", "calls": "step in, step out, circle left", "tags": ["foot"], "why": "In, out, and off the line.", "src": ["coach"]}
+    {"id": "f01", "calls": "step in, step out", "tags": [], "why": "In and out: range is the first thing you control.", "src": ["coach"]},
+    {"id": "f02", "calls": "circle left", "tags": [], "why": "Circle away from their power hand.", "src": ["coach"]},
+    {"id": "f03", "calls": "circle right", "tags": [], "why": "Change direction so they can't time you.", "src": ["coach"]},
+    {"id": "f04", "calls": "step in, pivot out", "tags": [], "why": "Step in, then turn off the line.", "src": ["coach"]},
+    {"id": "f05", "calls": "step in, step out, circle left", "tags": [], "why": "In, out, and off the line.", "src": ["coach"]}
   ],
   "traps": [
     {"id": "t01", "calls": "1, body 2 | 1, body 2 | 1, body 2 | body 2, rear head kick", "tags": ["snipe", "kick"], "why": "Three body crosses teach them to drop the elbow; the fourth goes high.", "src": ["evolve_headkick", "be_highkicks"], "ok": "builds on k01 (body 2, rear head kick), Milan's favourite"},
@@ -262,7 +262,7 @@
     {"id": "kicks-hard", "plan": "kicks", "mode": "hard", "name": "Kicks", "intro": "Kicks. Hard day. Short breaks, fast calls, and flurries. Let's work."},
     {"id": "counter-tech", "plan": "counter", "mode": "technical", "name": "Pull counters and defence", "intro": "Pull counters and defence. Technical day. Clean setups, perfect reps."}
   ],
-  "warmup": {"segments": [{"at": 0, "say": "Warm-up. Bounce on your feet, in and out. Hands start in a moment.", "weights": {"foot": 1}}, {"at": 0.12, "say": "Hands now. Light jabs and crosses. Loose shoulders.", "weights": {"warm": 1}}, {"at": 0.4, "say": "Add the legs. Light kicks, nothing hard yet.", "weights": {"warm": 1, "warmkick": 1.5}}, {"at": 0.7, "say": "Pick up the pace. Incoming calls are on.", "weights": {"warm": 1, "warmkick": 0.5, "snipe": 0.5}, "def": 0.25}]},
+  "warmup": {"segments": [{"at": 0, "say": "Warm-up. Light and loose, real combos from the start.", "weights": {"warm": 2, "snipe": 1.5, "jab": 1, "pull": 0.5}}, {"at": 0.33, "say": "Add the kicks. Still light.", "weights": {"warm": 1, "warmkick": 2, "snipe": 1, "body": 1}}, {"at": 0.66, "say": "Pick it up. Incoming calls are on.", "weights": {"snipe": 2, "pull": 1, "warmkick": 1, "body": 0.5}, "def": 0.3}]},
   "flurries": {
     "straights": {"say": "Straights. One two, nonstop, all out."},
     "body": {"say": "Two to the body, two to the head. Nonstop."},

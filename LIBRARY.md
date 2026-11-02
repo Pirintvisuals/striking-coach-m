@@ -158,11 +158,11 @@ Each 10-minute round teaches one setup: the coach explains it in one line, you d
 | x03 | 1, flying knee |  | knee | The jab freezes their guard high; the flying knee comes from underneath. | [coach] |
 | x04 | feint 2, back kick |  | kick | They brace for the cross; the back kick goes into the belly. | [coach] |
 | x05 | 3, spinning back fist |  |  | The hook turns you; keep turning and the back fist lands on the same side. | [coach] |
-| f01 | step in, step out |  | foot | In and out: range is the first thing you control. | [coach] |
-| f02 | circle left |  | foot | Circle away from their power hand. | [coach] |
-| f03 | circle right |  | foot | Change direction so they can't time you. | [coach] |
-| f04 | step in, pivot out |  | foot | Step in, then turn off the line. | [coach] |
-| f05 | step in, step out, circle left |  | foot | In, out, and off the line. | [coach] |
+| f01 | step in, step out |  |  | In and out: range is the first thing you control. | [coach] |
+| f02 | circle left |  |  | Circle away from their power hand. | [coach] |
+| f03 | circle right |  |  | Change direction so they can't time you. | [coach] |
+| f04 | step in, pivot out |  |  | Step in, then turn off the line. | [coach] |
+| f05 | step in, step out, circle left |  |  | In, out, and off the line. | [coach] |
 
 ## Trap sequences
 
