@@ -124,3 +124,16 @@ a report, camera optional.
   rotation vs his own baseline) and every called punch (did that hand come home within ~0.65 s).
 - Cues come between combos only, rate-limited. A spoken report after each round and a written one in the log/export.
 - Not judged: hitting the bag, kick technique, anything it couldn't see clearly.
+
+## v4 (2026-11-02): first phone test
+
+Milan's feedback on the Snipe hard day: numbers weren't spoken ("1, 2, low kick" came out as just
+"low kick", sometimes cut), Stop didn't work during "get ready", he wants to skip parts, and he wants to
+mix themes (some snipe, some kicks) without sitting through whole sessions or slow warm-ups.
+
+- Cause of the missing numbers (most likely): v2 lines missing from the sprite used the iPhone speech engine,
+  and switching between it and the `<audio>` sprite made iOS swallow the short number clips. Fixes: the full sprite is now built
+  by a GitHub Action (edge-tts works there), combos are never split between the two systems, clips start
+  inside the silence before them, and there's a "Phone voice only" setting as a fallback.
+- Skip button; two-tap Stop that works at any moment; "Build your own" session (1–5 themes from any
+  day, hard or technical, outside the rotation); warm-up length setting (default 3 min), faster warm-up.
