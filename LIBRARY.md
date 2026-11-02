@@ -4,15 +4,15 @@ Generated from `library.json` by `tools/build_library_md.py`. Edit the JSON, not
 
 Orthodox stance. 1 jab, 2 cross, 3 lead hook, 4 rear hook; **up jab** = lead-hand long uppercut from range; **check hook** = lead hook thrown while pivoting off the line. `|` separates the calls of a trap sequence. McGregor is southpaw: his straight left is Milan's **2**, and his kicks to his right side are mirrored here.
 
-**Totals:** 168 combos, 17 trap sequences, 43 incoming attacks with answers, 15 spotlights. 15 entries contain a spinning or flying technique; the engine caps them per round (1 per round, more during the McGregor/Ruffy spin spotlights), so jabs and straights stay far more frequent.
+**Totals:** 214 combos, 29 trap sequences, 45 incoming attacks with answers, 19 spotlights. 20 entries contain a spinning or flying technique; the engine caps them per round (1 per round, more during the McGregor/Ruffy spin spotlights), so jabs and straights stay far more frequent.
 
 ## Sessions and spotlights
 
 Three options, all hard. Every round mixes everything. Every ~2 minutes a **spotlight** (one short spoken line) makes one setup and its family come up more often, then the next spotlight takes over.
 
-- **Fight mix**: incoming attacks ×1.3, spotlights: The liver, McGregor's straight, Body kicks, Hooks and uppercuts, Superman punch, Adesanya's feints, Ruffy in and out, Long strings, Lead side kick, Clinch, Pull counters, Question mark kick, McGregor's kicks and spins, Ruffy's spins
-- **Counters and defence**: incoming attacks ×2.6, spotlights: Pull counters, Adesanya's check hook, The liver, Hooks and uppercuts, Long strings, Body kicks, McGregor's straight, Lead side kick, Clinch
-- **Kicks**: incoming attacks ×1.6, spotlights: Body kicks, Adesanya's feints, Lead side kick, Question mark kick, Superman punch, McGregor's kicks and spins, The liver, Long strings, Ruffy's spins, Hooks and uppercuts
+- **Fight mix**: incoming attacks ×1.3, spotlights: The liver, McGregor's straight, Teeps, Body kicks, Hooks and uppercuts, MMA, Superman punch, Adesanya's feints, Knees and elbows, Ruffy in and out, Long strings, Spinning attacks, Lead side kick, Clinch, Pull counters, Question mark kick, McGregor's kicks and spins, Ruffy's spins
+- **Counters and defence**: incoming attacks ×2.6, spotlights: Pull counters, Adesanya's check hook, Teeps, The liver, Hooks and uppercuts, MMA, Long strings, Body kicks, Knees and elbows, McGregor's straight, Lead side kick, Clinch
+- **Kicks**: incoming attacks ×1.6, spotlights: Body kicks, Adesanya's feints, Teeps, Lead side kick, Question mark kick, Spinning attacks, Superman punch, McGregor's kicks and spins, Knees and elbows, The liver, Long strings, Ruffy's spins, Hooks and uppercuts
 
 | spotlight | spoken | setup | family |
 |---|---|---|---|
@@ -31,6 +31,10 @@ Three options, all hard. Every round mixes everything. Every ~2 minutes a **spot
 | Ruffy's spins | Spotlight: Ruffy. Fake the jab, then spin. | `feint 1, wheel kick` | ru04, ru05, tr1, x05 |
 | Lead side kick | Spotlight: the lead side kick. Keep them long. | `side kick, 1, 2` | sk1, sk2, sk4, sk5, sk6 |
 | Superman punch | Spotlight: the superman punch. Sell the kick. | `rear body kick | rear body kick | superman punch` | sm1, sm2, sm3, sm4, sm5 |
+| Teeps | Spotlight: the teep. Own the distance. | `teep, 1, 3, 2` | tp1, tp2, tp4, tp5, tp6, tp7, tp8, t05, t13 |
+| MMA | Spotlight: MMA. Shots, knees, superman punch. | `1, 2 | 1, 2 | 1, 2, double leg` | mm1, mm2, mm3, mm5, mm6, mm14, mm17, mm18, x07 |
+| Knees and elbows | Spotlight: knees and elbows. Get inside. | `3, rear elbow, lead elbow, step out` | mm5, mm7, mm8, mm9, e05, e06, e07, cl2, mm15 |
+| Spinning attacks | Spotlight: spinning attacks. Set them up first. | `2, 3, spinning back elbow` | mm11, mm12, ru05, x04, x05, mc07, ru03 |
 
 ## Combos
 
@@ -204,6 +208,52 @@ Three options, all hard. Every round mixes everything. Every ~2 minutes a **spot
 | L14 | step in, 2, 3, 2, pull, 2, step out |  | long hook pull exit | Ruffy-style entry, pull the counter, cross, gone. | [coach] |
 | L15 | up jab, 2, 3, rear uppercut, 3, rear head kick |  | long upper kick | Six strikes: the last hook loads the rear head kick. | [coach] |
 | L16 | front kick, 1, 2, liver shot, 3, step out |  | long kick liver | Front kick to stop them, then hands high and low, out. | [coach] |
+| s06 | 1, up jab, 2 |  | snipe jab | The normal jab makes them shell high; the up jab comes under the gloves. | [coach] |
+| s11 | 1, 2, 1 |  | snipe jab | Finishing on the jab keeps them on the end of your reach while you reset. | [coach] |
+| s12 | 1, body 2, 2 |  | snipe | Same cross on two levels: they can only guard one of them. | [coach] |
+| s13 | 1, 2, teep |  | snipe teep | The teep after the cross pushes them straight back out to your range. | [coach] |
+| s15 | 1, teep |  | snipe teep jab | The jab lifts their hands and eyes; the teep lands in the open belly. | [coach] |
+| s16 | feint 1, body 2 | McGregor | snipe | A jab feint makes them lift the guard; drive the cross into the body. | [sherdog_mcg], [fox_ufc205] |
+| s17 | 1, pivot out |  | snipe jab warm exit | Jab and angle off: they reset facing an empty spot. | [coach] |
+| s20 | body 2, up jab |  | snipe jab | The body cross pulls their elbows down; the up jab rises straight through. | [coach] |
+| s23 | body 2, 2 |  | snipe | Body then head with the same hand: the eyes follow the first one down. | [coach] |
+| e01 | 3, 2, step out |  | exit | The lead hook pulls their guard wide; the cross goes down the middle, then step out. | [coach] |
+| e02 | 2, 3, 2, pivot out |  | exit | Cross, hook, cross turns them; pivot out so they punch where you were. | [coach] |
+| e04 | 2, 3, angle out |  | exit | Punish on the inside, then angle off before they can clinch or trade. | [coach] |
+| p15 | pull, teep |  | pull counter teep | If they keep walking after the miss, teep them back to range. | [coach] |
+| p19 | pull, pull, 2 |  | pull counter | Pull from the one two and fire your cross as their second hand comes back. | [evolve_pullcombos] |
+| p24 | 1, hop back, 2 | McGregor | pull counter snipe | Jab to make them answer, back-skip out of the answer, 2 on the way in. | [vice_mcg_alvarez], [mmatorch_pull] |
+| ru02 | step in, 2, step out | Ruffy | snipe exit | In with the right hand and straight back out: hit and don't be there. | [cageside_ruffy_mullarkey] |
+| ru08 | 2, 3, 2, step out | Ruffy | snipe exit | Right, left, right, and leave. The basic Ruffy burst. | [cageside_ruffy_mullarkey] |
+| s32 | up jab, 2, 3, 2 |  | snipe jab | Up jab lifts the chin, then cross, hook, cross while they are still looking up. | [coach] |
+| e07 | 2, 3, knee, step out |  | exit knee | Cross and hook bend them over; the knee comes up the middle. Short knee, the bag moves. | [coach] |
+| e03 | liver shot, 3, step out |  | liver hook exit | Liver first drops the elbow; the same hook goes upstairs. Then leave. | [coach] |
+| tp1 | teep, 2 |  | teep kick snipe | The teep stops their step; the 2 lands while they are stuck. | [coach] |
+| tp2 | 2, 3, teep |  | teep kick hook | Cross and hook, then teep them back out to your range. | [coach] |
+| tp3 | teep, 1, 3, 2 |  | teep kick hook | Teep to set the distance, then the 1, 3, 2 as they come back in. | [coach] |
+| tp4 | 1, rear teep |  | teep kick | The jab raises their hands; the rear teep goes into the belly. | [coach] |
+| tp5 | rear teep, 3, 2 |  | teep kick hook | Rear teep, step down forward into hook and cross. | [coach] |
+| tp6 | teep, superman punch |  | teep kick snipe | The teep makes them expect the leg; the superman punch comes over the top. | [coach] |
+| tp7 | liver shot, 3, teep |  | teep kick liver | Body, head, then teep them away before they can answer. | [coach] |
+| tp8 | teep, rear body kick |  | teep kick body | Teep to the belly, then the rear kick to the ribs as they come back. | [coach] |
+| mm1 | feint level change, superman punch |  | mma feint snipe | Fake the shot so they drop their hands; the superman punch lands over them. | [coach] |
+| mm2 | 1, 2, double leg |  | mma | Punches bring their guard up; shoot the double under it. | [coach] |
+| mm3 | 2, double leg |  | mma | The cross makes them shell; change levels and shoot. | [coach] |
+| mm4 | double leg, sprawl, 1, 2 |  | mma counter | Shoot, they sprawl, you sprawl back out and punish on the way up. (Shadowboxing drill.) | [coach] |
+| mm5 | 1, 2, switch knee |  | mma knee | The cross brings them forward; switch and drive the lead knee. | [coach] |
+| mm6 | switch knee, 2 |  | mma knee | Switch knee to the body, land forward into the cross. | [coach] |
+| mm7 | 3, knee, step out |  | knee hook exit | The hook turns them; the rear knee comes up the middle; leave. | [coach] |
+| mm8 | liver shot, switch knee |  | knee liver | Liver shot, then the lead knee to the same side as they fold. | [coach] |
+| mm9 | body jab, flying knee |  | mma knee | The body jab drops their hands; the flying knee comes up through the gap. | [coach] |
+| mm10 | 2, 3, spinning back elbow |  | mma elbow | The hook turns you clockwise; keep turning into the spinning back elbow. | [coach] |
+| mm11 | 1, spinning back fist |  | mma | The jab makes them reach to parry; spin round the outside with the back fist. | [coach] |
+| mm12 | feint 2, spinning back fist |  | mma feint | They brace for the cross; spin the other way with the back fist. | [coach] |
+| mm13 | 3, rear elbow, lead elbow, step out |  | elbow hook exit | Hook, then elbows both sides in close, then out. | [coach] |
+| mm14 | 1, 2, superman punch |  | mma snipe | One two to back them up; the superman punch covers the distance as they retreat. | [coach] |
+| mm15 | oblique kick, 2, 3, rear elbow |  | mma kick elbow | Stop the step with the oblique, close with 2, 3, finish with the elbow. | [coach] |
+| mm16 | clinch, knee, knee, frame out, superman punch |  | clinch knee mma | Knees in the clinch, frame off, superman punch as they come back in. | [coach] |
+| mm17 | sprawl, knee |  | mma knee counter | Sprawl their shot and come up with the knee as they lift their head. | [coach] |
+| mm18 | up jab, 2, double leg |  | mma jab | Up jab and cross raise their guard; shoot under it. | [coach] |
 
 ## Trap sequences
 
@@ -228,6 +278,18 @@ The repeated calls condition the opponent; the last call breaks the pattern. Lat
 | tr1 | 1, 2 | 1, 2 | feint 1, wheel kick | Ruffy | One twos make them raise the hands at any jab; the feint does the rest and the wheel kick goes round the guard. | [keviniole_ruffy], [lowkick_ruffy_koty] |
 | t19 | 1, pull | 1, pull | 1, pull, 2 |  | Two empty pulls make them commit to the counter; the third time it's waiting for them. | [evolve_pull], [ds_pull] |
 | ts1 | rear body kick | rear body kick | superman punch |  | Two body kicks make them drop the elbow and wait for the kick; the same start becomes the superman punch. | [coach] |
+| t05 | teep | teep | feint kick, 2 |  | Two teeps make them reach for the leg; fake the third and cross over the lowered hand. | [evolve_teep_def] |
+| t06 | body jab, body 2 | body jab, body 2 | body jab, 2 |  | Twice to the body drops their guard; the same entry goes to the head the third time. | [evolve_headkick] |
+| t07 | low kick | low kick | 1, rear head kick |  | Low kicks pull their eyes and guard down; the same leg comes up high. | [evolve_headkick] |
+| t08 | 1, step back | 1, step back | 1, pull, 2 | McGregor | Jab and step back teaches them to chase; the third time, pull and catch them chasing. | [evolve_pull], [sherdog_mcg] |
+| t11 | 1, 2 | 1, 2 | 1, body 2 |  | Two one twos make them shell high; the third cross goes under, to the body. | [coach] |
+| t12 | up jab | up jab | up jab, rear head kick |  | Up jabs make them squeeze the guard tight in the middle; the head kick goes around it. | [coach] |
+| t13 | teep | 1, teep | 1, rear head kick |  | Teeps make them guard the middle; after the jab, the kick goes high instead. | [evolve_headkick] |
+| t17 | calf kick | calf kick | feint kick, 2 |  | Calf kicks make them lift the leg early; fake it and cross while they stand on one foot. | [coach] |
+| t20 | feint 2 | feint 2 | 1, body 2 |  | Cross feints make them cover their face; the real cross goes to the body. | [coach] |
+| ta4 | shoulder feint | hip feint | shoulder feint, rear head kick | Adesanya | Feints with nothing behind them teach them to stop reacting; then the real kick comes off the same look. | [sherdog_adesanya], [sk_adesanya_feints] |
+| tr2 | step in, 2, step out | step in, 2, step out | step in, 2, 3, back kick | Ruffy | Darting in and out makes them wait for the exit; this time keep turning into the back kick. | [cageside_ruffy_llontop], [user_lead] |
+| tm4 | 1, 2 | 1, 2 | 1, 2, double leg |  | Two one twos make them shell and wait for punches; the third time you shoot. | [coach] |
 
 ## Incoming attacks
 
@@ -278,6 +340,8 @@ A forced pause after the last combo, an alert chirp, then a **different voice** 
 | d41 | body hook | step back, 2 |  | Step back out of the body hook; it falls short and the cross lands. | [coach] |
 | d42 | jab | slip, liver shot, 3 |  | Slip outside the jab and dig the liver, then hook up top. | [coach] |
 | d43 | cross | roll, 3, 2 |  | Roll under the cross, come up with the hook and the cross. | [evolve_headmove] |
+| d44 | double leg | sprawl, 1, 2 |  | Hips back and down, then up and punish. | [coach] |
+| d45 | teep | catch, rear body kick |  | Catch the teep and kick the standing leg's side while they hop. | [evolve_teep_def] |
 
 ## Flurries
 
@@ -310,6 +374,7 @@ Changes from v1:
 - v4: no teep-teep or double front kick inside one combo (a freestanding bag moves away after the first one); after parrying a jab with the rear hand the lead hand fires first (parry, 1, 2), and only a parried cross is answered with the 2. The audit now enforces both.
 - v6: Milan found single-theme rounds boring. Now there are 3 options (Fight mix hard / technical, Counters and defence), every round mixes everything, and the fighter setups are 2-minute spotlights. Added hooks (1, 3, 2), the liver shot, uppercuts, clinch on the bag, and long fast strings. No '1, 2, 3' (Milan: it doesn't make sense to him; 1, 3, 2 instead), and the audit enforces that. Lone-jab traps (1 | 1 | 1 ...) and near-duplicates removed.
 - v6: all sessions are hard (Milan: no easy options). Third option is Kicks (everything, kick-heavy). Added the lead side kick.
+- v7: Milan's log: more teeps, MMA, knees, elbows, spins, and old combos back in. Restored 20 v5 combos and 11 traps (no '1, 2, 3', no lone-jab traps), added teeps, MMA shots/superman/switch knee, spinning back elbow/back fist, 4 new spotlights; long strings weighted down (hard to follow).
 
 Automatic checks (run on every build of this file): **all passed.**
 

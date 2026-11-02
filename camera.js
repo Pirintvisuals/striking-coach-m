@@ -134,7 +134,7 @@ class Coach {
   // ---- rounds ----
   startRound(n, name) {
     this.round = { n, name, t0: null, rear: { n: 0, home: 0, slow: [] }, lead: { n: 0, home: 0, slow: [] }, kick: { n: 0, ok: 0 }, kickHip: [], head: { n: 0, ok: 0 }, ret: { n: 0, ok: 0 },
-      hip: [], events: { rearDrop: [], leadDrop: [], chin: [], square: [], still: [] } };
+      hip: [], events: { rearDrop: [], leadDrop: [], chin: [], square: [], still: [] }, moments: [] };
     this.calls = []; this.cues = []; this.gap = {}; this.paused = false;
   }
   endRound() {
@@ -153,7 +153,8 @@ class Coach {
       if (r.t0 == null) r.t0 = c.t;
       const win = this.frames.filter(x => x.t >= c.t && x.t <= until);
       if (win.length < 4) continue;
-      if (c.hand && until - c.t >= 1000) { // quick doubles (1, 1) aren't judged on the return
+      // Only the rear hand is judged on coming home: Milan's lead hand stays out on purpose.
+      if (c.hand === this.base.rear && until - c.t >= 1000) { // quick doubles aren't judged on the return
         const g = this.base[c.hand];
         const d = win.map(x => dist(x.f[c.hand], g));
         const iPeak = d.indexOf(Math.max(...d));
@@ -199,6 +200,7 @@ class Coach {
           const rot = Math.max(...win.map(x => angDiff(x.f.hipYaw, y0)));
           if (lift > 0.6) {
             r.kickHip.push({ t: c.t, ratio: rot / this.base.kickRot });
+            if (rot / this.base.kickRot < 0.5) this.mark('kickHip', c.t);
             const recent = r.kickHip.slice(-4);
             if (recent.length >= 4 && median(recent.map(h => h.ratio)) < 0.6) this.flag('kickHip', c.t, false);
           }
@@ -208,6 +210,7 @@ class Coach {
         const y0 = median(win.slice(0, 3).map(x => x.f.hipYaw));
         const rot = Math.max(...win.map(x => angDiff(x.f.hipYaw, y0)));
         r.hip.push({ t: c.t, ratio: rot / this.base.hipRot });
+        if (rot / this.base.hipRot < 0.5) this.mark('hip', c.t);
         const recent = r.hip.slice(-4);
         if (recent.length >= 4 && median(recent.map(h => h.ratio)) < 0.55) this.flag('hip', c.t, true);
       }
@@ -239,8 +242,11 @@ class Coach {
     }
   }
 
+  // Every individual problem becomes a moment you can jump to in the recorded video.
+  mark(type, t) { if (this.round) this.round.moments.push({ t, type }); }
   flag(type, t, counted) {
     if (counted && this.round.events[type]) this.round.events[type].push(t);
+    if (type !== 'hip' && type !== 'kickHip') this.mark(type, t);
     if (t - this.lastCue < this.cueGap || t - (this.lastCueByType[type] ?? -1e9) < 45000) return;
     this.cues.push(type);
   }
@@ -249,7 +255,6 @@ class Coach {
     const r = this.round; if (!r) return '';
     const parts = [];
     if (r.rear.n) parts.push(`Rear home ${r.rear.home}/${r.rear.n}`);
-    if (r.lead.n) parts.push(`Lead home ${r.lead.home}/${r.lead.n}`);
     if (r.hip.length) parts.push(`Hip ${Math.round(100 * median(r.hip.map(h => h.ratio)))}%`);
     if (r.kick.n) parts.push(`Kick guard ${r.kick.ok}/${r.kick.n}`);
     if (r.kickHip.length) parts.push(`Kick hip ${Math.round(100 * median(r.kickHip.map(h => h.ratio)))}%`);
@@ -257,8 +262,8 @@ class Coach {
     if (r.ret.n) parts.push(`Leg back ${r.ret.ok}/${r.ret.n}`);
     return parts.length ? parts.join(' · ') : 'Watching… nothing judged yet';
   }
-  judged() { const r = this.round; return r ? r.rear.n + r.lead.n + r.kick.n + r.hip.length : 0; }
-  goodSoFar() { const r = this.round; const n = r.rear.n + r.lead.n + r.kick.n; return n && (r.rear.home + r.lead.home + r.kick.ok) / n >= 0.8; }
+  judged() { const r = this.round; return r ? r.rear.n + r.kick.n + r.hip.length : 0; }
+  goodSoFar() { const r = this.round; const n = r.rear.n + r.kick.n; return n && (r.rear.home + r.kick.ok) / n >= 0.8; }
 
   // The engine asks between combos; returns a cue type or null.
   takeCue(t) {
@@ -322,7 +327,7 @@ function report(r, base) {
   if (!say) say = r.rear.n + r.lead.n + r.kick.n >= 5 ? 'Clean round. Hands came home and the stance held.' : "I couldn't see enough to judge this round.";
   const good = r.rear.n >= 5 && r.rear.home / r.rear.n >= 0.85 ? ' Rear hand discipline was good.' : '';
   if (parts.length && good && !parts.slice(0, 2).some(p => p.say.startsWith('Rear'))) say += good;
-  return { say, text: `Round ${r.n} (${r.name}): ` + (notes.length ? notes.join('; ') : 'not enough tracking to judge') + '.' };
+  return { moments: r.moments, say, text: `Round ${r.n} (${r.name}): ` + (notes.length ? notes.join('; ') : 'not enough tracking to judge') + '.' };
 }
 
 // ---------------- browser side: camera + MediaPipe ----------------
@@ -376,7 +381,30 @@ const Cam = {
     };
     step();
   },
+  // Recording: one video per round, kept on the phone (see app.js VDB).
+  startRec() {
+    if (!this.stream || typeof MediaRecorder === 'undefined') return false;
+    const types = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'];
+    const mime = types.find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
+    try { this.rec = new MediaRecorder(this.stream, Object.assign({ videoBitsPerSecond: 1200000 }, mime ? { mimeType: mime } : {})); }
+    catch (e) { console.warn('recorder', e); this.rec = null; return false; }
+    this.chunks = [];
+    this.rec.ondataavailable = e => { if (e.data && e.data.size) this.chunks.push(e.data); };
+    this.recT0 = performance.now();
+    this.rec.start(1000);
+    return true;
+  },
+  stopRec() {
+    const rec = this.rec; this.rec = null;
+    if (!rec || rec.state === 'inactive') return Promise.resolve(null);
+    return new Promise(res => {
+      const t0 = this.recT0;
+      rec.onstop = () => res({ blob: new Blob(this.chunks, { type: rec.mimeType || 'video/mp4' }), t0 });
+      try { rec.stop(); } catch { res(null); }
+    });
+  },
   stop() {
+    try { this.rec && this.rec.state !== 'inactive' && this.rec.stop(); } catch {}
     this.running = false;
     try { this.stream && this.stream.getTracks().forEach(t => t.stop()); } catch {}
     try { this.landmarker && this.landmarker.close(); } catch {}

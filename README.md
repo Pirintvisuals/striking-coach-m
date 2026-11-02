@@ -20,8 +20,8 @@ the setup once, and then that family of combos comes up more often among everyth
 come from the McGregor / Adesanya / Ruffy research and continue where the last session stopped.
 
 Session: short intro → 2-min warm-up (real combos) → 3 × 10-min rounds → 3-min burnout, with 2-min rests.
-Rests are short: "Rest", the camera report if it's on, and "Ten seconds". During a session, **Faster / Slower**
-changes the tempo (it's remembered). **Combos** on the home screen lists every combo, trap and incoming
+Rests are short: "Rest", the camera report if it's on, and "Ten seconds". During a session, **+10 s** jumps ahead
+ten seconds, like skipping in a video. **Combos** on the home screen lists every combo, trap and incoming
 attack with why it works.
 
 ## During a session
@@ -34,33 +34,24 @@ attack with why it works.
   in the recorded clips is said as one sentence by the phone voice. The app never switches voices mid-combo,
   because that's what made numbers disappear on iPhone in v2.
 
-## Camera coach (optional, experimental)
+## Camera coach (optional)
 
-Turn it on in **Settings → Camera coach**. It uses the **back** camera and MediaPipe Pose, which runs on the
-phone, so no video leaves it. Use it like this:
+Turn it on in **Settings → Camera coach**. It uses the back camera and MediaPipe Pose on the phone itself.
+Stand the phone diagonal in front of you, 2–3 m away, head to feet in view.
 
-1. Stand the phone **diagonal in front of you, 2–3 m away**, with your whole body in view from head to feet, in decent light.
-2. After the countdown there's a ~40 s **calibration**. It checks it can see you, then asks you to
-   hold your guard for 5 s (it learns *your* guard, so a low or extended lead hand counts as normal), throw 3
-   jabs (it works out your lead hand), and throw 3 of your best 2s (that becomes your baseline for hip turn).
-3. During the **themed rounds** it checks:
-   - **Rear hand home**: after every 2, rear hook or rear elbow, the rear hand should be back within about 0.65 s, and stay at the chin between combos.
-   - **Lead hand**: back after jabs and hooks. Between combos it only flags drops well below your own low guard.
-   - **Hip turn on the 2**: how far your hips rotate on each called 2, compared with your calibration 2s.
-   - **Kicks** (calibration adds 3 rear body kicks): hip turn on round kicks against your calibration kicks; head kicks reaching
-     head height; the kicking leg back to stance within ~0.9 s; and the other hand staying up (rear hand on lead-leg kicks,
-     lead hand on rear-leg kicks).
-   - **Chin up / standing tall**, **stance turning square**, and **feet going still** between combos.
-4. The run screen shows live numbers ("Rear home 12/14 · Hip 82% · Kick guard 5/7"). A third of the way into a round it says
-   whether it can see your work ("Camera check: hands are coming home", or "I can't see your punches well").
-5. Live cues ("Rear hand home", "Turn the hip on the two", …) come **between combos only**, at most
-   once every 20 s, and the same cue at most once every 45 s. Flurries aren't judged.
-6. During the rest after each round you get a short spoken **camera report**, with the worst one or two
-   things and whether they got worse late in the round. The written version goes into the log and the export.
-
-It can't judge whether you hit the bag, or the finer technique on kicks. A punch it couldn't see
-clearly isn't counted either way. The pose library and model (`vendor/mediapipe`, ~15 MB used, Apache-2.0) download
-the first time the camera runs and are cached for offline use after that.
+- **Calibration** (~45 s before the warm-up): hold your guard, 3 jabs (finds the lead hand), 3 of your best 2s
+  (hip-turn baseline), 3 of your best rear body kicks (kick baseline).
+- **Every round is recorded** (Settings → Record each round). Under **Videos** on the home screen you get the
+  round's video, the report, and a list of **marked moments** ("3:42 Weak hip on a kick"). Tap one and the video
+  jumps there. **Save / share video** saves it to Photos. The last 6 rounds are kept on the phone.
+- What it marks:
+  - rear hand slow to come home, or dropped between combos;
+  - the lead hand only if it drops far below your own guard (it stays out on purpose);
+  - weak hip on a 2 or on a kick compared with your calibration;
+  - head kicks below shoulder height, the kicking leg slow back to stance, the other hand dropping on a kick;
+  - chin up, stance turned square, feet still.
+- Live spoken cues are **off** by default (Settings → Live camera cues). A third into each round it only speaks up if it can't see you.
+- The thresholds are first guesses from synthetic tests. Watch the marked moments and tell Claude which ones are wrong.
 
 ## Deploy for free (pick one)
 

@@ -163,3 +163,18 @@ mix themes (some snipe, some kicks) without sitting through whole sessions or sl
 - Asked and answered: comparing Milan to McGregor / Adesanya / Ruffy / O'Malley footage isn't done. There's no
   pose data of their strikes to compare with, and measuring it from fight video from one phone angle would be guesswork. The camera
   compares him with his own calibration instead.
+
+## v7 (2026-11-02): first logs from Milan
+
+Log notes: camera felt useless; wants more teeps, MMA, knees, elbows, spins, old combos mixed with new; some
+combos hard to follow; tempo buttons didn't help, wants "skip 10 seconds like YouTube"; wants to watch videos back.
+Answers to questions: his lead hand stays out on purpose; he was mostly shadowboxing; camera job = record + mark
+moments; phone diagonal in front.
+
+- +10 s button replaces Faster/Slower.
+- Library: 214 combos / 29 traps / 45 incoming. Restored v5 combos and traps (no 1, 2, 3, no lone-jab traps), teeps
+  (rear teep too), MMA (double leg, sprawl, superman punch, switch knee), spinning back elbow and back fist, 4 new
+  spotlights (teeps, MMA, knees and elbows, spins). Long strings weighted down. Spin cap 2 per round (5 in spin spotlights).
+- Camera: the lead hand isn't judged on coming back; every round is recorded (MediaRecorder, IndexedDB, last 6 kept)
+  with marked moments to jump to; live cues off by default.
+- Incoming attacks: settings bumped once to at least 25%.

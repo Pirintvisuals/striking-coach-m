@@ -16,7 +16,8 @@ STRIKES = {"1", "2", "3", "4", "body jab", "body 2", "body 3", "up jab", "check 
            "teep", "front kick", "low kick", "calf kick", "oblique kick", "lead body kick", "rear body kick",
            "lead head kick", "rear head kick", "question mark kick", "back kick", "wheel kick", "spinning back fist",
            "knee", "flying knee", "lead elbow", "rear elbow",
-           "liver shot", "lead uppercut", "rear uppercut", "side kick", "superman punch"}
+           "liver shot", "lead uppercut", "rear uppercut", "side kick", "superman punch",
+           "switch knee", "double leg", "spinning back elbow", "rear teep"}
 EXITS = {"step out", "pivot out", "angle out", "frame out"}
 MOVES = {"pull", "slip", "roll", "parry", "check", "catch", "block", "step back", "step in", "shoulder roll",
          "hop back", "sprawl", "circle left", "circle right", "clinch",

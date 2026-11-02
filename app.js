@@ -9,12 +9,13 @@ const LS = {
   set(k, v) { try { localStorage.setItem('sc.' + k, JSON.stringify(v)); } catch {} },
 };
 const DEFAULTS = { sayAnswer: true, headKicks: true, quick: false, roundMin: 10, restMin: 2, rounds: 3, camera: false,
-  warmMin: 2, voice: 'clips', tempo: 1, defPct: 25 };
+  warmMin: 2, voice: 'clips', defPct: 25, camCues: false, camRecord: true };
 const settings = Object.assign({}, DEFAULTS, LS.get('settings', {}));
 delete settings.custom;
 if (settings.defPct === 15) settings.defPct = 25; // v6: more incoming attacks (old default was 15%)
 if (Q.has('quick')) settings.quick = true;
 const saveSettings = () => { if (!SIM) LS.set('settings', settings); };
+if (!settings.m7) { settings.defPct = Math.max(25, settings.defPct); settings.m7 = 1; saveSettings(); } // more incoming attacks (v7)
 
 let LIB = null, SPRITE = null;
 
@@ -242,8 +243,7 @@ const PACE = {
 };
 const strikes = ts => ts.reduce((n, t) => n + (MOVE.test(t) ? 0.6 : 1), 0);
 const recNow = p => lerp(p.rec[0], p.rec[1], run.st ? run.st.prog() : 0);
-// Tempo (Faster / Slower buttons during a session): scales how long you get to throw and recover.
-const tempo = () => SIM ? 1 : settings.tempo || 1;
+const tempo = () => 1; // (the v6 tempo buttons were replaced by "+10 s")
 const stepGap = (ts, p) => (strikes(ts) * p.exec + recNow(p)) * 1000 / tempo();
 function estimateItem(e, p) { // ms, rough: ~0.45 s of speech per token
   if (e.kind === 'def') return (p.preDef + 1.6 + p.react + e.answerSteps.length * 0.45) * 1000 + stepGap(e.answerSteps, p);
@@ -370,13 +370,28 @@ function pickMix(sess, st, spot) {
 
 // ---------- camera coach (optional) ----------
 const camOn = () => !SIM && run && run.cam && Cam.running && Cam.coach && Cam.coach.base;
-async function camCue() { // between combos only
-  if (!camOn() || !run.inRound) return;
+async function camCue() { // between combos only, and only if live cues are switched on
+  if (!camOn() || !run.inRound || !settings.camCues) return;
   const type = Cam.coach.takeCue(performance.now());
   if (type) { showCall('CAMERA · ' + LIB.phrases.camCue[type]); await say(LIB.phrases.camCue[type]); }
 }
 function camPause(p) { if (camOn()) Cam.coach.pause(p); }
+// End of a round (or a skipped one): report, and save the recording with its marked moments.
+function camEndRound() {
+  if (!camOn() || !Cam.coach.round) return;
+  const roundNo = run.roundNo, sess = run.sess.name, date = new Date().toISOString();
+  run.camReport = Cam.coach.endRound();
+  const rep = run.camReport;
+  if (!run.recording) return;
+  run.recording = false;
+  run.saving = Cam.stopRec().then(rec => {
+    if (!rec || !rec.blob.size) return;
+    const moments = rep.moments.map(m => ({ s: Math.max(0, (m.t - rec.t0) / 1000), type: m.type })).filter(m => m.s > 0);
+    return VDB.save({ id: date, date, sess, round: roundNo, blob: rec.blob, mime: rec.blob.type, moments, report: rep.text });
+  }).catch(e => console.warn('saving video', e));
+}
 async function camCheckin() { // a third into the round: say whether it can actually see the work
+  if (!settings.camCues && Cam.coach.judged() >= 3) return; // quiet mode: only speak up if it can't see
   const n = Cam.coach.judged();
   if (n < 3) await say(LIB.phrases.camBlind);
   else if (Cam.coach.goodSoFar()) await say(LIB.phrases.camGood);
@@ -455,7 +470,10 @@ async function mixRound(spec) {
   const end = run.phase.end;
   await clip('fx:bell');
   await say(LIB.phrases.round[n - 1] || LIB.phrases.round.at(-1));
-  if (camOn()) Cam.coach.startRound(n, spots.map(x => x.name).join(', '));
+  if (camOn()) {
+    Cam.coach.startRound(n, spots.map(x => x.name).join(', '));
+    run.recording = settings.camRecord && Cam.startRec();
+  }
   run.inRound = true;
   run.camCheckin = false;
   const finalMs = Math.min(20000, dur * 0.1);
@@ -471,7 +489,7 @@ async function mixRound(spec) {
     const want = Math.min(spots.length - 1, Math.floor((now - st.start) / spotLen));
     if (want !== si) { // new spotlight: one short line, then show it once straight away
       si = want; spot = spots[si];
-      st.spinMax = 1 + (spot.spin || 0);
+      st.spinMax = 2 + (spot.spin || 0);
       setFocus(spot.name);
       await say(spot.say);
       const su = LIB.byId[spot.setup];
@@ -512,7 +530,7 @@ async function mixRound(spec) {
   await gapWait(Math.max(0, end - clock.now()));
   await clip('fx:bell3');
   run.inRound = false;
-  if (camOn()) run.camReport = Cam.coach.endRound();
+  camEndRound();
   run.roundsDone++;
 }
 
@@ -601,7 +619,7 @@ async function part(name, fn) {
     audio.el.pause();
     try { speechSynthesis.cancel(); } catch {}
     run.inRound = false;
-    if (camOn() && Cam.coach.round) run.camReport = Cam.coach.endRound();
+    camEndRound();
     if (run.cam && Cam.coach && !Cam.coach.base) { Cam.stop(); run.cam = false; } // calibration skipped: no camera
     showCall('');
   }
@@ -672,7 +690,7 @@ function show(id) {
 let chosen = 0;
 const fmtSession = s => s.name;
 const fmtCfg = () => (settings.quick ? 'quick test' : `${settings.rounds}×${settings.roundMin} min, ${settings.restMin} min rest`) +
-  `, tempo ${Math.round(100 * settings.tempo)}%` + (settings.camera ? ', camera coach' : '');
+  (settings.camera ? ', camera coach' : '');
 
 function previewSpots(sess) {
   const pool = sess.spotlights, off = LS.get('spot.' + sess.id, 0);
@@ -736,7 +754,6 @@ $('startBtn').onclick = () => {
   clock.reset();
   $('pauseBtn').textContent = 'Pause';
   $('stopBtn').textContent = 'Stop';
-  setTempo(0);
   show('run');
   run.timer = setInterval(() => {
     renderClock();
@@ -746,13 +763,8 @@ $('startBtn').onclick = () => {
   }, 200);
   unlocked.then(() => runSession(sess)).then(() => finish(true), e => { if (!(e instanceof Abort)) console.error(e); finish(false); });
 };
-function setTempo(d) {
-  settings.tempo = Math.round(Math.min(1.8, Math.max(0.5, (settings.tempo || 1) + d)) * 100) / 100;
-  saveSettings();
-  $('tempoInfo').textContent = `Tempo ${Math.round(settings.tempo * 100)}%`;
-}
-$('slowerBtn').onclick = () => setTempo(-0.15);
-$('fasterBtn').onclick = () => setTempo(0.15);
+// +10 s: jump the session clock forward, like skipping ahead in a video.
+$('fwdBtn').onclick = () => { if (!run || run.finished || SIM) return; clock.offset -= 10000; renderClock(); };
 $('pauseBtn').onclick = () => {
   if (clock.pausedAt == null) { clock.pause(); camPause(true); $('pauseBtn').textContent = 'Resume'; }
   else { clock.resume(); if (run.inRound) camPause(false); $('pauseBtn').textContent = 'Pause'; }
@@ -783,7 +795,7 @@ function finish(completed) {
   run.finished = true;
   clearInterval(run.timer);
   clearInterval(run.camTimer);
-  if (run.cam) Cam.stop();
+  if (run.cam) { if (Cam.coach && Cam.coach.round) camEndRound(); Promise.resolve(run.saving).finally(() => Cam.stop()); }
   audio.el.pause();
   try { speechSynthesis.cancel(); } catch {}
   releaseAwake();
@@ -879,6 +891,7 @@ function neededClips() { // [id, text] the app can say; mirrors collect() in too
 function renderSettings() {
   $('defPct').value = settings.defPct; $('defVal').textContent = settings.defPct + '%';
   $('sayAnswer').checked = settings.sayAnswer; $('headKicks').checked = settings.headKicks; $('quick').checked = settings.quick; $('camera').checked = settings.camera;
+  $('camCues').checked = settings.camCues; $('camRecord').checked = settings.camRecord;
   $('camera').disabled = !Cam.supported();
   $('roundMin').value = settings.roundMin; $('restMin').value = settings.restMin; $('roundsN').value = settings.rounds;
   $('warmMin').value = settings.warmMin; $('voiceSel').value = settings.voice;
@@ -894,6 +907,8 @@ $('sayAnswer').onchange = e => { settings.sayAnswer = e.target.checked; saveSett
 $('headKicks').onchange = e => { settings.headKicks = e.target.checked; saveSettings(); };
 $('quick').onchange = e => { settings.quick = e.target.checked; saveSettings(); };
 $('camera').onchange = e => { settings.camera = e.target.checked; saveSettings(); };
+$('camCues').onchange = e => { settings.camCues = e.target.checked; saveSettings(); };
+$('camRecord').onchange = e => { settings.camRecord = e.target.checked; saveSettings(); };
 $('voiceSel').onchange = e => { settings.voice = e.target.value; saveSettings(); };
 for (const [id, key] of [['roundMin', 'roundMin'], ['restMin', 'restMin'], ['roundsN', 'rounds'], ['warmMin', 'warmMin']]) {
   $(id).onchange = e => { settings[key] = +e.target.value; saveSettings(); renderSettings(); };
@@ -911,6 +926,82 @@ $('testSound').onclick = () => {
   });
 };
 for (const b of document.querySelectorAll('.back')) b.onclick = renderHome;
+
+// ---------- recorded rounds (camera coach) ----------
+// Videos stay on the phone (IndexedDB). Only the last 6 rounds are kept.
+const VDB = {
+  db: null,
+  open() {
+    return this.db || (this.db = new Promise((res, rej) => {
+      const r = indexedDB.open('sc-videos', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('v', { keyPath: 'id' });
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    }));
+  },
+  async tx(mode, fn) {
+    const db = await this.open();
+    return new Promise((res, rej) => { const t = db.transaction('v', mode); const q = fn(t.objectStore('v')); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error); });
+  },
+  all() { return this.tx('readonly', s => s.getAll()); },
+  del(id) { return this.tx('readwrite', s => s.delete(id)); },
+  async save(v) {
+    await this.tx('readwrite', s => s.put(v));
+    const all = (await this.all()).sort((a, b) => a.id < b.id ? 1 : -1);
+    for (const old of all.slice(6)) await this.del(old.id);
+  },
+};
+const MOMENT = { rearDrop: 'Rear hand slow / dropped', leadDrop: 'Lead hand dropped low', hip: 'Weak hip on the 2',
+  kickGuard: 'Other hand dropped on a kick', kickHip: 'Weak hip on a kick', kickHigh: 'Head kick too low',
+  kickReturn: 'Kicking leg slow back', chin: 'Chin up / standing tall', square: 'Stance turned square', still: 'Feet still' };
+const mmss = t => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+let videoURL = null;
+async function renderVideos() {
+  show('videos');
+  $('videoBox').classList.add('hidden');
+  let all = [];
+  try { all = (await VDB.all()).sort((a, b) => a.id < b.id ? 1 : -1); } catch (e) { $('videoList').textContent = 'Could not open saved videos: ' + e.message; return; }
+  $('videoList').innerHTML = all.length ? '' : '<p class="small">No recorded rounds yet. Turn on Settings → Camera coach and Record rounds.</p>';
+  for (const v of all) {
+    const b = document.createElement('button');
+    b.className = 'hist';
+    b.innerHTML = `<b>${v.sess} · round ${v.round}</b><div class="small">${new Date(v.date).toLocaleString('en-GB')} · ${(v.blob.size / 1e6).toFixed(0)} MB · ${v.moments.length} moments</div>`;
+    b.onclick = () => playVideo(v);
+    $('videoList').appendChild(b);
+  }
+}
+function playVideo(v) {
+  if (videoURL) URL.revokeObjectURL(videoURL);
+  videoURL = URL.createObjectURL(v.blob);
+  const el = $('videoPlayer');
+  el.src = videoURL;
+  $('videoBox').classList.remove('hidden');
+  $('videoReport').textContent = v.report || '';
+  // Group moments of the same kind that are close together, so the list stays readable.
+  const list = [];
+  for (const m of [...v.moments].sort((a, b) => a.s - b.s)) {
+    const last = list.findLast(x => x.type === m.type);
+    if (last && m.s - last.s < 8) continue;
+    list.push(m);
+  }
+  $('momentList').innerHTML = list.length ? '' : '<p class="small">No problems marked in this round.</p>';
+  for (const m of list) {
+    const b = document.createElement('button');
+    b.textContent = `${mmss(m.s)}  ${MOMENT[m.type] || m.type}`;
+    b.onclick = () => { el.currentTime = Math.max(0, m.s - 2.5); el.play(); };
+    $('momentList').appendChild(b);
+  }
+  $('saveVideo').onclick = async () => {
+    const ext = (v.mime || '').includes('mp4') ? 'mp4' : 'webm';
+    const file = new File([v.blob], `striking-round${v.round}-${v.id.slice(0, 16).replace(/[:T]/g, '-')}.${ext}`, { type: v.mime || 'video/mp4' });
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file] }); return; }
+    } catch (e) { if (e.name === 'AbortError') return; }
+    const a = document.createElement('a'); a.href = videoURL; a.download = file.name; a.click();
+  };
+  $('delVideo').onclick = async () => { if (confirm('Delete this video?')) { await VDB.del(v.id); renderVideos(); } };
+  $('videoBox').scrollIntoView({ behavior: 'smooth' });
+}
+$('videosBtn').onclick = renderVideos;
 
 // ---------- ?sim: whole session in virtual time, trace on screen and in window.__trace ----------
 async function simulate() {

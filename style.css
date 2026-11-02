@@ -40,3 +40,5 @@ input[type=checkbox] { width:22px; height:22px; }
 .tempo { align-items:center; } .tempo span { text-align:center; flex:0.8; }
 #comboList h3 { margin:16px 0 8px; }
 #comboList .hist { margin-bottom:6px; }
+#videoPlayer { width:100%; border-radius:12px; background:#000; }
+#videoList .hist { text-align:left; width:100%; margin-bottom:6px; }
