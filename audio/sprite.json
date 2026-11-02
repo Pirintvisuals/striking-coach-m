@@ -1,0 +1,1019 @@
+{
+"voice": "en-GB-RyanNeural",
+"clips": {
+"fx:silence": {
+"s": 0.0,
+"d": 0.5
+},
+"fx:bell": {
+"s": 0.85,
+"d": 1.6
+},
+"fx:bell3": {
+"s": 2.8,
+"d": 1.35
+},
+"fx:beep": {
+"s": 4.5,
+"d": 0.18
+},
+"fx:clack": {
+"s": 5.03,
+"d": 0.45
+},
+"fx:alert": {
+"s": 5.83,
+"d": 0.3
+},
+"t:1": {
+"s": 6.48,
+"d": 0.294,
+"text": "One."
+},
+"t:2": {
+"s": 7.124,
+"d": 0.3,
+"text": "Two."
+},
+"w:s01": {
+"s": 7.774,
+"d": 3.387,
+"text": "The jab measures and blinds; the cross travels down the same line."
+},
+"w:s02": {
+"s": 11.51,
+"d": 3.555,
+"text": "The double jab steals distance, and the second jab hides the cross."
+},
+"t:body 2": {
+"s": 15.416,
+"d": 0.56,
+"text": "Body two."
+},
+"w:s03": {
+"s": 16.326,
+"d": 3.11,
+"text": "Jab high lifts the guard; the cross goes under it to the body."
+},
+"t:body jab": {
+"s": 19.786,
+"d": 0.643,
+"text": "Body jab."
+},
+"w:s04": {
+"s": 20.78,
+"d": 3.552,
+"text": "Jab to the body drops the hands; the cross goes to the open chin."
+},
+"t:up jab": {
+"s": 24.682,
+"d": 0.574,
+"text": "Up jab."
+},
+"w:s05": {
+"s": 25.606,
+"d": 3.538,
+"text": "The up jab splits the guard from below; the cross follows through the gap."
+},
+"w:s06": {
+"s": 29.494,
+"d": 3.811,
+"text": "The normal jab makes them shell high; the up jab comes under the gloves."
+},
+"t:step out": {
+"s": 33.655,
+"d": 0.579,
+"text": "Step out."
+},
+"w:s07": {
+"s": 34.584,
+"d": 2.963,
+"text": "Touch with the up jab from range and leave before they can answer."
+},
+"w:s08": {
+"s": 37.897,
+"d": 4.431,
+"text": "Land the one two and leave on an angle. Never stay to admire it."
+},
+"t:feint 1": {
+"s": 42.678,
+"d": 0.522,
+"text": "Feint one."
+},
+"w:s09": {
+"s": 43.55,
+"d": 3.601,
+"text": "The jab feint freezes them; the cross lands while they are still reacting."
+},
+"t:feint 2": {
+"s": 47.501,
+"d": 0.551,
+"text": "Feint two."
+},
+"w:s10": {
+"s": 48.402,
+"d": 3.752,
+"text": "Fake the cross so they cover; jab and cross land as they open back up."
+},
+"w:s11": {
+"s": 52.504,
+"d": 3.248,
+"text": "Finishing on the jab keeps them on the end of your reach while you reset."
+},
+"w:s12": {
+"s": 56.102,
+"d": 2.998,
+"text": "Same cross on two levels: they can only guard one of them."
+},
+"t:teep": {
+"s": 59.45,
+"d": 0.326,
+"text": "Teep."
+},
+"w:s13": {
+"s": 60.126,
+"d": 3.102,
+"text": "The teep after the cross pushes them straight back out to your range."
+},
+"w:s14": {
+"s": 63.578,
+"d": 3.747,
+"text": "The teep stops their step; the jab and cross catch them while they reset."
+},
+"w:s15": {
+"s": 67.675,
+"d": 3.687,
+"text": "The jab lifts their hands and eyes; the teep lands in the open belly."
+},
+"w:s16": {
+"s": 71.712,
+"d": 3.368,
+"text": "A jab feint makes them lift the guard; drive the cross into the body."
+},
+"t:pivot out": {
+"s": 75.429,
+"d": 0.532,
+"text": "Pivot out."
+},
+"w:s17": {
+"s": 76.311,
+"d": 3.208,
+"text": "Jab and angle off: they reset facing an empty spot."
+},
+"w:s18": {
+"s": 79.869,
+"d": 2.565,
+"text": "Pumping jabs set a rhythm; the cross breaks it."
+},
+"w:s19": {
+"s": 82.784,
+"d": 3.509,
+"text": "A long cross from outside, then leave on the angle before they answer."
+},
+"w:s20": {
+"s": 86.643,
+"d": 3.773,
+"text": "The body cross pulls their elbows down; the up jab rises straight through."
+},
+"w:s21": {
+"s": 90.766,
+"d": 2.865,
+"text": "Four straights: every hand comes straight back to the face."
+},
+"w:s22": {
+"s": 93.981,
+"d": 3.558,
+"text": "The double jab: the first finds the range, the second scores."
+},
+"w:s23": {
+"s": 97.889,
+"d": 3.498,
+"text": "Body then head with the same hand: the eyes follow the first one down."
+},
+"t:feint level change": {
+"s": 101.737,
+"d": 0.941,
+"text": "Feint level change."
+},
+"w:s24": {
+"s": 103.028,
+"d": 3.962,
+"text": "In MMA a level change sells the takedown; the cross lands as they sprawl."
+},
+"t:3": {
+"s": 107.34,
+"d": 0.351,
+"text": "Three."
+},
+"w:s25": {
+"s": 108.042,
+"d": 3.68,
+"text": "They move away from the cross into the hook. Then you leave."
+},
+"w:e01": {
+"s": 112.071,
+"d": 4.143,
+"text": "The lead hook pulls their guard wide; the cross goes down the middle, then step out."
+},
+"w:e02": {
+"s": 116.564,
+"d": 4.068,
+"text": "Cross, hook, cross turns them; pivot out so they punch where you were."
+},
+"t:body 3": {
+"s": 120.983,
+"d": 0.62,
+"text": "Body three."
+},
+"w:e03": {
+"s": 121.953,
+"d": 4.759,
+"text": "The hook to the liver drops their elbow; the same hook goes up top. Then leave."
+},
+"t:angle out": {
+"s": 127.061,
+"d": 0.578,
+"text": "Angle out."
+},
+"w:e04": {
+"s": 127.989,
+"d": 3.613,
+"text": "Punish on the inside, then angle off before they can clinch or trade."
+},
+"t:pull": {
+"s": 131.952,
+"d": 0.243,
+"text": "Pull."
+},
+"w:p01": {
+"s": 132.545,
+"d": 4.39,
+"text": "Your jab invites their jab back; pull just out of range and fire the cross over it."
+},
+"w:p02": {
+"s": 137.285,
+"d": 3.062,
+"text": "Let their punch fall short, then hit the space it left open."
+},
+"w:p03": {
+"s": 140.697,
+"d": 4.512,
+"text": "Pull, then cross and hook while they are overextended. Then leave."
+},
+"w:p04": {
+"s": 145.56,
+"d": 3.505,
+"text": "After the miss they are stretched out; jab and cross before they recover."
+},
+"w:p05": {
+"s": 149.415,
+"d": 3.253,
+"text": "A missed punch leaves the body open; drive the cross into it."
+},
+"w:p06": {
+"s": 153.018,
+"d": 3.402,
+"text": "The up jab comes up under their returning hand; the cross follows."
+},
+"t:lead head kick": {
+"s": 156.77,
+"d": 0.733,
+"text": "Lead head kick."
+},
+"w:p07": {
+"s": 157.852,
+"d": 3.4,
+"text": "The cross loads your hips; ride that turn into the lead head kick."
+},
+"w:p08": {
+"s": 161.603,
+"d": 2.656,
+"text": "The feint draws their counter; pull out of it and punish."
+},
+"w:p09": {
+"s": 164.609,
+"d": 2.975,
+"text": "They answer your one two; pull out of it and cross again."
+},
+"w:p10": {
+"s": 167.934,
+"d": 2.661,
+"text": "Counter, then pivot: they turn into nothing."
+},
+"t:slip": {
+"s": 170.945,
+"d": 0.384,
+"text": "Slip."
+},
+"w:p11": {
+"s": 171.68,
+"d": 2.722,
+"text": "Slip outside their jab and your cross is already loaded."
+},
+"w:p12": {
+"s": 174.751,
+"d": 3.26,
+"text": "Slip outside, cross over the top, hook behind it."
+},
+"t:roll": {
+"s": 178.362,
+"d": 0.366,
+"text": "Roll."
+},
+"w:p13": {
+"s": 179.078,
+"d": 2.749,
+"text": "Roll under the hook and come back with your own hook and cross."
+},
+"t:parry": {
+"s": 182.177,
+"d": 0.348,
+"text": "Parry."
+},
+"w:p14": {
+"s": 182.875,
+"d": 2.307,
+"text": "Parry the jab down and the cross is right there."
+},
+"w:p15": {
+"s": 185.532,
+"d": 3.076,
+"text": "If they keep walking after the miss, teep them back to range."
+},
+"w:p16": {
+"s": 188.958,
+"d": 3.595,
+"text": "After the pull your weight is on the back leg, so the lead leg is free to kick."
+},
+"w:p17": {
+"s": 192.903,
+"d": 2.382,
+"text": "Pull, and come back with the lead hook as they reach."
+},
+"t:step back": {
+"s": 195.635,
+"d": 0.612,
+"text": "Step back."
+},
+"w:p18": {
+"s": 196.596,
+"d": 3.041,
+"text": "Stepping back draws them in; the cross meets them on the step."
+},
+"w:p19": {
+"s": 199.987,
+"d": 3.804,
+"text": "Pull from the one two and fire your cross as their second hand comes back."
+},
+"w:p20": {
+"s": 204.142,
+"d": 5.4,
+"text": "Bait, pull, punish, leave. The whole sniper game in one combo."
+},
+"t:rear head kick": {
+"s": 209.891,
+"d": 0.767,
+"text": "Rear head kick."
+},
+"w:k01": {
+"s": 211.008,
+"d": 3.918,
+"text": "The body cross pulls their elbow down; the rear kick goes over it to the head."
+},
+"w:k02": {
+"s": 215.276,
+"d": 3.579,
+"text": "The cross turns your hips; let the lead leg ride that turn up to the head."
+},
+"t:low kick": {
+"s": 219.205,
+"d": 0.527,
+"text": "Low kick."
+},
+"w:k03": {
+"s": 220.082,
+"d": 3.231,
+"text": "Punches raise their eyes; the low kick lands where they aren't looking."
+},
+"w:k04": {
+"s": 223.663,
+"d": 3.265,
+"text": "The jab blinds them; the rear head kick comes around the side."
+},
+"w:k05": {
+"s": 227.278,
+"d": 3.03,
+"text": "The teep makes them guard the middle; the head kick goes around it."
+},
+"t:rear body kick": {
+"s": 230.658,
+"d": 0.813,
+"text": "Rear body kick."
+},
+"w:k06": {
+"s": 231.821,
+"d": 3.378,
+"text": "After the cross the rear kick is already loaded; land it on the body."
+},
+"t:feint kick": {
+"s": 235.549,
+"d": 0.556,
+"text": "Feint kick."
+},
+"w:k07": {
+"s": 236.455,
+"d": 4.0,
+"text": "Fake the kick so they lift the leg; the cross lands while they stand on one foot."
+},
+"w:k08": {
+"s": 240.805,
+"d": 3.354,
+"text": "The up jab splits the guard upward; the head kick comes around it."
+},
+"t:lead body kick": {
+"s": 244.509,
+"d": 0.743,
+"text": "Lead body kick."
+},
+"w:k09": {
+"s": 245.602,
+"d": 3.618,
+"text": "The lead kick to the body brings their elbow down; the cross follows straight."
+},
+"w:k10": {
+"s": 249.57,
+"d": 2.974,
+"text": "Dutch style: punches up top hide the low kick finish."
+},
+"t:calf kick": {
+"s": 252.894,
+"d": 0.599,
+"text": "Calf kick."
+},
+"w:k11": {
+"s": 253.843,
+"d": 3.471,
+"text": "The calf kick makes them shift their weight; the cross catches them flat."
+},
+"w:k12": {
+"s": 257.663,
+"d": 3.646,
+"text": "The hook pulls their guard to one side; the rear kick lands on the other."
+},
+"w:k13": {
+"s": 261.659,
+"d": 3.734,
+"text": "Fake the cross so they cover the centre; the lead kick comes around the side."
+},
+"w:k14": {
+"s": 265.743,
+"d": 2.891,
+"text": "The cross turns you; the lead kick lands on the liver side."
+},
+"w:k15": {
+"s": 268.984,
+"d": 2.903,
+"text": "The low kick drops their eyes; the cross follows up top."
+},
+"w:k16": {
+"s": 272.237,
+"d": 3.237,
+"text": "The body jab pulls their hands down; the lead leg goes high."
+},
+"w:k17": {
+"s": 275.824,
+"d": 4.361,
+"text": "Teep to set range, cross to turn them, lead kick to finish on the open side."
+},
+"t:feint low kick": {
+"s": 280.535,
+"d": 0.684,
+"text": "Feint low kick."
+},
+"w:k18": {
+"s": 281.57,
+"d": 3.219,
+"text": "Fake low, go high: their guard follows the fake down."
+},
+"w:k19": {
+"s": 285.139,
+"d": 3.849,
+"text": "Double teep: the first stops them, the second pushes them out of range."
+},
+"t:back kick": {
+"s": 289.338,
+"d": 0.526,
+"text": "Back kick."
+},
+"w:r01": {
+"s": 290.214,
+"d": 3.738,
+"text": "After the cross they expect a hook; turn and back kick straight up the middle."
+},
+"t:wheel kick": {
+"s": 294.302,
+"d": 0.503,
+"text": "Wheel kick."
+},
+"w:r02": {
+"s": 295.155,
+"d": 3.178,
+"text": "The low kick drops their eyes; the wheel kick comes around high."
+},
+"t:flying knee": {
+"s": 298.683,
+"d": 0.642,
+"text": "Flying knee."
+},
+"w:r03": {
+"s": 299.675,
+"d": 2.987,
+"text": "The teep makes them rebound forward, straight into the knee."
+},
+"w:r04": {
+"s": 303.012,
+"d": 2.805,
+"text": "They brace for the cross; the back kick goes into the belly."
+},
+"w:r05": {
+"s": 306.167,
+"d": 3.433,
+"text": "The jab freezes their guard high; the flying knee comes from underneath."
+},
+"w:r06": {
+"s": 309.951,
+"d": 3.862,
+"text": "If the head kick misses, keep spinning: the wheel kick uses the same turn."
+},
+"w:t01": {
+"s": 314.163,
+"d": 3.633,
+"text": "Three body crosses teach them to drop the elbow; the fourth goes high."
+},
+"w:t02": {
+"s": 318.146,
+"d": 4.015,
+"text": "After repeated one twos they cover high and centre; the lead kick goes around."
+},
+"w:t03": {
+"s": 322.51,
+"d": 4.46,
+"text": "Three identical jabs set the rhythm; the feint breaks it and the cross lands on the flinch."
+},
+"w:t04": {
+"s": 327.321,
+"d": 4.016,
+"text": "Straight jabs make them cover high; the up jab comes underneath on the third."
+},
+"w:t05": {
+"s": 331.687,
+"d": 4.067,
+"text": "Two teeps make them reach for the leg; fake the third and cross over the lowered hand."
+},
+"w:t06": {
+"s": 336.104,
+"d": 4.073,
+"text": "Twice to the body drops their guard; the same entry goes to the head the third time."
+},
+"w:t07": {
+"s": 340.526,
+"d": 3.43,
+"text": "Low kicks pull their eyes and guard down; the same leg comes up high."
+},
+"w:t08": {
+"s": 344.307,
+"d": 4.628,
+"text": "Jab and step back teaches them to chase; the third time, pull and catch them chasing."
+},
+"w:t09": {
+"s": 349.285,
+"d": 4.283,
+"text": "Leaving after the one two invites them to follow; the third time you stay and counter."
+},
+"w:t10": {
+"s": 353.918,
+"d": 5.653,
+"text": "Body kicks make them drop the arm; the same kick goes upstairs. Jones did it to Cormier."
+},
+"w:t11": {
+"s": 359.921,
+"d": 3.976,
+"text": "Two one twos make them shell high; the third cross goes under, to the body."
+},
+"w:t12": {
+"s": 364.247,
+"d": 4.095,
+"text": "Up jabs make them squeeze the guard tight in the middle; the head kick goes around it."
+},
+"w:t13": {
+"s": 368.692,
+"d": 3.829,
+"text": "Teeps make them guard the middle; after the jab, the kick goes high instead."
+},
+"w:t14": {
+"s": 372.871,
+"d": 4.213,
+"text": "Twice they eat the pull counter and cover for the cross; the third answer is the kick."
+},
+"w:t15": {
+"s": 377.434,
+"d": 3.29,
+"text": "They learn to check after the one two; now the kick goes high."
+},
+"w:t16": {
+"s": 381.074,
+"d": 3.841,
+"text": "Feints with no follow-up teach them to ignore it; the next one is real."
+},
+"w:t17": {
+"s": 385.265,
+"d": 4.351,
+"text": "Calf kicks make them lift the leg early; fake it and cross while they stand on one foot."
+},
+"w:t18": {
+"s": 389.966,
+"d": 3.961,
+"text": "Each combo adds a strike; they defend the last pattern, not the new one."
+},
+"w:t19": {
+"s": 394.277,
+"d": 3.98,
+"text": "Two empty pulls make them commit to the counter; the third time it's waiting for them."
+},
+"w:t20": {
+"s": 398.607,
+"d": 3.749,
+"text": "Cross feints make them cover their face; the real cross goes to the body."
+},
+"a:jab": {
+"s": 402.705,
+"d": 0.485,
+"text": "Jab!"
+},
+"w:d01": {
+"s": 403.54,
+"d": 3.23,
+"text": "Catch the jab with the rear hand and fire the cross back down the line."
+},
+"w:d02": {
+"s": 407.121,
+"d": 3.546,
+"text": "Lean back just enough for the jab to fall short, then cross over it."
+},
+"w:d03": {
+"s": 411.017,
+"d": 3.083,
+"text": "Slip outside the jab; your cross is loaded on that side."
+},
+"w:d04": {
+"s": 414.45,
+"d": 2.664,
+"text": "Step out of range, then come back as they recover."
+},
+"w:d05": {
+"s": 417.464,
+"d": 2.595,
+"text": "After the pull your weight is back and the lead leg is free."
+},
+"a:cross": {
+"s": 420.409,
+"d": 0.454,
+"text": "Cross!"
+},
+"w:d06": {
+"s": 421.213,
+"d": 4.0,
+"text": "The cross falls short when you pull; your cross comes back while their chin is open."
+},
+"w:d07": {
+"s": 425.563,
+"d": 3.089,
+"text": "Slip outside the cross and the lead hook is loaded on that side."
+},
+"t:shoulder roll": {
+"s": 429.002,
+"d": 0.704,
+"text": "Shoulder roll."
+},
+"w:d08": {
+"s": 430.056,
+"d": 2.564,
+"text": "Take it on the shoulder and fire the cross straight back."
+},
+"w:d09": {
+"s": 432.969,
+"d": 2.179,
+"text": "Pull, and hook them as their cross comes back."
+},
+"w:d10": {
+"s": 435.498,
+"d": 3.674,
+"text": "Parry the cross across with the lead hand, then answer straight down the middle."
+},
+"a:lead hook": {
+"s": 439.522,
+"d": 0.576,
+"text": "Lead hook!"
+},
+"w:d11": {
+"s": 440.448,
+"d": 2.749,
+"text": "Roll under the hook and come back with your own hook and cross."
+},
+"w:d12": {
+"s": 443.547,
+"d": 3.87,
+"text": "The hook passes in front of your face; the cross goes through the middle it opened."
+},
+"t:block": {
+"s": 447.766,
+"d": 0.334,
+"text": "Block."
+},
+"w:d13": {
+"s": 448.451,
+"d": 3.425,
+"text": "Glove to the temple, answer straight, and leave before the next one."
+},
+"a:rear hook": {
+"s": 452.226,
+"d": 0.608,
+"text": "Rear hook!"
+},
+"w:d14": {
+"s": 453.185,
+"d": 2.795,
+"text": "Block the rear hook; your lead hook is the shortest answer."
+},
+"a:overhand": {
+"s": 456.329,
+"d": 0.716,
+"text": "Overhand!"
+},
+"w:d15": {
+"s": 457.396,
+"d": 4.378,
+"text": "The overhand is long and slow: step back, let it miss, punish the gap."
+},
+"a:jab cross": {
+"s": 462.123,
+"d": 0.832,
+"text": "Jab cross!"
+},
+"w:d16": {
+"s": 463.306,
+"d": 3.27,
+"text": "Parry the jab, pull from the cross, and cross back over it."
+},
+"w:d17": {
+"s": 466.926,
+"d": 2.528,
+"text": "Step back from both, then cross as they finish."
+},
+"a:double jab": {
+"s": 469.804,
+"d": 0.664,
+"text": "Double jab!"
+},
+"w:d18": {
+"s": 470.818,
+"d": 2.97,
+"text": "Parry both jabs and the cross is free on the third beat."
+},
+"a:rear low kick": {
+"s": 474.137,
+"d": 0.833,
+"text": "Rear low kick!"
+},
+"t:check": {
+"s": 475.32,
+"d": 0.364,
+"text": "Check."
+},
+"w:d19": {
+"s": 476.035,
+"d": 2.644,
+"text": "Check with the lead shin and cross while they land square."
+},
+"w:d20": {
+"s": 479.029,
+"d": 3.332,
+"text": "Pull the leg back so the kick misses, then cross as they swing through."
+},
+"w:d21": {
+"s": 482.711,
+"d": 1.768,
+"text": "Check, then answer kick for kick."
+},
+"a:calf kick": {
+"s": 484.829,
+"d": 0.692,
+"text": "Calf kick!"
+},
+"w:d22": {
+"s": 485.871,
+"d": 3.12,
+"text": "Turn the knee out to check the calf, then cross as they land."
+},
+"w:d23": {
+"s": 489.341,
+"d": 2.413,
+"text": "Check and teep straight away so they can't follow up."
+},
+"a:body kick": {
+"s": 492.104,
+"d": 0.593,
+"text": "Body kick!"
+},
+"t:catch": {
+"s": 493.048,
+"d": 0.389,
+"text": "Catch."
+},
+"w:d24": {
+"s": 493.786,
+"d": 2.685,
+"text": "Catch the body kick and cross while they hop on one leg."
+},
+"w:d25": {
+"s": 496.821,
+"d": 3.028,
+"text": "Block it, then kick back on the same side while they reset."
+},
+"a:rear head kick": {
+"s": 500.199,
+"d": 0.842,
+"text": "Rear head kick!"
+},
+"w:d26": {
+"s": 501.39,
+"d": 3.468,
+"text": "Block high, arm tight to the head, then cross while they land."
+},
+"w:d27": {
+"s": 505.209,
+"d": 3.78,
+"text": "Lean back and let it pass in front of you, then punish as they turn open."
+},
+"a:lead head kick": {
+"s": 509.338,
+"d": 0.775,
+"text": "Lead head kick!"
+},
+"w:d28": {
+"s": 510.463,
+"d": 3.791,
+"text": "Block with the rear arm, then jab and cross before they reset their feet."
+},
+"w:d29": {
+"s": 514.604,
+"d": 3.47,
+"text": "Step back out of the arc; their hip is open as the kick passes."
+},
+"a:teep": {
+"s": 518.423,
+"d": 0.335,
+"text": "Teep!"
+},
+"w:d30": {
+"s": 519.108,
+"d": 3.74,
+"text": "Parry the teep across your body; they turn sideways and the cross is open."
+},
+"w:d31": {
+"s": 523.199,
+"d": 2.592,
+"text": "Catch the teep and cross while they balance on one leg."
+},
+"w:d32": {
+"s": 526.141,
+"d": 2.748,
+"text": "Step off the line and low kick the leg they are standing on."
+},
+"i:snipe-hard": {
+"s": 529.24,
+"d": 2.147,
+"text": "Snipe. Hard day."
+},
+"i:kicks-tech": {
+"s": 531.737,
+"d": 2.223,
+"text": "Kicks. Technical day."
+},
+"i:counter-hard": {
+"s": 534.31,
+"d": 3.047,
+"text": "Pull counters and defence. Hard day."
+},
+"i:snipe-tech": {
+"s": 537.707,
+"d": 2.286,
+"text": "Snipe. Technical day."
+},
+"i:kicks-hard": {
+"s": 540.343,
+"d": 2.084,
+"text": "Kicks. Hard day."
+},
+"i:counter-tech": {
+"s": 542.777,
+"d": 3.186,
+"text": "Pull counters and defence. Technical day."
+},
+"f:warm": {
+"s": 546.313,
+"d": 6.008,
+"text": "Warm-up round. Loose and light. Jab, cross, move your feet."
+},
+"f:burnout": {
+"s": 552.671,
+"d": 6.645,
+"text": "Final round. Burnout. Straight punches, nonstop, as fast as you can."
+},
+"f:techfinal": {
+"s": 559.666,
+"d": 6.219,
+"text": "Final round. Slow and technical. Perfect form, exhale on every strike."
+},
+"f:snipe1": {
+"s": 566.235,
+"d": 5.323,
+"text": "Round one. The jab. Double it, up jab it, and leave."
+},
+"f:snipe2": {
+"s": 571.908,
+"d": 4.766,
+"text": "Round two. Straights on two levels. Head and body."
+},
+"f:snipe3": {
+"s": 577.024,
+"d": 5.076,
+"text": "Round three. Traps. Repeat the pattern, then break it."
+},
+"f:snipe4": {
+"s": 582.45,
+"d": 5.692,
+"text": "Round four. Snipe and exit. Every combo ends with you out of range."
+},
+"f:kicks1": {
+"s": 588.492,
+"d": 5.074,
+"text": "Round one. Punches into kicks. The hands hide the legs."
+},
+"f:kicks2": {
+"s": 593.916,
+"d": 5.286,
+"text": "Round two. Head kicks. Set them up, never throw them naked."
+},
+"f:kicks3": {
+"s": 599.552,
+"d": 5.502,
+"text": "Round three. Kick traps. Condition low and middle, then go high."
+},
+"f:kicks4": {
+"s": 605.404,
+"d": 4.931,
+"text": "Round four. Teep and range. Keep them on the end of your leg."
+},
+"f:counter1": {
+"s": 610.685,
+"d": 5.076,
+"text": "Round one. Pull counters. Bait, pull, punish."
+},
+"f:counter2": {
+"s": 616.111,
+"d": 5.659,
+"text": "Round two. Defence against punches. Defend first, then answer."
+},
+"f:counter3": {
+"s": 622.12,
+"d": 6.701,
+"text": "Round three. Defence against kicks. Check, block, catch, then answer."
+},
+"f:counter4": {
+"s": 629.172,
+"d": 5.891,
+"text": "Round four. Everything. Bait, defend, counter, exit."
+},
+"p:rest": {
+"s": 635.413,
+"d": 0.458,
+"text": "Rest."
+},
+"p:ten": {
+"s": 636.221,
+"d": 0.881,
+"text": "Ten seconds."
+},
+"p:done": {
+"s": 637.452,
+"d": 4.328,
+"text": "Session done. Good work. Rate it and log it."
+},
+"p:tip": {
+"s": 642.13,
+"d": 1.136,
+"text": "Tip for next round."
+}
+}
+}

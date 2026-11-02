@@ -1,0 +1,156 @@
+"""Build audio/sprite.m4a + audio/sprite.json from library.json.
+
+Every call token, why-line, focus line and phrase becomes one clip. Clips are
+generated with edge-tts (free, no account), trimmed, and concatenated into a
+single sprite with silence between them, so the app can play everything from
+ONE <audio> element (needed for iOS: one element unlocked by the start tap).
+
+Needs: python 3.9+, `pip install edge-tts`, ffmpeg on PATH.
+Run from the repo root:   python tools/build_audio.py
+Generated TTS mp3s are cached in tools/.cache so re-runs are fast.
+"""
+import asyncio, hashlib, json, os, subprocess, sys, wave
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CACHE = os.path.join(ROOT, "tools", ".cache")
+OUT = os.path.join(ROOT, "audio")
+VOICE = "en-GB-RyanNeural"
+RATE = 24000
+GAP = 0.35  # seconds of silence between clips (guards against seek bleed)
+
+NUM = {"1": "one", "2": "two", "3": "three", "4": "four"}
+
+
+def say_token(tok):
+    """Text for a call token: numbers spoken as words."""
+    words = [NUM.get(w, w) for w in tok.split()]
+    return " ".join(words).capitalize() + "."
+
+
+def tokens_of(calls):
+    for step in calls.split("|"):
+        for t in step.split(","):
+            t = t.strip()
+            if t:
+                yield t
+
+
+def collect(lib):
+    """id -> (text, rate). Ids must match app.js."""
+    clips = {}
+    for group in ("combos", "rare", "traps"):
+        for e in lib[group]:
+            for t in tokens_of(e["calls"]):
+                clips["t:" + t] = (say_token(t), "+15%")
+            clips["w:" + e["id"]] = (e["why"], "+0%")
+    for d in lib["defence"]:
+        clips["a:" + d["attack"]] = (d["attack"].capitalize() + "!", "+10%")
+        for t in tokens_of(d["answer"]):
+            clips["t:" + t] = (say_token(t), "+15%")
+        clips["w:" + d["id"]] = (d["why"], "+0%")
+    for s in lib["sessions"]:
+        clips["i:" + s["id"]] = (s["intro"], "+0%")
+    rounds = [lib["warmup"], *lib["finals"].values()]
+    for plan in lib["plans"].values():
+        rounds += plan
+    for r in rounds:
+        clips["f:" + r["id"]] = (r["focus"], "+0%")
+    for k, v in lib["phrases"].items():
+        clips["p:" + k] = (v, "+0%")
+    return clips
+
+
+async def tts(text, rate, path):
+    import edge_tts
+    for attempt in range(4):
+        try:
+            await edge_tts.Communicate(text, VOICE, rate=rate).save(path)
+            return
+        except Exception as e:  # network hiccups
+            if attempt == 3:
+                raise
+            print("  retry:", text, e)
+            await asyncio.sleep(2)
+
+
+def ff(*args):
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *args], check=True)
+
+
+def to_pcm(src, dst, trim=True):
+    filt = []
+    if trim:  # strip leading/trailing silence so stitched calls are tight
+        s = "silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.02"
+        filt = ["-af", f"{s},areverse,{s},areverse"]
+    ff("-i", src, *filt, "-ac", "1", "-ar", str(RATE), "-sample_fmt", "s16", dst)
+
+
+def synth_fx(dst, expr, dur):
+    ff("-f", "lavfi", "-i", f"aevalsrc='{expr}':s={RATE}:d={dur}", "-ac", "1", "-sample_fmt", "s16", dst)
+
+
+FX = {
+    "fx:silence": ("0", 0.5),  # first: the start tap unlocks audio by playing from 0
+    # bell: inharmonic partials with exponential decay
+    "fx:bell": ("0.5*exp(-2.2*t)*(sin(2*PI*830*t)+0.6*sin(2*PI*1660*t+1)+0.4*sin(2*PI*2490*t)+0.3*sin(2*PI*1920*t))/2.3", 1.6),
+    "fx:bell3": ("0.5*exp(-5*mod(t,0.45))*(sin(2*PI*830*t)+0.6*sin(2*PI*1660*t+1)+0.4*sin(2*PI*2490*t))/2", 1.35),
+    "fx:beep": ("0.45*sin(2*PI*880*t)*lt(t,0.15)", 0.18),
+    # 10-second warning: two wood-block clacks
+    "fx:clack": ("0.8*exp(-60*mod(t,0.22))*sin(2*PI*1800*t)*lt(t,0.44)", 0.45),
+    # incoming-attack alert: quick rising double chirp
+    "fx:alert": ("0.4*sin(2*PI*(600+2400*mod(t,0.12))*t)*lt(mod(t,0.15),0.12)", 0.3),
+}
+
+
+async def main():
+    lib = json.load(open(os.path.join(ROOT, "library.json"), encoding="utf-8"))
+    clips = collect(lib)
+    os.makedirs(CACHE, exist_ok=True)
+    os.makedirs(OUT, exist_ok=True)
+
+    todo = []
+    for cid, (text, rate) in clips.items():
+        h = hashlib.sha1(f"{VOICE}|{rate}|{text}".encode()).hexdigest()[:16]
+        mp3 = os.path.join(CACHE, h + ".mp3")
+        clips[cid] = (text, rate, mp3)
+        if not os.path.exists(mp3):
+            todo.append((text, rate, mp3))
+    print(f"{len(clips)} spoken clips, {len(todo)} to generate")
+    sem = asyncio.Semaphore(6)
+
+    async def one(job):
+        async with sem:
+            await tts(*job)
+    await asyncio.gather(*(one(j) for j in todo))
+
+    pcm, index, pos = bytearray(), {}, 0.0
+    gap = b"\x00\x00" * int(GAP * RATE)
+    items = [(cid, None, v) for cid, v in FX.items()] + [(cid, v[2], None) for cid, v in clips.items()]
+    for cid, mp3, fx in items:
+        wav = os.path.join(CACHE, "tmp.wav")
+        if fx:
+            synth_fx(wav, *fx)
+        else:
+            to_pcm(mp3, wav)
+        with wave.open(wav) as w:
+            frames = w.readframes(w.getnframes())
+        dur = len(frames) / 2 / RATE
+        index[cid] = {"s": round(pos, 3), "d": round(dur, 3)}
+        if not fx:
+            index[cid]["text"] = clips[cid][0]
+        pcm += frames + gap
+        pos += dur + GAP
+
+    big = os.path.join(CACHE, "sprite.wav")
+    with wave.open(big, "wb") as w:
+        w.setnchannels(1); w.setsampwidth(2); w.setframerate(RATE); w.writeframes(bytes(pcm))
+    # AAC in .m4a: Safari seeks it accurately (mp4 has a sample index)
+    ff("-i", big, "-c:a", "aac", "-b:a", "48k", "-movflags", "+faststart", os.path.join(OUT, "sprite.m4a"))
+    json.dump({"voice": VOICE, "clips": index}, open(os.path.join(OUT, "sprite.json"), "w"), indent=0)
+    print(f"sprite: {pos:.0f}s, {len(index)} clips -> audio/sprite.m4a")
+
+
+if __name__ == "__main__":
+    if sys.platform == "win32":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    asyncio.run(main())

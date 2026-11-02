@@ -77,3 +77,13 @@ After each session: 1–5 rating + free-text note. History in localStorage.
 - README: free deploy (Vercel / GitHub Pages) + add to iPhone home screen.
 - Report what couldn't be verified (iPhone silent switch, wake lock, bag height
   — default: call head kicks normally).
+
+## Build notes (2026-11-02)
+- Voice: **edge-tts clips generated** (`en-GB-RyanNeural`) into one sprite,
+  `audio/sprite.m4a` (204 clips, ~4 MB). `speechSynthesis` is only a fallback.
+- Library: 68 combos, 20 trap sequences, 6 rare strikes, 32 defence calls
+  (see LIBRARY.md). "Rufo" read as Mauricio Ruffy ("the Sniper").
+- No southpaw content at all yet. Add it after week 4 if wanted.
+- Head kicks are on by default; Settings has a toggle in case the bag doesn't reach head height.
+- Not verified on a real iPhone: silent-switch playback, Wake Lock in the
+  home-screen app, sprite seek latency.

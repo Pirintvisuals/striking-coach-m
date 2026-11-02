@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Coach">
+<meta name="theme-color" content="#111111">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<title>Striking Coach</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HOME -->
+<section id="home" class="screen">
+  <p class="label">Next session</p>
+  <h1 id="nextName">…</h1>
+  <p id="nextMode" class="mode"></p>
+  <p id="nextRounds" class="small"></p>
+  <button id="startBtn" class="big">Start</button>
+  <p class="label">Or pick another</p>
+  <div id="pickList" class="chips"></div>
+  <nav class="row">
+    <button id="histBtn">Log</button>
+    <button id="setBtn">Settings</button>
+  </nav>
+</section>
+
+<!-- RUN -->
+<section id="run" class="screen hidden">
+  <p id="phase" class="label">Get ready</p>
+  <div id="clock">0:10</div>
+  <p id="focus" class="focus"></p>
+  <div id="call" class="call"></div>
+  <p id="answer" class="answer"></p>
+  <div class="row">
+    <button id="pauseBtn">Pause</button>
+    <button id="stopBtn" class="danger">Stop</button>
+  </div>
+  <p id="wakeInfo" class="small"></p>
+</section>
+
+<!-- LOG ENTRY -->
+<section id="logScreen" class="screen hidden">
+  <h2>How was it?</h2>
+  <p id="logSummary" class="small"></p>
+  <div id="stars" class="chips stars"></div>
+  <textarea id="note" rows="5" placeholder="Notes: what felt good, what was off, bag, energy…"></textarea>
+  <button id="saveLog" class="big">Save</button>
+  <button id="discardLog" class="link">Don't log this one</button>
+</section>
+
+<!-- HISTORY -->
+<section id="history" class="screen hidden">
+  <h2>Log</h2>
+  <button id="exportBtn" class="big">Export log (copy text)</button>
+  <p id="exportMsg" class="small"></p>
+  <textarea id="exportBox" class="hidden" rows="8" readonly></textarea>
+  <div id="histList"></div>
+  <button class="back">Back</button>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="screen hidden">
+  <h2>Settings</h2>
+  <label>Defence calls: <b id="defVal"></b>
+    <input id="defPct" type="range" min="0" max="40" step="5">
+  </label>
+  <p class="small">Share of calls that are incoming attacks on snipe/kick days. Counter days multiply it (×2 to ×3.5 depending on the round).</p>
+  <label class="check"><input id="sayAnswer" type="checkbox"> Say the defence + counter after an incoming attack</label>
+  <label class="check"><input id="headKicks" type="checkbox"> Head kicks (untick if the bag doesn't reach head height)</label>
+  <label class="check"><input id="quick" type="checkbox"> Quick test mode (30-second rounds, 15-second rest)</label>
+  <label>Rotation position
+    <select id="rotSel"></select>
+  </label>
+  <button id="testSound">Test sound</button>
+  <p id="audioInfo" class="small"></p>
+  <button class="back">Back</button>
+</section>
+
+<video id="keepAwake" playsinline muted loop src="audio/keepawake.mp4" style="position:fixed;width:1px;height:1px;opacity:0.01;pointer-events:none"></video>
+<script src="app.js"></script>
+</body>
+</html>
