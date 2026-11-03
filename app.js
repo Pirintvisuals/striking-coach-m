@@ -432,18 +432,26 @@ function newRoundState(dur, spinMax) {
 const remember = (st, e) => { st.recent.push(e.id); if (st.recent.length > 8) st.recent.shift(); };
 const setFocus = t => { if (!SIM) $('focus').textContent = t; };
 
-async function flurry(ms, kind, opener) {
+async function startBeep() { // explanation is done: "Ready." then the beep, and the clock starts on the beep
+  await say(LIB.phrases.ready);
+  await gapWait(400);
+  await clip('fx:beep');
+  showCall('GO!');
+}
+async function flurry(ms, kind, opener, endAt = Infinity) {
   camPause(true); // all-out flurries aren't judged
   showCall('FLURRY · ' + kind.toUpperCase());
-  const end = clock.now() + ms;
   await say(opener || (ms > 17500 ? LIB.phrases.flurry20 : LIB.phrases.flurry15));
   await say(LIB.flurries[kind].say);
+  await startBeep();
+  const end = Math.min(clock.now() + ms, endAt);
   let i = 0;
   while (end - clock.now() > 3500) {
     await gapWait(Math.min(4500, end - clock.now() - 3000));
     if (end - clock.now() > 2500) await say(LIB.phrases.pushes[i++ % LIB.phrases.pushes.length]);
   }
   await gapWait(Math.max(0, end - clock.now()));
+  await clip('fx:beep');
   run.flurries++;
   if (run.inRound) camPause(false);
 }
@@ -452,8 +460,9 @@ async function challenge() {
   const ch = pick(LIB.phrases.challenges);
   camPause(true);
   showCall('CHALLENGE');
-  const until = clock.now() + ch.dur * 1000;
   await say(ch.say);
+  await startBeep();
+  const until = clock.now() + ch.dur * 1000;
   await gapWait(Math.max(0, until - clock.now()));
   await clip('fx:beep');
   await say(LIB.phrases.challengeEnd);
@@ -524,8 +533,86 @@ async function mixRound(spec) {
     }
     await camCue();
   }
-  await gapWait(Math.max(0, end - finalMs - clock.now()));
-  await flurry(Math.max(0, end - clock.now()), kinds[run.flurries % kinds.length], LIB.phrases.last20);
+  await gapWait(Math.max(0, end - finalMs - 5000 - clock.now()));
+  await flurry(finalMs, kinds[run.flurries % kinds.length], LIB.phrases.last20, end);
+  showCall('');
+  await gapWait(Math.max(0, end - clock.now()));
+  await clip('fx:bell3');
+  run.inRound = false;
+  camEndRound();
+  run.roundsDone++;
+}
+
+// Opponent mode: the coach describes what the opponent does; Milan chooses the answer.
+// Round 1 names the habits and gives an answer afterwards; round 2 only the short tell; round 3 he adapts.
+async function oppSituation(h, full, reveal, p) {
+  showCall(full ? h.tell : h.short, true);
+  await say(full ? h.tell : h.short);
+  const longest = Math.max(...h.answers.map(a => parse(a)[0].length));
+  await gapWait((1800 + longest * 450) / tempo()); // your window: throw your answer now
+  if (reveal) {
+    const ans = pick(h.answers);
+    if (!SIM) $('answer').textContent = 'Answers: ' + h.answers.join('  ·  ');
+    await say(LIB.phrases.oppAnswer);
+    await sayTokens(parse(ans)[0]);
+    await gapWait(stepGap(parse(ans)[0], p));
+  } else await gapWait(recNow(p) * 1000);
+}
+
+async function opponentRound(spec) {
+  const { n, dur, opp, sess } = spec;
+  const p = PACE.hard, P = LIB.phrases;
+  run.roundNo = n;
+  setPhase(`Round ${n} of ${run.nRounds}`, dur, opp.name);
+  const st = run.st = newRoundState(dur, 2);
+  const end = run.phase.end;
+  await clip('fx:bell');
+  await say(P.round[n - 1] || P.round.at(-1));
+  await say(n === 1 ? opp.intro : n === 2 ? P.oppRound2 : P.oppRound3);
+  if (camOn()) { Cam.coach.startRound(n, opp.name); run.recording = settings.camRecord && Cam.startRec(); }
+  run.inRound = true;
+  run.camCheckin = false;
+  const seen = run.oppSeen || (run.oppSeen = new Map()); // habit -> times called this session
+  const habits = n >= 3 ? [...opp.habits, opp.adapt] : opp.habits;
+  const finalMs = Math.min(20000, dur * 0.1);
+  let hurtAt = st.start + dur * (0.45 + rand() * 0.1), nextCue = clock.now() + 60000;
+  const attacks = LIB.defence.filter(d => opp.attacks.includes(d.attack) && allowed(d));
+  for (;;) {
+    const now = clock.now(), stopAt = end - finalMs - 7000;
+    if (now >= stopAt) break;
+    if (now >= hurtAt) { // he's hurt: a flurry, started on the beep
+      hurtAt = Infinity;
+      if (stopAt - now > 30000) { await flurry(15000, 'straights', LIB.situations[4].tell); await say(P.time); await gapWait(2000); }
+      continue;
+    }
+    if (camOn() && !run.camCheckin && st.prog() > 0.3) { run.camCheckin = true; await camCheckin(); }
+    if (now >= nextCue) { await say(n === 1 ? pick(P.cuesHard) : P.oppHint); nextCue = clock.now() + 70000; }
+    const r = rand();
+    if (r < 0.4) { // one of his habits
+      // Round 3: his new habit comes up a lot, and is named the first time.
+      const h = n >= 3 && rand() < 0.45 ? opp.adapt : pick(habits);
+      const times = seen.get(h) || 0;
+      const full = (n === 1 && times < 2) || (h === opp.adapt && times < 1);
+      const reveal = full || (n === 1 ? rand() < 0.6 : rand() < 0.3);
+      seen.set(h, times + 1);
+      await oppSituation(h, full, reveal, p);
+      run.counts.habit = (run.counts.habit || 0) + 1;
+    } else if (r < 0.64 && attacks.length) { // he attacks with his own weapons
+      const d = pick(attacks.filter(x => !st.recent.includes(x.id))) || pick(attacks);
+      remember(st, d);
+      await doItem(d, p);
+    } else if (r < 0.76) { // a general fight situation (not "he's hurt": that one is the flurry)
+      await oppSituation(pick(LIB.situations.slice(0, 4)), true, rand() < 0.35, p);
+    } else { // keep the work rate up: a normal combo
+      let e = pickCore(sess.weights || {}, st);
+      if (estimateItem(e, p) > stopAt - clock.now()) e = pickCore({ snipe: 1 }, st, { short: true });
+      remember(st, e);
+      await doItem(e, p);
+    }
+    await camCue();
+  }
+  await gapWait(Math.max(0, end - finalMs - 6000 - clock.now()));
+  await flurry(finalMs, 'straights', LIB.situations[4].tell, end);
   showCall('');
   await gapWait(Math.max(0, end - clock.now()));
   await clip('fx:bell3');
@@ -568,7 +655,7 @@ async function burnout(dur) {
   const n = Math.max(1, Math.floor(dur / 30000));
   for (let i = 0; i < n; i++) {
     const on = Math.min(20000, (end - clock.now()) * 2 / 3);
-    await flurry(on, kinds[i % kinds.length], i === n - 1 ? LIB.phrases.burnLast : LIB.phrases.burnGo);
+    await flurry(on, kinds[i % kinds.length], i === n - 1 ? LIB.phrases.burnLast : LIB.phrases.burnGo, end);
     if (i < n - 1) { showCall('ease off'); await say(LIB.phrases.burnOff); await gapWait(Math.max(0, end - clock.now() - (n - i - 1) * 30000)); }
   }
   await gapWait(Math.max(0, end - clock.now()));
@@ -634,10 +721,15 @@ function spotlightsFor(sess, nRounds, roundMs) {
   return Array.from({ length: nRounds }, (_, i) => Array.from({ length: per }, (_, j) => LIB.spotlights[pool[(off + i * per + j) % pool.length]]));
 }
 
+const nextOpponent = () => LIB.opponents[LS.get('opp', 0) % LIB.opponents.length];
+
 async function runSession(sess) {
   const T = timings();
-  const spots = spotlightsFor(sess, settings.rounds, T.round);
-  const rounds = spots.map((sp, i) => ({ n: i + 1, dur: T.round, sess, spots: sp }));
+  const opp = sess.kind === 'opponent' ? (SIM ? LIB.opponents[(+Q.get('opp') || 0) % LIB.opponents.length] : nextOpponent()) : null;
+  if (opp && !SIM) LS.set('opp', (LIB.opponents.indexOf(opp) + 1) % LIB.opponents.length);
+  run.opp = opp;
+  const spots = opp ? Array.from({ length: settings.rounds }, () => []) : spotlightsFor(sess, settings.rounds, T.round);
+  const rounds = spots.map((sp, i) => ({ n: i + 1, dur: T.round, sess, spots: sp, opp }));
   run.nRounds = rounds.length;
   run.totalRounds = rounds.length + 1 + (T.warm ? 1 : 0);
   await part('countdown', async () => {
@@ -650,7 +742,7 @@ async function runSession(sess) {
   if (T.warm) await part('warm-up', () => warmupRound(T.warm));
   for (const r of rounds) {
     if ((T.warm || r.n > 1) && T.rest) await part('rest', () => runRest(T.rest));
-    await part('round', () => mixRound(r));
+    await part('round', () => r.opp ? opponentRound(r) : mixRound(r));
   }
   if (T.rest) await part('rest', () => runRest(T.rest, LIB.phrases.nextBurn));
   await part('finisher', () => burnout(T.fin));
@@ -688,11 +780,12 @@ function show(id) {
   window.scrollTo(0, 0);
 }
 let chosen = 0;
-const fmtSession = s => s.name;
+const fmtSession = s => s.kind === 'opponent' && run && run.opp ? `${s.name} vs ${run.opp.name.replace(/^The /, '')}` : s.name;
 const fmtCfg = () => (settings.quick ? 'quick test' : `${settings.rounds}×${settings.roundMin} min, ${settings.restMin} min rest`) +
   (settings.camera ? ', camera coach' : '');
 
 function previewSpots(sess) {
+  if (!sess.spotlights) return [];
   const pool = sess.spotlights, off = LS.get('spot.' + sess.id, 0);
   const per = Math.max(1, Math.round(timings().round / 120000));
   return Array.from({ length: Math.min(6, pool.length, settings.rounds * per) }, (_, i) => LIB.spotlights[pool[(off + i) % pool.length]].name);
@@ -705,7 +798,22 @@ function renderHome() {
   $('nextMode').textContent = 'Hard · everything mixed';
   $('nextRounds').textContent = (chosen === next ? 'Next in rotation. ' : 'Picked manually. ') +
     (settings.quick ? 'QUICK TEST MODE is on.' : `${T.warm ? `Warm-up ${settings.warmMin} · ` : 'No warm-up · '}${settings.rounds} × ${settings.roundMin} min · burnout 3 · ${settings.restMin ? settings.restMin + ' min rest' : 'no rest'} · about ${totalMin()} min.`);
-  $('nextThemes').textContent = 'Coming up: ' + previewSpots(s).join(' → ') + ' …';
+  if (s.kind === 'opponent') {
+    const o = nextOpponent();
+    $('nextMode').textContent = 'Hard · you read him, you choose';
+    $('nextThemes').textContent = `Opponent: ${o.name}. ${o.style}`;
+  } else $('nextThemes').textContent = 'Coming up: ' + previewSpots(s).join(' → ') + ' …';
+  $('oppPick').classList.toggle('hidden', s.kind !== 'opponent');
+  if (s.kind === 'opponent') {
+    $('oppPick').innerHTML = '';
+    LIB.opponents.forEach((o, i) => {
+      const b = document.createElement('button');
+      b.textContent = o.name.replace(/^The /, '');
+      b.classList.toggle('on', o === nextOpponent());
+      b.onclick = () => { LS.set('opp', i); renderHome(); };
+      $('oppPick').appendChild(b);
+    });
+  }
   $('pickList').innerHTML = '';
   LIB.sessions.forEach((x, i) => {
     const b = document.createElement('button');

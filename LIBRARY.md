@@ -4,7 +4,7 @@ Generated from `library.json` by `tools/build_library_md.py`. Edit the JSON, not
 
 Orthodox stance. 1 jab, 2 cross, 3 lead hook, 4 rear hook; **up jab** = lead-hand long uppercut from range; **check hook** = lead hook thrown while pivoting off the line. `|` separates the calls of a trap sequence. McGregor is southpaw: his straight left is Milan's **2**, and his kicks to his right side are mirrored here.
 
-**Totals:** 214 combos, 29 trap sequences, 45 incoming attacks with answers, 19 spotlights. 20 entries contain a spinning or flying technique; the engine caps them per round (1 per round, more during the McGregor/Ruffy spin spotlights), so jabs and straights stay far more frequent.
+**Totals:** 214 combos, 29 trap sequences, 48 incoming attacks with answers, 19 spotlights. 20 entries contain a spinning or flying technique; the engine caps them per round (1 per round, more during the McGregor/Ruffy spin spotlights), so jabs and straights stay far more frequent.
 
 ## Sessions and spotlights
 
@@ -13,6 +13,7 @@ Three options, all hard. Every round mixes everything. Every ~2 minutes a **spot
 - **Fight mix**: incoming attacks ×1.3, spotlights: The liver, McGregor's straight, Teeps, Body kicks, Hooks and uppercuts, MMA, Superman punch, Adesanya's feints, Knees and elbows, Ruffy in and out, Long strings, Spinning attacks, Lead side kick, Clinch, Pull counters, Question mark kick, McGregor's kicks and spins, Ruffy's spins
 - **Counters and defence**: incoming attacks ×2.6, spotlights: Pull counters, Adesanya's check hook, Teeps, The liver, Hooks and uppercuts, MMA, Long strings, Body kicks, Knees and elbows, McGregor's straight, Lead side kick, Clinch
 - **Kicks**: incoming attacks ×1.6, spotlights: Body kicks, Adesanya's feints, Teeps, Lead side kick, Question mark kick, Spinning attacks, Superman punch, McGregor's kicks and spins, Knees and elbows, The liver, Long strings, Ruffy's spins, Hooks and uppercuts
+- **Opponent**: incoming attacks ×1, spotlights: 
 
 | spotlight | spoken | setup | family |
 |---|---|---|---|
@@ -35,6 +36,65 @@ Three options, all hard. Every round mixes everything. Every ~2 minutes a **spot
 | MMA | Spotlight: MMA. Shots, knees, superman punch. | `1, 2 | 1, 2 | 1, 2, double leg` | mm1, mm2, mm3, mm5, mm6, mm14, mm17, mm18, x07 |
 | Knees and elbows | Spotlight: knees and elbows. Get inside. | `3, rear elbow, lead elbow, step out` | mm5, mm7, mm8, mm9, e05, e06, e07, cl2, mm15 |
 | Spinning attacks | Spotlight: spinning attacks. Set them up first. | `2, 3, spinning back elbow` | mm11, mm12, ru05, x04, x05, mc07, ru03 |
+
+## Opponent mode
+
+Situations instead of combos: the coach describes what the opponent does, you choose the answer. Round 1 names his habits and gives one answer after the window; round 2 uses only the short tell; round 3 he switches to a new habit and you're down on points.
+
+**The pressure fighter**: Walks you down, overhand, then shoots. Throws: overhand, jab cross, double leg, blitz, body hook.
+
+| tell | short call | answers | why |
+|---|---|---|---|
+| He walks in with his chin up. | He's walking in! | pull, 2 / 2, step out / pull, check hook, pivot out | Walking in square with the chin up: meet him with the straight or the check hook, never back straight up. |
+| He ducks his head on the way in. | Head's down! | lead uppercut, 2 / rear uppercut, 3 / clinch, knee, knee, frame out | A lowered head is uppercut and knee territory. |
+| He shoots right after his overhand. | Overhand! | sprawl, 1, 2 / pull, 2, sprawl, 2 | Make the overhand miss, and be ready to sprawl the shot behind it. |
+| (round 3) Now he feints the shot to draw your hands down. | Level change! | up jab, 2 / rear uppercut, 3 / lead head kick | If he fakes low, your hands stay up and the up jab or uppercut meets his head. |
+
+**The counter-puncher**: Waits, pulls, counters your cross. McGregor-type. Throws: cross, lead hook, jab, spinning back fist.
+
+| tell | short call | answers | why |
+|---|---|---|---|
+| He pulls back every time you jab. | He's pulling! | feint 1, step in, 2 / 1, 1, 2 / body jab, 2 | If he pulls from the jab, the second jab or a step-in 2 catches him at the end of his pull. |
+| He counters your cross with a left hook. | Watch the hook! | 2, roll, 3 / 2, pull, 2 / feint 2, 3, 2 | Throw the 2 and roll under his answer; or fake the 2 and hook as he counters. |
+| He stays at long range and waits. | He's waiting! | calf kick, 2 / teep, 1, 2 / oblique kick, 1, 2 | A waiting counter-puncher gets kicked: calf, teep, oblique, so he has to come to you. |
+| (round 3) Now he's leading with his own jab to draw your counter. | His jab! | parry, 1, 2 / slip, 2 / pull, 2 | Now you're the counter-puncher: parry or slip the jab and fire back. |
+
+**The kicker**: Long, kicks a lot, hands low. Adesanya/Pereira-type. Throws: body kick, calf kick, lead head kick, teep, rear low kick.
+
+| tell | short call | answers | why |
+|---|---|---|---|
+| He throws a body kick every time you step in. | Body kick coming! | catch, 2 / check, 2 / step back, 2 | Catch it or check it, then the cross while he stands on one leg. |
+| He kicks with his hands down. | Hands are low! | 1, 2, lead head kick / step in, 2, 3, step out / superman punch, 3 | Hands down while kicking means the head is open: close the gap with punches. |
+| He lifts his leg to check your calf kick. | He's checking! | feint low kick, rear head kick / feint kick, 2 / feint kick, superman punch | Fake the calf kick; while he's on one leg checking, go high or punch. |
+| (round 3) Now he throws a teep the moment you get close. | Teep! | parry, 1, 2 / catch, rear body kick / angle out, low kick | Sweep or catch the teep and punish the standing leg. |
+
+**The brawler**: Wide hooks, overextends, gets tired. Throws: lead hook, rear hook, overhand, blitz.
+
+| tell | short call | answers | why |
+|---|---|---|---|
+| He loads up a wide hook. | Wide hook! | 1, 2 / 2, step out / pull, check hook, pivot out | Straight beats wide: go down the middle before the hook arrives. |
+| He leans forward when he swings. | He's leaning! | rear uppercut, 3 / lead uppercut, 2 / 3, knee, step out | A leaning brawler walks into uppercuts and knees. |
+| He stops to breathe after his combinations. | He's tired! | 1, 3, 2, 3, 2 / liver shot, 3, 2 / 2, liver shot, 3, step out | When he stops, you start: go to the body and finish up top. |
+| (round 3) Now he clinches you every time he gets close. | Clinch! | frame out, 2 / clinch, knee, rear elbow, frame out / 3, rear elbow, step out | Frame off and punish, or win the clinch with knees and elbows. |
+
+**The southpaw**: Open stance: his lead foot fights yours. Throws: straight left, body kick, jab, lead hook.
+
+| tell | short call | answers | why |
+|---|---|---|---|
+| His lead foot is outside yours. | Win the foot! | step in, 2, 3, step out / 2, 3, rear body kick / feint 1, 2 | Get your lead foot outside his, and the 2 and the rear body kick go to his open side. |
+| He throws the straight left down the middle. | Straight left! | slip, 2 / pull, 2 / parry, 2 | Slip outside his left and the 2 is already loaded. |
+| He kicks your liver with his rear body kick. | Liver kick! | block, 2 / catch, 2 / step back, 2 | Elbow down on the liver kick, then the 2 straight back. |
+| (round 3) Now he's circling to his right, away from your 2. | He's circling! | rear body kick, 2 / 3, 2 / lead body kick, 2 | Cut him off: a kick or a hook to the side he's circling to, then the 2. |
+
+**Situations (every opponent)**
+
+| situation | answers |
+|---|---|
+| He's on the fence. | 1, 3, 2 / liver shot, 3 / 2, 3, rear body kick |
+| He's backing up. | step in, 2, 3 / superman punch / 1, 1, 2 |
+| He's covering high. | liver shot, 3 / body jab, 2 / 1, rear body kick |
+| He's out of range. | teep, 1, 2 / calf kick, 2 / 1, side kick |
+| He's hurt! Finish him. | 1, 3, 2, 3, 2 / liver shot, 3, 2, 3 / 2, 3, knee, step out |
 
 ## Combos
 
@@ -342,6 +402,9 @@ A forced pause after the last combo, an alert chirp, then a **different voice** 
 | d43 | cross | roll, 3, 2 |  | Roll under the cross, come up with the hook and the cross. | [evolve_headmove] |
 | d44 | double leg | sprawl, 1, 2 |  | Hips back and down, then up and punish. | [coach] |
 | d45 | teep | catch, rear body kick |  | Catch the teep and kick the standing leg's side while they hop. | [evolve_teep_def] |
+| d46 | straight left | slip, 2 |  | Slip outside the southpaw's straight left; the 2 comes down his open side. | [coach] |
+| d47 | straight left | pull, 2 |  | Pull from the straight left and counter with the 2. | [coach] |
+| d48 | spinning back fist | pull, 2 |  | Lean back from the spin; his back is to you for a moment, so the 2 lands as he comes round. | [coach] |
 
 ## Flurries
 
@@ -375,6 +438,7 @@ Changes from v1:
 - v6: Milan found single-theme rounds boring. Now there are 3 options (Fight mix hard / technical, Counters and defence), every round mixes everything, and the fighter setups are 2-minute spotlights. Added hooks (1, 3, 2), the liver shot, uppercuts, clinch on the bag, and long fast strings. No '1, 2, 3' (Milan: it doesn't make sense to him; 1, 3, 2 instead), and the audit enforces that. Lone-jab traps (1 | 1 | 1 ...) and near-duplicates removed.
 - v6: all sessions are hard (Milan: no easy options). Third option is Kicks (everything, kick-heavy). Added the lead side kick.
 - v7: Milan's log: more teeps, MMA, knees, elbows, spins, and old combos back in. Restored 20 v5 combos and 11 traps (no '1, 2, 3', no lone-jab traps), added teeps, MMA shots/superman/switch knee, spinning back elbow/back fist, 4 new spotlights; long strings weighted down (hard to follow).
+- v8: opponent mode. Each opponent has 3 habits (tell → several valid answers) plus one habit he switches to in round 3; generic fight situations; incoming attacks from his own weapons. Challenges and flurries now start on a beep.
 
 Automatic checks (run on every build of this file): **all passed.**
 

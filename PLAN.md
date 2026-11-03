@@ -178,3 +178,15 @@ moments; phone diagonal in front.
 - Camera: the lead hand isn't judged on coming back; every round is recorded (MediaRecorder, IndexedDB, last 6 kept)
   with marked moments to jump to; live cues off by default.
 - Incoming attacks: settings bumped once to at least 25%.
+
+## v8 (2026-11-03): opponent mode
+
+Milan: the app hadn't changed what he does, because he still just throws what he's told. He chose opponent mode
+(situations instead of combos) and liked the idea of camera scores (next). Challenges and flurries were unclear about
+when to start, so now it's explain, "Ready.", beep, go, beep to stop.
+
+- 5 opponents (pressure fighter, counter-puncher, kicker, brawler, southpaw), each with 3 habits (tell, short call,
+  several valid answers, why), one habit he adapts to in round 3, his own incoming attacks, and generic situations
+  (fence, backing up, covering high, out of range, hurt = flurry). All answers pass the same combo audit.
+- Next: camera scores (strike counts in flurries/challenges, reaction time to incoming calls) and a technique lab
+  (record reps of one technique, research-based checklist, side-by-side with a clip Milan imports).

@@ -22,7 +22,7 @@ GAP = 0.6  # seconds of silence between clips: the app starts each clip ~0.45 s 
 
 NUM = {"1": "one", "2": "two", "3": "three", "4": "four"}
 # Keys whose string values are spoken lines (app.js says them by text: clip id "x:" + text).
-SPOKEN = {"say", "cue", "teach", "focus", "tip", "intro", "cues"}
+SPOKEN = {"say", "cue", "teach", "focus", "tip", "intro", "cues", "tell", "short"}
 
 
 def say_token(tok):
@@ -79,7 +79,14 @@ def collect(lib):
             clips["s:" + ", ".join(st)] = (say_step(st), "+12%", VOICE)
         for t in tokens_of(d["answer"]):
             clips["t:" + t] = (say_token(t), "+15%", VOICE)
-    for group in ("combos", "traps", "spotlights", "sessions", "warmup", "flurries"):
+    # Opponent mode: every answer is a whole-combo clip too.
+    for h in [h for o in lib.get("opponents", []) for h in o["habits"] + [o["adapt"]]] + lib.get("situations", []):
+        for ans in h["answers"]:
+            for st in steps_of(ans):
+                clips["s:" + ", ".join(st)] = (say_step(st), "+12%", VOICE)
+            for tok in tokens_of(ans):
+                clips["t:" + tok] = (say_token(tok), "+15%", VOICE)
+    for group in ("combos", "traps", "spotlights", "sessions", "warmup", "flurries", "opponents", "situations"):
         for text in lines(lib[group]):
             clips["x:" + text] = (text, "+0%", VOICE)
     for text in lines(lib["phrases"], all_strings=True):

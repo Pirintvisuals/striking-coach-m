@@ -35,7 +35,16 @@ def steps(s):
     return [[t.strip() for t in st.split(",") if t.strip()] for st in s.split("|")]
 
 
-for e in ALL:
+# Opponent answers are checked by the same rules (as one-step combos).
+OPP = [{"id": f"{o['id']}:{i}", "calls": ans, "src": ["coach"]}
+       for o in lib.get("opponents", []) for i, h in enumerate(o["habits"] + [o["adapt"]]) for ans in h["answers"]]
+OPP += [{"id": f"situation:{i}", "calls": ans, "src": ["coach"]} for i, h in enumerate(lib.get("situations", [])) for ans in h["answers"]]
+DEF_ATTACKS = {d["attack"] for d in lib["defence"]}
+for o in lib.get("opponents", []):
+    for a_ in o["attacks"]:
+        if a_ not in DEF_ATTACKS:
+            problems.append(f"opponent {o['id']}: no incoming entry for '{a_}'")
+for e in ALL + OPP:
     st = steps(e["calls"])
     for i, s in enumerate(st):
         last_step = i == len(st) - 1
@@ -79,7 +88,7 @@ for sid, sp in lib["spotlights"].items():
         if i not in BY_ID:
             problems.append(f"spotlight {sid}: unknown id '{i}'")
 for se in lib["sessions"]:
-    for sid in se["spotlights"]:
+    for sid in se.get("spotlights", []):
         if sid not in lib["spotlights"]:
             problems.append(f"session {se['id']}: unknown spotlight '{sid}'")
 
@@ -107,12 +116,25 @@ out += ["## Sessions and spotlights", "",
         "Three options, all hard. Every round mixes everything. Every ~2 minutes a **spotlight** "
         "(one short spoken line) makes one setup and its family come up more often, then the next spotlight takes over.", ""]
 for se in lib["sessions"]:
-    out.append(f"- **{se['name']}**: incoming attacks ×{se['def']}, spotlights: " + ", ".join(lib["spotlights"][x]["name"] for x in se["spotlights"]))
+    out.append(f"- **{se['name']}**: incoming attacks ×{se['def']}, spotlights: " + ", ".join(lib["spotlights"][x]["name"] for x in se.get("spotlights", [])))
 out += ["", "| spotlight | spoken | setup | family |", "|---|---|---|---|"]
 for sid, sp in lib["spotlights"].items():
     su = BY_ID[sp["setup"]]
     out.append(f"| {sp['name']} | {sp['say']} | `{su.get('calls') or 'incoming ' + su['attack'] + ' → ' + su['answer']}` | {', '.join(sp['family'])} |")
 out.append("")
+
+if lib.get("opponents"):
+    out += ["## Opponent mode", "",
+            "Situations instead of combos: the coach describes what the opponent does, you choose the answer. Round 1 names his habits and "
+            "gives one answer after the window; round 2 uses only the short tell; round 3 he switches to a new habit and you're down on points.", ""]
+    for o in lib["opponents"]:
+        out += [f"**{o['name']}**: {o['style']} Throws: {', '.join(o['attacks'])}.", "", "| tell | short call | answers | why |", "|---|---|---|---|"]
+        for h in o["habits"] + [dict(o["adapt"], tell="(round 3) " + o["adapt"]["tell"])]:
+            out.append(f"| {h['tell']} | {h['short']} | {' / '.join(h['answers'])} | {h['why']} |")
+        out.append("")
+    out += ["**Situations (every opponent)**", "", "| situation | answers |", "|---|---|"]
+    out += [f"| {h['tell']} | {' / '.join(h['answers'])} |" for h in lib["situations"]]
+    out.append("")
 
 out += ["## Combos", "", "| id | call | fighter | tags | why it works | src |", "|---|---|---|---|---|---|"]
 out += [f"| {e['id']} | {e['calls']} | {fighter(e)} | {' '.join(e['tags'])} | {e['why']} | {refs(e)} |" for e in lib["combos"]]

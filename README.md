@@ -14,12 +14,18 @@ long fast strings, rapid fire, flurries, a challenge, and a lot of incoming atta
 - **1. Fight mix**: everything.
 - **2. Counters and defence**: everything, with about twice as many incoming attacks and more pull counters.
 - **3. Kicks**: everything, but kick-heavy, and most incoming attacks are kicks.
+- **4. Opponent**: no combo list to follow. The coach describes **what the opponent does** and **you choose the answer**.
+  Pick who you fight on the home screen: the pressure fighter, the counter-puncher, the kicker, the brawler, or the southpaw.
+  Each one has 3 habits ("He drops his hands when he kicks"). Round 1 names them and gives one good answer after
+  your window. Round 2 only uses the short call ("Hands are low!"), so you have to remember. In round 3 you're down on
+  points and he switches to a new habit. He also attacks you with his own weapons, and "He's hurt! Finish him" is a flurry.
 
 Every ~2 minutes a **spotlight** changes: one short line ("Spotlight: the liver. Go downstairs."),
 the setup once, and then that family of combos comes up more often among everything else. The spotlights
 come from the McGregor / Adesanya / Ruffy research and continue where the last session stopped.
 
 Session: short intro → 2-min warm-up (real combos) → 3 × 10-min rounds → 3-min burnout, with 2-min rests.
+Flurries and challenges are explained first, then "Ready." and a **beep**: go on the beep, stop on the next beep.
 Rests are short: "Rest", the camera report if it's on, and "Ten seconds". During a session, **+10 s** jumps ahead
 ten seconds, like skipping in a video. **Combos** on the home screen lists every combo, trap and incoming
 attack with why it works.
