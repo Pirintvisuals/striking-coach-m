@@ -16,8 +16,8 @@ long fast strings, rapid fire, flurries, a challenge, and a lot of incoming atta
 - **3. Kicks**: everything, but kick-heavy, and most incoming attacks are kicks.
 - **4. Opponent**: no combo list to follow. The coach describes **what the opponent does** and **you choose the answer**.
   Pick who you fight on the home screen: the pressure fighter, the counter-puncher, the kicker, the brawler, or the southpaw.
-  Each one has 3 habits ("He drops his hands when he kicks"). Round 1 names them and gives one good answer after
-  your window. Round 2 only uses the short call ("Hands are low!"), so you have to remember. In round 3 you're down on
+  Each one has 3 habits ("He drops his hands when he kicks"). The coach never tells you what to throw or how to defend (no combos, no answers after his attacks): you read it and
+  choose. Round 1 describes the habits in full. Round 2 only uses the short call ("Hands are low!"). In round 3 you're down on
   points and he switches to a new habit. He also attacks you with his own weapons, and "He's hurt! Finish him" is a flurry.
 
 Every ~2 minutes a **spotlight** changes: one short line ("Spotlight: the liver. Go downstairs."),

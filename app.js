@@ -286,7 +286,9 @@ async function doItem(e, p) {
     if (!(ic && ic.alert && audio.ok && settings.voice !== 'phone')) await clip('fx:alert');
     await sayIncoming(e.attack);
     await gapWait(p.react * 1000);
-    if (settings.sayAnswer) { if (!SIM) $('answer').textContent = '→ ' + e.answer; await sayTokens(e.answerSteps); }
+    // In opponent mode nobody tells you the defence: you read it and answer yourself.
+    if (settings.sayAnswer && !(run.opp && run.inRound)) { if (!SIM) $('answer').textContent = '→ ' + e.answer; await sayTokens(e.answerSteps); }
+    else await gapWait(1800);
     await gapWait(stepGap(e.answerSteps, p));
     return;
   }
@@ -545,18 +547,13 @@ async function mixRound(spec) {
 
 // Opponent mode: the coach describes what the opponent does; Milan chooses the answer.
 // Round 1 names the habits and gives an answer afterwards; round 2 only the short tell; round 3 he adapts.
-async function oppSituation(h, full, reveal, p) {
+async function oppSituation(h, full, p) {
+  run.lastSit = h;
+  // Only the situation. No answers, spoken or on screen: Milan decides what to throw.
   showCall(full ? h.tell : h.short, true);
   await say(full ? h.tell : h.short);
-  const longest = Math.max(...h.answers.map(a => parse(a)[0].length));
-  await gapWait((1800 + longest * 450) / tempo()); // your window: throw your answer now
-  if (reveal) {
-    const ans = pick(h.answers);
-    if (!SIM) $('answer').textContent = 'Answers: ' + h.answers.join('  ·  ');
-    await say(LIB.phrases.oppAnswer);
-    await sayTokens(parse(ans)[0]);
-    await gapWait(stepGap(parse(ans)[0], p));
-  } else await gapWait(recNow(p) * 1000);
+  const longest = Math.max(...h.answers.map(x => parse(x)[0].length));
+  await gapWait((1800 + longest * 450) / tempo() + recNow(p) * 1000); // your window
 }
 
 async function opponentRound(spec) {
@@ -590,24 +587,19 @@ async function opponentRound(spec) {
     const r = rand();
     if (r < 0.4) { // one of his habits
       // Round 3: his new habit comes up a lot, and is named the first time.
-      const h = n >= 3 && rand() < 0.45 ? opp.adapt : pick(habits);
+      let h = n >= 3 && rand() < 0.45 ? opp.adapt : pick(habits);
+      if (h === run.lastSit) h = pick(habits.filter(x => x !== h)) || h; // never the same call twice in a row
       const times = seen.get(h) || 0;
       const full = (n === 1 && times < 2) || (h === opp.adapt && times < 1);
-      const reveal = full || (n === 1 ? rand() < 0.6 : rand() < 0.3);
       seen.set(h, times + 1);
-      await oppSituation(h, full, reveal, p);
+      await oppSituation(h, full, p);
       run.counts.habit = (run.counts.habit || 0) + 1;
-    } else if (r < 0.64 && attacks.length) { // he attacks with his own weapons
+    } else if (r < 0.7 && attacks.length) { // he attacks with his own weapons
       const d = pick(attacks.filter(x => !st.recent.includes(x.id))) || pick(attacks);
       remember(st, d);
       await doItem(d, p);
-    } else if (r < 0.76) { // a general fight situation (not "he's hurt": that one is the flurry)
-      await oppSituation(pick(LIB.situations.slice(0, 4)), true, rand() < 0.35, p);
-    } else { // keep the work rate up: a normal combo
-      let e = pickCore(sess.weights || {}, st);
-      if (estimateItem(e, p) > stopAt - clock.now()) e = pickCore({ snipe: 1 }, st, { short: true });
-      remember(st, e);
-      await doItem(e, p);
+    } else { // a general fight situation (not "he's hurt": that one is the flurry)
+      await oppSituation(pick(LIB.situations.slice(0, 4).filter(x => x !== run.lastSit)), true, p);
     }
     await camCue();
   }
