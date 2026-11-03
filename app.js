@@ -1259,5 +1259,15 @@ async function simulate() {
   if (SIM) { simulate().catch(e => { console.error(e); document.body.textContent = 'SIM ERROR ' + e.stack; }); return; }
   chosen = LS.get('next', 0) % LIB.sessions.length;
   renderHome();
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  if ('serviceWorker' in navigator) {
+    // When a new version has downloaded, switch to it straight away (not only on the next launch), unless a session is running.
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (reloaded || (run && !run.finished)) return;
+      reloaded = true; location.reload();
+    });
+    navigator.serviceWorker.register('sw.js').then(r => r.update()).catch(() => {});
+    navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.version) $('verInfo').textContent = 'Version ' + e.data.version; });
+    if (navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage('version');
+  }
 })();

@@ -1,5 +1,5 @@
 // Offline cache. Bump VERSION whenever any file changes so phones pick it up.
-const VERSION = 'audio-9';
+const VERSION = 'v9.1';
 const FILES = [
   './', 'index.html', 'style.css', 'app.js', 'camera.js', 'library.json', 'manifest.webmanifest',
   'audio/sprite.m4a', 'audio/sprite.json', 'audio/keepawake.mp4',
@@ -7,7 +7,8 @@ const FILES = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
+  // cache: 'reload' so the new version is fetched from the server, not from the browser's HTTP cache
+  e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES.map(f => new Request(f, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys()
@@ -36,6 +37,7 @@ async function rangeResponse(req) {
   });
 }
 
+self.addEventListener('message', e => { if (e.data === 'version' && e.source) e.source.postMessage({ version: VERSION }); });
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
