@@ -190,3 +190,14 @@ when to start, so now it's explain, "Ready.", beep, go, beep to stop.
   (fence, backing up, covering high, out of range, hurt = flurry). All answers pass the same combo audit.
 - Next: camera scores (strike counts in flurries/challenges, reaction time to incoming calls) and a technique lab
   (record reps of one technique, research-based checklist, side-by-side with a clip Milan imports).
+
+## v9 (2026-11-03): no answers, camera watches the opponent rounds, Technique lab, no takedowns
+
+- Opponent mode: no answers, no filler combos, no defence replies. Milan reads and chooses.
+- With the camera on, opponent rounds are scored. The camera detects strikes by itself (punch or kick, body or head),
+  head movement and sprawls. After each situation it checks whether he used the opening (each habit has a hidden
+  `expect`: body/head/kick/combo/counter/sprawl), his reaction time, and whether he defended the incoming attacks.
+  Missed openings and undefended attacks become moments in the video.
+- Technique lab: 6 moves with 5–6 pointers each; 5 reps on the beep; per-pointer ✔/✘ from the camera (pivot, hip,
+  height, chamber, guard, return, reach); slow motion; side by side with an imported reference clip synced on a marked impact.
+- No double or single legs on offence. MMA = takedown defence (sprawl, frame, punish) and clinch work.

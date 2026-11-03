@@ -1,5 +1,5 @@
 // Offline cache. Bump VERSION whenever any file changes so phones pick it up.
-const VERSION = 'audio-8';
+const VERSION = 'v9';
 const FILES = [
   './', 'index.html', 'style.css', 'app.js', 'camera.js', 'library.json', 'manifest.webmanifest',
   'audio/sprite.m4a', 'audio/sprite.json', 'audio/keepawake.mp4',

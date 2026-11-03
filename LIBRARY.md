@@ -4,14 +4,14 @@ Generated from `library.json` by `tools/build_library_md.py`. Edit the JSON, not
 
 Orthodox stance. 1 jab, 2 cross, 3 lead hook, 4 rear hook; **up jab** = lead-hand long uppercut from range; **check hook** = lead hook thrown while pivoting off the line. `|` separates the calls of a trap sequence. McGregor is southpaw: his straight left is Milan's **2**, and his kicks to his right side are mirrored here.
 
-**Totals:** 214 combos, 29 trap sequences, 48 incoming attacks with answers, 19 spotlights. 20 entries contain a spinning or flying technique; the engine caps them per round (1 per round, more during the McGregor/Ruffy spin spotlights), so jabs and straights stay far more frequent.
+**Totals:** 218 combos, 28 trap sequences, 52 incoming attacks with answers, 19 spotlights. 20 entries contain a spinning or flying technique; the engine caps them per round (1 per round, more during the McGregor/Ruffy spin spotlights), so jabs and straights stay far more frequent.
 
 ## Sessions and spotlights
 
 Three options, all hard. Every round mixes everything. Every ~2 minutes a **spotlight** (one short spoken line) makes one setup and its family come up more often, then the next spotlight takes over.
 
-- **Fight mix**: incoming attacks ×1.3, spotlights: The liver, McGregor's straight, Teeps, Body kicks, Hooks and uppercuts, MMA, Superman punch, Adesanya's feints, Knees and elbows, Ruffy in and out, Long strings, Spinning attacks, Lead side kick, Clinch, Pull counters, Question mark kick, McGregor's kicks and spins, Ruffy's spins
-- **Counters and defence**: incoming attacks ×2.6, spotlights: Pull counters, Adesanya's check hook, Teeps, The liver, Hooks and uppercuts, MMA, Long strings, Body kicks, Knees and elbows, McGregor's straight, Lead side kick, Clinch
+- **Fight mix**: incoming attacks ×1.3, spotlights: The liver, McGregor's straight, Teeps, Body kicks, Hooks and uppercuts, Takedown defence and clinch, Superman punch, Adesanya's feints, Knees and elbows, Ruffy in and out, Long strings, Spinning attacks, Lead side kick, Clinch, Pull counters, Question mark kick, McGregor's kicks and spins, Ruffy's spins
+- **Counters and defence**: incoming attacks ×2.6, spotlights: Pull counters, Adesanya's check hook, Teeps, The liver, Hooks and uppercuts, Takedown defence and clinch, Long strings, Body kicks, Knees and elbows, McGregor's straight, Lead side kick, Clinch
 - **Kicks**: incoming attacks ×1.6, spotlights: Body kicks, Adesanya's feints, Teeps, Lead side kick, Question mark kick, Spinning attacks, Superman punch, McGregor's kicks and spins, Knees and elbows, The liver, Long strings, Ruffy's spins, Hooks and uppercuts
 - **Opponent**: incoming attacks ×1, spotlights: 
 
@@ -33,7 +33,7 @@ Three options, all hard. Every round mixes everything. Every ~2 minutes a **spot
 | Lead side kick | Spotlight: the lead side kick. Keep them long. | `side kick, 1, 2` | sk1, sk2, sk4, sk5, sk6 |
 | Superman punch | Spotlight: the superman punch. Sell the kick. | `rear body kick | rear body kick | superman punch` | sm1, sm2, sm3, sm4, sm5 |
 | Teeps | Spotlight: the teep. Own the distance. | `teep, 1, 3, 2` | tp1, tp2, tp4, tp5, tp6, tp7, tp8, t05, t13 |
-| MMA | Spotlight: MMA. Shots, knees, superman punch. | `1, 2 | 1, 2 | 1, 2, double leg` | mm1, mm2, mm3, mm5, mm6, mm14, mm17, mm18, x07 |
+| Takedown defence and clinch | Spotlight: takedown defence and clinch. Sprawl, frame, punish. | `sprawl, frame out, 2` | td2, td3, td4, x06, x07, mm17, cl7, cl8, cl9, cl10, mm16 |
 | Knees and elbows | Spotlight: knees and elbows. Get inside. | `3, rear elbow, lead elbow, step out` | mm5, mm7, mm8, mm9, e05, e06, e07, cl2, mm15 |
 | Spinning attacks | Spotlight: spinning attacks. Set them up first. | `2, 3, spinning back elbow` | mm11, mm12, ru05, x04, x05, mc07, ru03 |
 
@@ -41,7 +41,7 @@ Three options, all hard. Every round mixes everything. Every ~2 minutes a **spot
 
 Situations instead of combos: the coach describes what the opponent does, you choose the answer. Round 1 names his habits and gives one answer after the window; round 2 uses only the short tell; round 3 he switches to a new habit and you're down on points.
 
-**The pressure fighter**: Walks you down, overhand, then shoots. Throws: overhand, jab cross, double leg, blitz, body hook.
+**The pressure fighter**: Walks you down, overhand, then shoots. Throws: overhand, jab cross, double leg, single leg, body lock, blitz.
 
 | tell | short call | answers | why |
 |---|---|---|---|
@@ -68,7 +68,7 @@ Situations instead of combos: the coach describes what the opponent does, you ch
 | He lifts his leg to check your calf kick. | He's checking! | feint low kick, rear head kick / feint kick, 2 / feint kick, superman punch | Fake the calf kick; while he's on one leg checking, go high or punch. |
 | (round 3) Now he throws a teep the moment you get close. | Teep! | parry, 1, 2 / catch, rear body kick / angle out, low kick | Sweep or catch the teep and punish the standing leg. |
 
-**The brawler**: Wide hooks, overextends, gets tired. Throws: lead hook, rear hook, overhand, blitz.
+**The brawler**: Wide hooks, overextends, gets tired. Throws: lead hook, rear hook, overhand, blitz, clinch.
 
 | tell | short call | answers | why |
 |---|---|---|---|
@@ -297,9 +297,6 @@ Situations instead of combos: the coach describes what the opponent does, you ch
 | tp7 | liver shot, 3, teep |  | teep kick liver | Body, head, then teep them away before they can answer. | [coach] |
 | tp8 | teep, rear body kick |  | teep kick body | Teep to the belly, then the rear kick to the ribs as they come back. | [coach] |
 | mm1 | feint level change, superman punch |  | mma feint snipe | Fake the shot so they drop their hands; the superman punch lands over them. | [coach] |
-| mm2 | 1, 2, double leg |  | mma | Punches bring their guard up; shoot the double under it. | [coach] |
-| mm3 | 2, double leg |  | mma | The cross makes them shell; change levels and shoot. | [coach] |
-| mm4 | double leg, sprawl, 1, 2 |  | mma counter | Shoot, they sprawl, you sprawl back out and punish on the way up. (Shadowboxing drill.) | [coach] |
 | mm5 | 1, 2, switch knee |  | mma knee | The cross brings them forward; switch and drive the lead knee. | [coach] |
 | mm6 | switch knee, 2 |  | mma knee | Switch knee to the body, land forward into the cross. | [coach] |
 | mm7 | 3, knee, step out |  | knee hook exit | The hook turns them; the rear knee comes up the middle; leave. | [coach] |
@@ -313,7 +310,14 @@ Situations instead of combos: the coach describes what the opponent does, you ch
 | mm15 | oblique kick, 2, 3, rear elbow |  | mma kick elbow | Stop the step with the oblique, close with 2, 3, finish with the elbow. | [coach] |
 | mm16 | clinch, knee, knee, frame out, superman punch |  | clinch knee mma | Knees in the clinch, frame off, superman punch as they come back in. | [coach] |
 | mm17 | sprawl, knee |  | mma knee counter | Sprawl their shot and come up with the knee as they lift their head. | [coach] |
-| mm18 | up jab, 2, double leg |  | mma jab | Up jab and cross raise their guard; shoot under it. | [coach] |
+| td1 | sprawl, frame out, 2 |  | mma counter | Sprawl the shot, frame their head away as you stand, cross as they come up. | [coach] |
+| td2 | sprawl, knee, frame out |  | mma knee counter | Sprawl, knee as their head comes up, frame off and reset. | [coach] |
+| td3 | 1, 2, sprawl, 1, 2 |  | mma counter | They duck under your punches for the legs: sprawl, then back to the one two. | [coach] |
+| td4 | sprawl, step out, 1, 2 |  | mma counter exit | Sprawl and circle off the cage line before you punch back. | [coach] |
+| cl7 | clinch, knee, rear elbow, frame out, 2 |  | clinch knee elbow mma | Knee, elbow on the break, frame, cross. | [coach] |
+| cl8 | 3, clinch, knee, knee, knee, frame out |  | clinch knee mma | Hook to get inside, three knees, frame out. | [coach] |
+| cl9 | frame out, 2, 3, step out |  | clinch mma exit | Break their clinch with the frame and punish the gap. | [coach] |
+| cl10 | clinch, lead elbow, rear elbow, frame out |  | clinch elbow mma | Elbows both sides off the clinch, then frame out. | [coach] |
 
 ## Trap sequences
 
@@ -349,7 +353,6 @@ The repeated calls condition the opponent; the last call breaks the pattern. Lat
 | t20 | feint 2 | feint 2 | 1, body 2 |  | Cross feints make them cover their face; the real cross goes to the body. | [coach] |
 | ta4 | shoulder feint | hip feint | shoulder feint, rear head kick | Adesanya | Feints with nothing behind them teach them to stop reacting; then the real kick comes off the same look. | [sherdog_adesanya], [sk_adesanya_feints] |
 | tr2 | step in, 2, step out | step in, 2, step out | step in, 2, 3, back kick | Ruffy | Darting in and out makes them wait for the exit; this time keep turning into the back kick. | [cageside_ruffy_llontop], [user_lead] |
-| tm4 | 1, 2 | 1, 2 | 1, 2, double leg |  | Two one twos make them shell and wait for punches; the third time you shoot. | [coach] |
 
 ## Incoming attacks
 
@@ -405,6 +408,10 @@ A forced pause after the last combo, an alert chirp, then a **different voice** 
 | d46 | straight left | slip, 2 |  | Slip outside the southpaw's straight left; the 2 comes down his open side. | [coach] |
 | d47 | straight left | pull, 2 |  | Pull from the straight left and counter with the 2. | [coach] |
 | d48 | spinning back fist | pull, 2 |  | Lean back from the spin; his back is to you for a moment, so the 2 lands as he comes round. | [coach] |
+| d49 | single leg | sprawl, frame out, 2 |  | Sprawl the leg back, frame the head, cross as you separate. | [coach] |
+| d50 | double leg | sprawl, knee, frame out |  | Sprawl, knee as they come up, frame off. | [coach] |
+| d51 | body lock | frame out, 2 |  | Hips back, frame on the neck and hip, break the lock and cross. | [coach] |
+| d52 | clinch | clinch, knee, frame out |  | Win the inside position and knee before they settle. | [coach] |
 
 ## Flurries
 
@@ -439,6 +446,7 @@ Changes from v1:
 - v6: all sessions are hard (Milan: no easy options). Third option is Kicks (everything, kick-heavy). Added the lead side kick.
 - v7: Milan's log: more teeps, MMA, knees, elbows, spins, and old combos back in. Restored 20 v5 combos and 11 traps (no '1, 2, 3', no lone-jab traps), added teeps, MMA shots/superman/switch knee, spinning back elbow/back fist, 4 new spotlights; long strings weighted down (hard to follow).
 - v8: opponent mode. Each opponent has 3 habits (tell → several valid answers) plus one habit he switches to in round 3; generic fight situations; incoming attacks from his own weapons. Challenges and flurries now start on a beep.
+- v9: Milan doesn't want to shoot takedowns himself: all double/single-leg offence removed. MMA is now takedown defence (sprawl, frame, punish) and clinch work; more incoming takedowns and clinches.
 
 Automatic checks (run on every build of this file): **all passed.**
 

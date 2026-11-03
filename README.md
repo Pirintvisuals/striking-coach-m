@@ -14,7 +14,8 @@ long fast strings, rapid fire, flurries, a challenge, and a lot of incoming atta
 - **1. Fight mix**: everything.
 - **2. Counters and defence**: everything, with about twice as many incoming attacks and more pull counters.
 - **3. Kicks**: everything, but kick-heavy, and most incoming attacks are kicks.
-- **4. Opponent**: no combo list to follow. The coach describes **what the opponent does** and **you choose the answer**.
+- **4. Opponent** (with the camera on, it also watches you: did you use the opening, how fast, did you defend his
+  attacks; you hear "Point!", "Too late!" or "You got hit", and get a score in the rest. It never says what to throw): no combo list to follow. The coach describes **what the opponent does** and **you choose the answer**.
   Pick who you fight on the home screen: the pressure fighter, the counter-puncher, the kicker, the brawler, or the southpaw.
   Each one has 3 habits ("He drops his hands when he kicks"). The coach never tells you what to throw or how to defend (no combos, no answers after his attacks): you read it and
   choose. Round 1 describes the habits in full. Round 2 only uses the short call ("Hands are low!"). In round 3 you're down on
@@ -39,6 +40,19 @@ attack with why it works.
 - **Settings → Voice**: "Recorded clips" or "Phone voice only". In both modes, a combo that isn't fully
   in the recorded clips is said as one sentence by the phone voice. The app never switches voices mid-combo,
   because that's what made numbers disappear on iPhone in v2.
+
+## Technique lab
+
+**Technique lab** on the home screen: pick a move (rear head kick, lead head kick, rear body kick, lead side
+kick, spinning back kick, the 2). You see the researched pointers for it. Tap **Start 5 reps**: stand in your
+stance for 3 s, then for each rep the coach says the move, **beep**, you throw it. After each rep it says the **one
+thing to fix** ("Turn the hip over.") or "Good rep", and fills a table, one row per pointer with ✔ / ✘ per rep.
+Pointers a single camera can't measure (shin vs foot, chin behind the shoulder) are marked "check this in slow motion".
+
+The reps are recorded. **Watch the reps in slow motion** opens the video at 0.25× with a marker per rep. Use **Import
+reference clip** to load a video from your phone (for example a saved clip of Adesanya's kick), scrub it to the moment
+of impact and tap **Mark impact**. Tapping a rep then plays your rep and the reference together, lined up, in slow
+motion. The reference stays on your phone and is reused for that move.
 
 ## Camera coach (optional)
 

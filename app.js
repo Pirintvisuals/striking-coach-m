@@ -288,7 +288,11 @@ async function doItem(e, p) {
     await gapWait(p.react * 1000);
     // In opponent mode nobody tells you the defence: you read it and answer yourself.
     if (settings.sayAnswer && !(run.opp && run.inRound)) { if (!SIM) $('answer').textContent = '→ ' + e.answer; await sayTokens(e.answerSteps); }
-    else await gapWait(1800);
+    else {
+      const t0 = performance.now();
+      await gapWait(1800);
+      if (camOn() && Cam.coach.round && !Cam.coach.judgeDefence(t0 - p.react * 1000, 1800 + p.react * 1000, 'incoming ' + e.attack)) await say(LIB.phrases.gotHit);
+    }
     await gapWait(stepGap(e.answerSteps, p));
     return;
   }
@@ -388,7 +392,7 @@ function camEndRound() {
   run.recording = false;
   run.saving = Cam.stopRec().then(rec => {
     if (!rec || !rec.blob.size) return;
-    const moments = rep.moments.map(m => ({ s: Math.max(0, (m.t - rec.t0) / 1000), type: m.type })).filter(m => m.s > 0);
+    const moments = rep.moments.map(m => ({ s: Math.max(0, (m.t - rec.t0) / 1000), type: m.type, text: m.text })).filter(m => m.s > 0);
     return VDB.save({ id: date, date, sess, round: roundNo, blob: rec.blob, mime: rec.blob.type, moments, report: rep.text });
   }).catch(e => console.warn('saving video', e));
 }
@@ -553,7 +557,15 @@ async function oppSituation(h, full, p) {
   showCall(full ? h.tell : h.short, true);
   await say(full ? h.tell : h.short);
   const longest = Math.max(...h.answers.map(x => parse(x)[0].length));
-  await gapWait((1800 + longest * 450) / tempo() + recNow(p) * 1000); // your window
+  const win = (1800 + longest * 450) / tempo();
+  const t0 = performance.now();
+  await gapWait(win); // your window: the camera watches what you do with it
+  if (camOn() && Cam.coach.round) {
+    const res = Cam.coach.judgeAnswer(t0, win, h.expect || 'any', h.short);
+    if (res && res.ok) await say(LIB.phrases.point);
+    else if (res && !res.answered) await say(LIB.phrases.tooLate);
+  }
+  await gapWait(recNow(p) * 1000);
 }
 
 async function opponentRound(spec) {
@@ -984,6 +996,7 @@ function neededClips() { // [id, text] the app can say; mirrors collect() in too
   LIB.combos.forEach(e => tok(e.calls)); LIB.traps.forEach(e => tok(e.calls));
   LIB.defence.forEach(d => { out.push(['in:' + d.attack, `Incoming ${d.attack}!`]); tok(d.answer); });
   for (const sp of Object.values(LIB.spotlights)) out.push(['x:' + sp.say, sp.say]);
+  for (const t of LIB.techniques || []) for (const p of t.pointers) if (p.cue) out.push(['x:' + p.cue, p.cue]);
   const walk = v => typeof v === 'string' ? out.push(['x:' + v, v]) : Object.values(v).forEach(walk);
   walk(LIB.phrases);
   return out;
@@ -1043,11 +1056,13 @@ const VDB = {
     return new Promise((res, rej) => { const t = db.transaction('v', mode); const q = fn(t.objectStore('v')); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error); });
   },
   all() { return this.tx('readonly', s => s.getAll()); },
+  get(id) { return this.tx('readonly', s => s.get(id)); },
+  put(v) { return this.tx('readwrite', s => s.put(v)); },
   del(id) { return this.tx('readwrite', s => s.delete(id)); },
   async save(v) {
     await this.tx('readwrite', s => s.put(v));
-    const all = (await this.all()).sort((a, b) => a.id < b.id ? 1 : -1);
-    for (const old of all.slice(6)) await this.del(old.id);
+    const all = (await this.all()).filter(x => !x.ref).sort((a, b) => a.id < b.id ? 1 : -1);
+    for (const old of all.slice(8)) await this.del(old.id);
   },
 };
 const MOMENT = { rearDrop: 'Rear hand slow / dropped', leadDrop: 'Lead hand dropped low', hip: 'Weak hip on the 2',
@@ -1059,35 +1074,68 @@ async function renderVideos() {
   show('videos');
   $('videoBox').classList.add('hidden');
   let all = [];
-  try { all = (await VDB.all()).sort((a, b) => a.id < b.id ? 1 : -1); } catch (e) { $('videoList').textContent = 'Could not open saved videos: ' + e.message; return; }
+  try { all = (await VDB.all()).filter(x => !x.ref).sort((a, b) => a.id < b.id ? 1 : -1); } catch (e) { $('videoList').textContent = 'Could not open saved videos: ' + e.message; return; }
   $('videoList').innerHTML = all.length ? '' : '<p class="small">No recorded rounds yet. Turn on Settings → Camera coach and Record rounds.</p>';
   for (const v of all) {
     const b = document.createElement('button');
     b.className = 'hist';
-    b.innerHTML = `<b>${v.sess} · round ${v.round}</b><div class="small">${new Date(v.date).toLocaleString('en-GB')} · ${(v.blob.size / 1e6).toFixed(0)} MB · ${v.moments.length} moments</div>`;
+    b.innerHTML = `<b>${v.sess}${v.round ? ' · round ' + v.round : ''}</b><div class="small">${new Date(v.date).toLocaleString('en-GB')} · ${(v.blob.size / 1e6).toFixed(0)} MB · ${v.moments.length} moments</div>`;
     b.onclick = () => playVideo(v);
     $('videoList').appendChild(b);
   }
 }
-function playVideo(v) {
+let refURL = null, rate = 1;
+async function showRef(v) {
+  const box = $('refBox'), el = $('refPlayer');
+  box.classList.toggle('hidden', !v.tech);
+  if (!v.tech) return null;
+  const ref = await VDB.get('ref:' + v.tech).catch(() => null);
+  if (refURL) { URL.revokeObjectURL(refURL); refURL = null; }
+  if (ref) { refURL = URL.createObjectURL(ref.blob); el.src = refURL; }
+  el.classList.toggle('hidden', !ref);
+  $('refInfo').textContent = ref ? (ref.impact != null ? `Reference impact at ${ref.impact.toFixed(1)} s.` : 'Scrub the reference to the moment of impact and tap "Mark impact".')
+    : 'Import a clip from your phone (e.g. a saved Adesanya kick) to watch it next to your reps.';
+  $('refMark').classList.toggle('hidden', !ref);
+  $('refFile').onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    await VDB.put({ id: 'ref:' + v.tech, ref: true, blob: f, impact: null });
+    showRef(v);
+  };
+  $('refMark').onclick = async () => { const r = await VDB.get('ref:' + v.tech); r.impact = el.currentTime; await VDB.put(r); showRef(v); };
+  return ref;
+}
+function setRate(r) {
+  rate = r;
+  $('videoPlayer').playbackRate = r; $('refPlayer').playbackRate = r;
+  for (const b of document.querySelectorAll('#rateBtns button')) b.classList.toggle('on', +b.dataset.r === r);
+}
+for (const b of document.querySelectorAll('#rateBtns button')) b.onclick = () => setRate(+b.dataset.r);
+async function playVideo(v) {
   if (videoURL) URL.revokeObjectURL(videoURL);
   videoURL = URL.createObjectURL(v.blob);
   const el = $('videoPlayer');
   el.src = videoURL;
+  const ref = await showRef(v);
+  setRate(v.tech ? 0.25 : 1);
   $('videoBox').classList.remove('hidden');
   $('videoReport').textContent = v.report || '';
   // Group moments of the same kind that are close together, so the list stays readable.
   const list = [];
   for (const m of [...v.moments].sort((a, b) => a.s - b.s)) {
     const last = list.findLast(x => x.type === m.type);
-    if (last && m.s - last.s < 8) continue;
+    if (last && m.s - last.s < 8 && !m.text) continue;
     list.push(m);
   }
   $('momentList').innerHTML = list.length ? '' : '<p class="small">No problems marked in this round.</p>';
   for (const m of list) {
     const b = document.createElement('button');
-    b.textContent = `${mmss(m.s)}  ${MOMENT[m.type] || m.type}`;
-    b.onclick = () => { el.currentTime = Math.max(0, m.s - 2.5); el.play(); };
+    b.textContent = `${mmss(m.s)}  ${m.text || MOMENT[m.type] || m.type}`;
+    b.onclick = async () => {
+      const lead = v.tech ? 0.4 : 2.5; // lab reps: jump to just before the rep; rounds: a bit earlier
+      el.currentTime = Math.max(0, m.s - lead); el.playbackRate = rate; el.play();
+      const r = v.tech && await VDB.get('ref:' + v.tech).catch(() => null);
+      if (r && r.impact != null) { const re = $('refPlayer'); re.currentTime = Math.max(0, r.impact - 0.8); re.playbackRate = rate; re.play(); }
+    };
     $('momentList').appendChild(b);
   }
   $('saveVideo').onclick = async () => {
@@ -1099,9 +1147,89 @@ function playVideo(v) {
     const a = document.createElement('a'); a.href = videoURL; a.download = file.name; a.click();
   };
   $('delVideo').onclick = async () => { if (confirm('Delete this video?')) { await VDB.del(v.id); renderVideos(); } };
+  if (v.labTable) $('videoReport').innerHTML = v.labTable;
   $('videoBox').scrollIntoView({ behavior: 'smooth' });
 }
 $('videosBtn').onclick = renderVideos;
+
+// ---------- Technique lab: pick a move, 5 reps on the beep, the camera checks the pointers ----------
+let labTech = null;
+function renderLab() {
+  $('labList').innerHTML = '';
+  for (const t of LIB.techniques) {
+    const b = document.createElement('button');
+    b.textContent = t.name; b.classList.toggle('on', t === labTech);
+    b.onclick = () => { labTech = t; renderLab(); };
+    $('labList').appendChild(b);
+  }
+  $('labDetail').classList.toggle('hidden', !labTech);
+  if (labTech) {
+    $('labPointers').innerHTML = labTech.pointers.map(p => `<li>${p.text}${p.check ? '' : ' <span class="small">(you check this in slow motion)</span>'}</li>`).join('');
+  }
+  $('labStatus').textContent = ''; $('labTable').innerHTML = '';
+  show('lab');
+}
+const MARK = v => v === true ? '✔' : v === false ? '✘' : '–';
+function labTableHTML(tech, results) {
+  const head = '<tr><th></th>' + results.map((_, i) => `<th>${i + 1}</th>`).join('') + '</tr>';
+  const rows = tech.pointers.filter(p => p.check).map(p => `<tr><td>${p.text.split(':')[0]}</td>` +
+    results.map(r => `<td>${r.seen ? MARK(r.checks[p.check]) : '·'}</td>`).join('') + '</tr>').join('');
+  return `<table class="labtable">${head}${rows}</table><p class="small">✔ good · ✘ fix it · – couldn't measure · · rep not seen</p>`;
+}
+$('labBtn').onclick = () => renderLab();
+$('labStart').onclick = () => {
+  const tech = labTech; if (!tech) return;
+  const unlocked = unlockAudio();
+  if (!Cam.supported()) { $('labStatus').textContent = 'This browser has no camera access.'; return; }
+  const camOK = Cam.start($('labVideo')); // inside the tap: camera permission
+  run = newRun({ id: 'lab', name: 'Technique lab' }, -1);
+  run.lab = true;
+  clock.reset();
+  $('labStart').disabled = true; $('labStop').classList.remove('hidden');
+  const P = LIB.phrases, results = [];
+  (async () => {
+    await unlocked;
+    await say(P.labIntro);
+    if (!(await camOK)) { $('labStatus').textContent = 'Camera could not start: ' + (Cam.error || 'unknown'); await say(P.camFail); return; }
+    const c = Cam.coach;
+    $('labStatus').textContent = 'Stand in your stance';
+    await say(P.labStance); c.startStep('guard'); await wait(3000);
+    for (let i = 0; i < 10 && c.cal.guard.filter(x => x.f).length < 12; i++) await wait(300); // slow phone: wait for enough frames
+    if (c.endStep() !== 'ok') { $('labStatus').textContent = "Couldn't see you: head to feet in view, decent light."; await say(P.camFail); return; }
+    c.paused = false;
+    const recOn = Cam.startRec(), marks = [];
+    for (let i = 0; i < 5; i++) {
+      $('labStatus').textContent = `Rep ${i + 1} of 5: ${tech.name}`;
+      await say(P.labRep[i]);
+      await sayTokens([tech.call]);
+      await wait(500);
+      await clip('fx:beep');
+      const t0 = performance.now();
+      await wait(2600);
+      const res = c.labRep(t0, performance.now(), tech);
+      results.push(res);
+      const fail = res.seen && tech.pointers.find(p => p.check && res.checks[p.check] === false);
+      marks.push({ t: t0, type: 'rep', text: `Rep ${i + 1}: ` + (!res.seen ? 'not seen' : fail ? fail.cue : 'good') });
+      $('labTable').innerHTML = labTableHTML(tech, results);
+      await say(!res.seen ? P.labMissed : fail ? fail.cue : P.labGood);
+      await wait(1200);
+    }
+    await say(P.labDone);
+    if (recOn) {
+      const rec = await Cam.stopRec();
+      if (rec && rec.blob.size) {
+        const date = new Date().toISOString();
+        await VDB.save({ id: date, date, sess: 'Technique lab: ' + tech.name, round: 0, tech: tech.id, blob: rec.blob, mime: rec.blob.type,
+          moments: marks.map(m => ({ s: Math.max(0, (m.t - rec.t0) / 1000), type: m.type, text: m.text })),
+          report: '', labTable: labTableHTML(tech, results) });
+        $('labStatus').innerHTML = 'Saved. <button id="labWatch">Watch the reps in slow motion</button>';
+        $('labWatch').onclick = async () => { const all = await VDB.all(); renderVideos().then(() => playVideo(all.find(x => x.id === date))); };
+      }
+    }
+  })().catch(e => { if (!(e instanceof Abort)) { console.error(e); $('labStatus').textContent = 'Error: ' + e.message; } })
+    .finally(() => { Cam.stop(); run = null; $('labStart').disabled = false; $('labStop').classList.add('hidden'); });
+};
+$('labStop').onclick = () => { if (run && run.lab) run.aborted = true; };
 
 // ---------- ?sim: whole session in virtual time, trace on screen and in window.__trace ----------
 async function simulate() {

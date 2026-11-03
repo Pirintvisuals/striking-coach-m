@@ -47,6 +47,11 @@ function features(lm, world) {
     hipYaw: yaw(w[POSE.lh], w[POSE.rh]),
     shYaw: yaw(w[POSE.ls], w[POSE.rs]),
     hipX: hip.x / torso, hipY: hip.y / torso,
+    noseX: (n.x - hip.x) / torso, noseY: (n.y - hip.y) / torso,
+    // Technique lab: which way each foot points (world coords: heel -> toe) and knee heights.
+    lfoot: yaw(w[29] || g(29), w[31] || g(31)), rfoot: yaw(w[30] || g(30), w[32] || g(32)),
+    footSeen: [29, 30, 31, 32].every(vis),
+    lk: (g(25).y - sh.y) / torso, rk: (g(26).y - sh.y) / torso,
     footX: (g(POSE.la).x + g(POSE.ra).x) / 2 / torso,
   };
 }
@@ -64,6 +69,8 @@ class Coach {
     this.paused = true;
     this.cal = { guard: [], jabs: [], twos: [], seen: [] };
     this.calStep = null;
+    this.ev = [];   // strikes the camera saw by itself (opponent mode): {t, kind, hand|leg, body|high}
+    this.mv = [];   // head/hip samples for defence and sprawls
   }
 
   // ---- input ----
@@ -73,7 +80,7 @@ class Coach {
     if (!f) return;
     this.frames.push({ t, f });
     while (this.frames.length && this.frames[0].t < t - 8000) this.frames.shift();
-    if (this.base && this.round && !this.paused) { this.checkCalls(t); this.checkGap(t, f); }
+    if (this.base && this.round && !this.paused) { this.checkCalls(t); this.checkGap(t, f); this.detect(t, f); }
   }
   onCall(token, t) {
     if (!this.base || !this.round || this.paused) return;
@@ -136,12 +143,102 @@ class Coach {
     this.round = { n, name, t0: null, rear: { n: 0, home: 0, slow: [] }, lead: { n: 0, home: 0, slow: [] }, kick: { n: 0, ok: 0 }, kickHip: [], head: { n: 0, ok: 0 }, ret: { n: 0, ok: 0 },
       hip: [], events: { rearDrop: [], leadDrop: [], chin: [], square: [], still: [] }, moments: [] };
     this.calls = []; this.cues = []; this.gap = {}; this.paused = false;
+    this.round.tStart = this.frames.length ? this.frames[this.frames.length - 1].t : 0;
   }
   endRound() {
     const r = this.round; this.round = null; this.paused = true;
     return r ? report(r, this.base) : null;
   }
   pause(p) { this.paused = p; if (p) this.gap = {}; }
+
+  // ---- free detection (no call needed): what did he actually throw? ----
+  detect(t, f) {
+    const b = this.base, st = this.det || (this.det = { on: {}, last: {}, ank: { la: [], ra: [] } });
+    if (f.wristsSeen) for (const h of ['lw', 'rw']) {
+      const out = dist(f[h], b[h]) > 0.5 * b.reach[h];
+      if (out && !st.on[h] && t - (st.last[h] || 0) > 250) {
+        st.last[h] = t;
+        this.ev.push({ t, kind: 'punch', hand: h === b.lead ? 'lead' : 'rear', body: f[h].y > f.chin + 0.45 });
+      }
+      st.on[h] = out;
+    }
+    if (f.feetSeen) for (const a of ['la', 'ra']) {
+      const hist = st.ank[a], baseY = hist.length ? median(hist) : f[a].y;
+      const up = baseY - f[a].y > 0.6;
+      if (up && !st.on[a] && t - (st.last[a] || 0) > 400) { st.last[a] = t; this.ev.push({ t, kind: 'kick', leg: a, high: f[a].y < 0.15 }); }
+      st.on[a] = up;
+      if (!up) { hist.push(f[a].y); if (hist.length > 30) hist.shift(); }
+    }
+    this.mv.push({ t, nx: f.noseX, ny: f.noseY, hy: f.hipY });
+    while (this.ev.length && this.ev[0].t < t - 20000) this.ev.shift();
+    while (this.mv.length && this.mv[0].t < t - 20000) this.mv.shift();
+  }
+  // Did he use the opening? expect: any | body | head | kick | combo | counter | sprawl. Never spoken as advice.
+  judgeAnswer(t0, ms, expect, label) {
+    const r = this.round; if (!r) return null;
+    const ev = this.ev.filter(e => e.t >= t0 && e.t <= t0 + ms);
+    const mv = this.mv.filter(m => m.t >= t0 && m.t <= t0 + ms);
+    const body = ev.some(e => (e.kind === 'punch' && e.body) || (e.kind === 'kick' && !e.high));
+    const head = ev.some(e => (e.kind === 'punch' && !e.body) || (e.kind === 'kick' && e.high));
+    const sprawl = mv.length > 2 && Math.max(...mv.map(m => m.hy)) - mv[0].hy > 0.35;
+    const first = ev[0];
+    const ok = { body, head, kick: ev.some(e => e.kind === 'kick'), combo: ev.length >= 3,
+      counter: !!first && first.t - t0 < 1500, sprawl, any: ev.length > 0 }[expect] ?? ev.length > 0;
+    const res = { ok, answered: ev.length > 0 || sprawl, rt: first ? first.t - t0 : null };
+    const o = r.opp || (r.opp = { open: 0, scored: 0, rts: [], def: 0, defOk: 0 });
+    o.open++; if (ok) o.scored++; if (res.rt != null) o.rts.push(res.rt);
+    if (!ok) r.moments.push({ t: t0, type: 'missed', text: 'Missed opening: ' + label });
+    return res;
+  }
+  // After "Incoming ...": did he move his head, lift a leg to check, or get his hands moving?
+  judgeDefence(t0, ms, label) {
+    const r = this.round; if (!r) return null;
+    const mv = this.mv.filter(m => m.t >= t0 && m.t <= t0 + ms);
+    const head = mv.length > 2 && Math.max(...mv.map(m => Math.hypot(m.nx - mv[0].nx, m.ny - mv[0].ny))) > 0.25;
+    const ok = head || this.ev.some(e => e.t >= t0 && e.t <= t0 + ms);
+    const o = r.opp || (r.opp = { open: 0, scored: 0, rts: [], def: 0, defOk: 0 });
+    o.def++; if (ok) o.defOk++;
+    if (!ok) r.moments.push({ t: t0, type: 'hit', text: 'No defence: ' + label });
+    return ok;
+  }
+
+  // ---- Technique lab: judge one rep (frames from the beep to t1) against the technique's pointers ----
+  labRep(t0, t1, tech) {
+    const b = this.base, win = this.frames.filter(x => x.t >= t0 && x.t <= t1).map(x => ({ t: x.t, f: x.f }));
+    const out = { seen: false, checks: {} };
+    if (!b || win.length < 6) return out;
+    const leadSide = b.lead === 'lw';
+    const leg = tech.leg === 'lead' ? (leadSide ? 'l' : 'r') : tech.leg === 'rear' ? (leadSide ? 'r' : 'l') : null;
+    const ank = leg && leg + 'a', knee = leg && leg + 'k';
+    const supFoot = tech.kind === 'punch' ? (leadSide ? 'rfoot' : 'lfoot') : leg === 'l' ? 'rfoot' : 'lfoot'; // punch: the rear foot pivots
+    const C = out.checks, y0 = median(win.slice(0, 3).map(x => x.f.hipYaw));
+    C.hip = Math.max(...win.map(x => angDiff(x.f.hipYaw, y0))) >= tech.hipMin;
+    if (win.filter(x => x.f.footSeen).length >= 4) {
+      const f0 = median(win.slice(0, 3).map(x => x.f[supFoot]));
+      C.pivot = Math.max(...win.filter(x => x.f.footSeen).map(x => angDiff(x.f[supFoot], f0))) >= (tech.kind === 'punch' ? 25 : 45);
+    } else C.pivot = null;
+    if (tech.kind === 'punch') {
+      const h = b.rear, d = win.map(x => dist(x.f[h], b[h])), iPeak = d.indexOf(Math.max(...d));
+      out.seen = d[iPeak] > 0.45 * b.reach[h];
+      C.reach = d[iPeak] >= 0.85 * b.reach[h];
+      const back = win.findIndex((x, i) => i > iPeak && d[i] < b.R * 1.3);
+      C.return = back >= 0 && win[back].t - win[iPeak].t <= 650;
+      return out;
+    }
+    const a = leg === 'l' ? 'la' : 'ra', k = leg === 'l' ? 'lk' : 'rk';
+    const ys = win.map(x => x.f[a].y), iTop = ys.indexOf(Math.min(...ys)), start = win[0].f[a];
+    out.seen = start.y - ys[iTop] > 0.45;
+    if (!out.seen) return out;
+    C.height = tech.height === 'head' ? ys[iTop] < 0.15 : ys[iTop] < 1.1;
+    C.chamber = Math.min(...win.slice(0, iTop + 1).map(x => x.f[k])) < 0.95; // knee up to about hip height
+    const guardHand = tech.leg === 'lead' ? b.rear : b.lead;
+    const okG = f => guardHand === b.rear ? dist(f[b.rear], b[b.rear]) < b.R * 2.2 : f[b.lead].y - b[b.lead].y < 0.45;
+    const gs = win.filter(x => x.f.wristsSeen);
+    C.guard = gs.length >= 4 ? gs.filter(x => okG(x.f)).length / gs.length >= 0.6 : null;
+    const back = win.findIndex((x, i) => i > iTop && dist(x.f[a], start) < 0.35);
+    C.return = back >= 0 && win[back].t - win[iTop].t <= 900;
+    return out;
+  }
 
   // ---- live checks ----
   checkCalls(t) {
@@ -256,13 +353,14 @@ class Coach {
     const parts = [];
     if (r.rear.n) parts.push(`Rear home ${r.rear.home}/${r.rear.n}`);
     if (r.hip.length) parts.push(`Hip ${Math.round(100 * median(r.hip.map(h => h.ratio)))}%`);
+    if (r.opp) parts.unshift(`Score ${r.opp.scored}/${r.opp.open}` + (r.opp.rts.length ? ` · RT ${(median(r.opp.rts) / 1000).toFixed(1)} s` : '') + (r.opp.def ? ` · Defended ${r.opp.defOk}/${r.opp.def}` : ''));
     if (r.kick.n) parts.push(`Kick guard ${r.kick.ok}/${r.kick.n}`);
     if (r.kickHip.length) parts.push(`Kick hip ${Math.round(100 * median(r.kickHip.map(h => h.ratio)))}%`);
     if (r.head.n) parts.push(`Head height ${r.head.ok}/${r.head.n}`);
     if (r.ret.n) parts.push(`Leg back ${r.ret.ok}/${r.ret.n}`);
     return parts.length ? parts.join(' · ') : 'Watching… nothing judged yet';
   }
-  judged() { const r = this.round; return r ? r.rear.n + r.kick.n + r.hip.length : 0; }
+  judged() { const r = this.round; return r ? r.rear.n + r.kick.n + r.hip.length + this.ev.filter(e => e.t > (r.tStart || 0)).length : 0; }
   goodSoFar() { const r = this.round; const n = r.rear.n + r.kick.n; return n && (r.rear.home + r.kick.ok) / n >= 0.8; }
 
   // The engine asks between combos; returns a cue type or null.
@@ -322,6 +420,12 @@ function report(r, base) {
   ev('chin', 2, 'Chin came up or you stood tall # times');
   ev('square', 2, 'Stance turned square # times');
   ev('still', 3, 'Feet went still between combos # times');
+  if (r.opp && r.opp.open + r.opp.def >= 3) {
+    const o = r.opp, rt = o.rts.length ? (median(o.rts) / 1000).toFixed(1) : null;
+    const line = `You used ${o.scored} of ${o.open} openings` + (rt ? `, reaction ${rt} seconds` : '') + (o.def ? `, and defended ${o.defOk} of ${o.def} attacks.` : '.');
+    notes.unshift(line.replace(/\.$/, ''));
+    parts.push({ w: 1000, say: line });
+  }
   parts.sort((a, b) => b.w - a.w);
   let say = parts.slice(0, 2).map(p => p.say).join(' ');
   if (!say) say = r.rear.n + r.lead.n + r.kick.n >= 5 ? 'Clean round. Hands came home and the stance held.' : "I couldn't see enough to judge this round.";

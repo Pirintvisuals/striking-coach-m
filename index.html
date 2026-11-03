@@ -31,6 +31,9 @@
     <button id="combosBtn">Combos</button>
     <button id="histBtn">Log</button>
     <button id="videosBtn">Videos</button>
+  </nav>
+  <nav class="row">
+    <button id="labBtn">Technique lab</button>
     <button id="setBtn">Settings</button>
   </nav>
 </section>
@@ -59,12 +62,36 @@
   <button class="back">Back</button>
 </section>
 
+<!-- TECHNIQUE LAB -->
+<section id="lab" class="screen hidden">
+  <h2>Technique lab</h2>
+  <p class="small">Pick a move. You throw 5 reps on the beep, the camera checks the pointers it can measure, and you watch the reps back in slow motion next to a reference clip if you import one. Phone diagonal in front, 2–3 m, head to feet in view.</p>
+  <div id="labList" class="chips"></div>
+  <div id="labDetail" class="hidden">
+    <p class="label">Pointers</p>
+    <ol id="labPointers" class="pointers"></ol>
+    <video id="labVideo" class="labvideo" playsinline muted></video>
+    <button id="labStart" class="big">Start 5 reps</button>
+    <button id="labStop" class="danger hidden">Stop</button>
+    <p id="labStatus" class="focus"></p>
+    <div id="labTable"></div>
+  </div>
+  <button class="back">Back</button>
+</section>
+
 <!-- RECORDED ROUNDS -->
 <section id="videos" class="screen hidden">
   <h2>Recorded rounds</h2>
   <div id="videoList"></div>
   <div id="videoBox" class="hidden">
     <video id="videoPlayer" controls playsinline></video>
+    <div id="refBox" class="hidden">
+      <p class="label">Reference</p>
+      <video id="refPlayer" controls playsinline class="hidden"></video>
+      <p id="refInfo" class="small"></p>
+      <div class="row"><label class="filebtn">Import reference clip<input id="refFile" type="file" accept="video/*" hidden></label><button id="refMark" class="hidden">Mark impact</button></div>
+    </div>
+    <div id="rateBtns" class="chips"><button data-r="0.25">0.25×</button><button data-r="0.5">0.5×</button><button data-r="1">1×</button></div>
     <p id="videoReport" class="small"></p>
     <p class="label">Marked moments: tap to jump there</p>
     <div id="momentList" class="chips"></div>
